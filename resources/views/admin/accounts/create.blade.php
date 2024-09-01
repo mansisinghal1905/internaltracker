@@ -8,17 +8,17 @@
             <div class="page-header">
                 <div class="page-header-left d-flex align-items-center">
                     <div class="page-header-title">
-                        <h5 class="m-b-10">Projects</h5>
+                        <h5 class="m-b-10">Payment</h5>
                     </div>
                     <ul class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ route('admin.projects.index') }}">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('admin.payments.index') }}">Home</a></li>
                         <li class="breadcrumb-item">Create</li>
                     </ul>
                 </div>
                 <div class="page-header-right ms-auto">
                     <div class="page-header-right-items">
                         <div class="d-flex align-items-center">
-                            <a href="{{ route('admin.projects.index') }}" class="btn btn-outline-primary d-flex align-items-center">
+                            <a href="{{ route('admin.payments.index') }}" class="btn btn-outline-primary d-flex align-items-center">
                                 <i class="feather-arrow-left me-2"></i>
                                 <span>Back</span>
                             </a>
@@ -43,9 +43,9 @@
                                 <div class="tab-pane fade show active" id="profileTab" role="tabpanel">
                                     <div class="card-body personal-info">
 
-                                    <form action="{{ $project ? route('admin.projects.update', $project->id) : route('admin.projects.store') }}" method="POST" enctype="multipart/form-data">
+                                    <form action="{{ $payment ? route('admin.payments.update', $payment->id) : route('admin.payments.store') }}" method="POST" enctype="multipart/form-data">
                                         {{csrf_field()}}
-                                        @if($project)
+                                        @if($payment)
                                             @method('PUT')
                                         @endif
                                         @if (session('status'))
@@ -60,71 +60,44 @@
 
                                         <div class="mb-4 d-flex align-items-center justify-content-between">
                                             <h5 class="fw-bold mb-0 me-4">
-                                                <span class="d-block mb-2">Project Information:</span>
+                                                <span class="d-block mb-2">Payment Information:</span>
                                                 <span class="fs-12 fw-normal text-muted text-truncate-1-line">Following information is publicly displayed, be careful! </span>
                                             </h5>
                                         </div>
 
                                         <div class="row mb-4 align-items-center">
                                             <div class="col-lg-4">
-                                                <label for="titleInput" class="fw-semibold">Title: </label>
+                                                <label class="fw-semibold">Customer: </label>
                                             </div>
                                             <div class="col-lg-8">
-                                                <div class="input-group">
-                                                    <!-- <div class="input-group-text"><i class="feather-user"></i></div> -->
-                                                    <input type="text" class="form-control @error('title') is-invalid @enderror" name="title" value="{{ isset($project->title) ? $project->title : old('title') }}" id="titleInput" placeholder="Title">
-                                                </div>
-                                                @error('title')
-                                                    <span class="text-danger">{{ $message }}</span>
-                                                @enderror
-                                            </div>
-                                        </div>
-
-                                        <div class="row mb-4 align-items-center">
-                                            <div class="col-lg-4">
-                                                <label for="startDate" class="fw-semibold">Start Date: </label>
-                                            </div>
-                                            <div class="col-lg-8">
-                                                <div class="input-group">
-                                                    <!-- <div class="input-group-text"><i class="feather-user"></i></div> -->
-                                                    <input type="date" id="startDate" class="form-control @error('start_date') is-invalid @enderror" name="start_date" value="{{ isset($project->start_date) ? $project->start_date : old('start_date') }}" placeholder="Start Date">
-                                                </div>
-                                                @error('start_date')
-                                                    <span class="text-danger">{{ $message }}</span>
-                                                @enderror
-                                            </div>
-                                        </div>
-
-                                        <div class="row mb-4 align-items-center">
-                                            <div class="col-lg-4">
-                                                <label for="endDate" class="fw-semibold">End Date: </label>
-                                            </div>
-                                            <div class="col-lg-8">
-                                                <div class="input-group">
-                                                    <!-- <div class="input-group-text"><i class="feather-user"></i></div> -->
-                                                    <input type="date" id="endDate" class="form-control @error('end_date') is-invalid @enderror" name="end_date" value="{{ isset($project->end_date) ? $project->end_date : old('end_date') }}" placeholder="End Date">
-                                                </div>
-                                                @error('end_date')
-                                                    <span class="text-danger">{{ $message }}</span>
-                                                @enderror
-                                            </div>
-                                        </div>
-
-                                        <div class="row mb-4 align-items-center">
-                                            <div class="col-lg-4">
-                                                <label class="fw-semibold">Client: </label>
-                                            </div>
-                                            <div class="col-lg-8">
-                                                <select class="form-control" data-select2-selector="country" name="client" id="client_id">
-                                                    @if(count($clientlist) > 0)
-                                                        <option value="">Select Client</option>
-                                                        @foreach($clientlist as $client)
-                                                            <option value="{{ $client->id }}" @if(isset($project) && $project->client == $client->id) selected @endif>{{ ucfirst($client->name) }}</option>
+                                                <select class="form-control @error('customer_id') is-invalid @enderror" data-select2-selector="tag" name="customer_id" id="customer_id">
+                                                    @if(count($customerlist) > 0)
+                                                        <option value="">Select Customer</option>
+                                                        @foreach($customerlist as $customer)
+                                                            <option value="{{ $customer->id }}" @if(isset($payment) && $payment->customer_id == $customer->id) selected @endif>{{ ucfirst($customer->first_name) }} {{ ucfirst($customer->last_name) }}</option>
                                                         @endforeach
                                                     @else
-                                                        <option value=''>No Client found</option>
+                                                        <option value=''>No Customer found</option>
                                                     @endif
                                                 </select>
+                                                @error('customer_id')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-4 align-items-center">
+                                            <div class="col-lg-4">
+                                                <label for="titleInput" class="fw-semibold">Amount ($): </label>
+                                            </div>
+                                            <div class="col-lg-8">
+                                                <div class="input-group">
+                                                   
+                                                    <input type="number" class="form-control @error('total_amount') is-invalid @enderror" name="total_amount" value="{{ isset($payment->total_amount) ? $payment->total_amount : old('total_amount') }}" id="titleInput" placeholder=" Amount">
+                                                </div>
+                                                @error('total_amount')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
                                             </div>
                                         </div>
 

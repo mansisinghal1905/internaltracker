@@ -1,9 +1,13 @@
 
 @extends('admin.layouts.backend.app')
-
 @push('style')
-
-@Endpush
+<style>
+#toast-container .toast-success {
+    background-color: #28a745; /* Green color */
+    color: #fff;
+}
+</style>
+@endpush
 @section('content')
 <main class="nxl-container">
         <div class="nxl-content">
@@ -11,11 +15,11 @@
             <div class="page-header">
                 <div class="page-header-left d-flex align-items-center">
                     <div class="page-header-title">
-                        <h5 class="m-b-10">Quotation</h5>
+                        <h5 class="m-b-10">Route</h5>
                     </div>
                     <ul class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ route('admin.quotation.index') }}">Home</a></li>
-                        <li class="breadcrumb-item">Quotation</li>
+                        <li class="breadcrumb-item"><a href="{{ route('admin.vendorindex') }}">Home</a></li>
+                        <li class="breadcrumb-item">Route</li>
                     </ul>
                 </div>
                 <div class="page-header-right ms-auto">
@@ -27,9 +31,9 @@
                             </a>
                         </div>
                         <div class="d-flex align-items-center gap-2 page-header-right-items-wrapper">
-                            <a href="javascript:void(0);" class="btn btn-icon btn-light-brand" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                            <!-- <a href="javascript:void(0);" class="btn btn-icon btn-light-brand" data-bs-toggle="collapse" data-bs-target="#collapseOne">
                                 <i class="feather-bar-chart"></i>
-                            </a>
+                            </a> -->
                             <div class="dropdown">
                                 <a class="btn btn-icon btn-light-brand" data-bs-toggle="dropdown" data-bs-offset="0, 10" data-bs-auto-close="outside">
                                     <i class="feather-filter"></i>
@@ -39,10 +43,7 @@
                                         <i class="feather-eye me-3"></i>
                                         <span>All</span>
                                     </a>
-                                    <!-- <a href="javascript:void(0);" class="dropdown-item">
-                                        <i class="feather-users me-3"></i>
-                                        <span>Group</span>
-                                    </a> -->
+                                    
                                     <a href="javascript:void(0);" class="dropdown-item">
                                         <i class="feather-flag me-3"></i>
                                         <span>Country</span>
@@ -97,10 +98,7 @@
                                     </a>
                                 </div>
                             </div>
-                            <a href="{{ route('admin.quotation.create') }}" class="btn btn-primary">
-                                <i class="feather-plus me-2"></i>
-                                <span>Create Quotation</span>
-                            </a>
+                           
                         </div>
                     </div>
                     <div class="d-md-none d-flex align-items-center">
@@ -110,7 +108,7 @@
                     </div>
                 </div>
             </div>
-            <div id="collapseOne" class="accordion-collapse collapse page-header-collapse">
+            <!-- <div id="collapseOne" class="accordion-collapse collapse page-header-collapse">
                 <div class="accordion-body pb-2">
                     <div class="row">
                         <div class="col-xxl-3 col-md-6">
@@ -199,7 +197,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
             <!-- [ page-header ] end -->
             <!-- [ Main Content ] start -->
             <div class="main-content">
@@ -208,7 +206,7 @@
                         <div class="card stretch stretch-full">
                             <div class="card-body p-0">
                                 <div class="table-responsive">
-                                    <table class="table table-hover data-table1 table stripe hover nowrap" id="quotationList">
+                                    <table class="table table-hover data-table1 table stripe hover nowrap" id="vendorList">
                                         <thead>
                                             <tr>
                                                 <th class="wd-30">
@@ -219,12 +217,11 @@
                                                         </div>
                                                     </div>
                                                 </th>
-                                                <th>Quotation Subject</th>
-                                                <th>Quotation Code</th>
-                                                <!-- <th>Short Description</th> -->
-                                                <th>Category</th>
-                                                <th>Start Date</th>
-                                                <th>End Date</th>
+                                                <th>Full Name</th>
+                                                <th>Email</th>
+                                                <th>Phone</th>
+                                                <!-- <th>Type</th> -->
+                                                <th>Image</th>
                                                 <th>Status</th>
                                                 <th class="">Actions</th>
                                             </tr>
@@ -258,7 +255,14 @@
 @endsection
 
 @push('script')
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- 
+<script src="{{ asset('public/assets/src/plugins/datatables/js/jquery.dataTables.min.js')}}"></script>
+	<script src="{{ asset('public/assets/src/plugins/datatables/js/dataTables.bootstrap4.min.js')}}"></script>
+	<script src="{{ asset('public/assets/src/plugins/datatables/js/dataTables.responsive.min.js')}}"></script>
+	<script src="{{ asset('public/assets/src/plugins/datatables/js/responsive.bootstrap4.min.js')}}"></script>
+	<script src="{{ asset('public/assets/vendors/scripts/datatable-setting.js')}}"></script> -->
+
+
 <script type="text/javascript">
 		$(function () {
 			$.ajaxSetup({
@@ -266,7 +270,12 @@
 					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 				}
 			});
-			var table = $('#quotationList').DataTable({
+
+			// $(".selectstatus").on("click", function () {
+			// 	id = $(this).data("id");
+			// 	alert(id);
+			// });
+			var table = $('#vendorList').DataTable({
 				processing: true,
 				serverSide: true,
 				"scrollY": "400px", // Set the height for the container
@@ -275,11 +284,10 @@
 				pagingType: "simple_numbers", // Use simple pagination (Previous/Next)
 
 				ajax: {
-					url: "{{ route('admin.quotationAjax') }}",
+					url: "{{ route('admin.vendorAjax') }}",
 					type: "POST",
 					data: {
                         status: $('input[name=status]').val(),
-						search: $('input[name=name]').val(),
 					},
 					dataSrc: "data"
 				},
@@ -291,52 +299,24 @@
 				"aoColumns": [{
 					"data": "id"
 				},
-				{ "data": "quotation_subject" },
-                { "data": "quotation_code" },
-				// { "data": "short_description" },
-				{ "data": "category_id" },
-                { "data": "start_date" },
-                { "data": "end_date" },
-                { "data": "status" },
-				{ "data": "view" },
-
+                { "data": "fullname" },
+                { "data": "email" },
+                { "data": "phone_number" },
+                // { "data": "role" },
+                { "data": "avatar" },
+				{ "data": "status" },
+                { "data": "view" },
 				],
                 columnDefs: [
-                    { "targets": [2,3], "orderable": false }, // Disable sorting on the "job_id" column
+                    { "targets": [], "orderable": false }, // Disable sorting on the "job_id" column
                     { "targets": [], "orderable": false } // Disable sorting on the "job_id" column
                 ]
 			});
 
-			// for chnage status
-            $(document).on('change', '.quotationStatusToggle', function () {
-                var id = $(this).attr("data-id");
-                var status = $(this).is(':checked') ? 1 : 0;
-
-                $.ajax({
-                    type: "POST",
-                    url: @json(route('admin.changeQuotationStatus')),
-                    data: { id: id, status: status },
-                    dataType: "JSON",
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    success: function (response) {
-                        if (response.status) {
-                            toastr.success(response.message); // Show success toast
-                            table.ajax.reload(); // Reload the table to reflect the changes
-                        } else {
-                            toastr.error(response.message); // Show error toast
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        toastr.error("An error occurred while changing the status."); // Show generic error toast
-                        console.error(error);
-                    }
-                });
-            });
 		});
 
-        function deleteQuotation(element) {
+
+        function deleteRoutes(element) {
             var url = element.getAttribute('data-url');
             var id = element.getAttribute('data-id');
             
@@ -362,7 +342,7 @@
                         success: function(response) {
                             Swal.fire(
                                 'Deleted!',
-                                'The Quotation has been deleted.',
+                                'The Route has been deleted.',
                                 'success'
                             );
                             
@@ -373,7 +353,7 @@
                         error: function(response) {
                             Swal.fire(
                                 'Failed!',
-                                'There was an error deleting the Quotation.',
+                                'There was an error deleting the Route.',
                                 'error'
                             );
                         }
@@ -383,6 +363,6 @@
         }
 
 	</script>
-    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 @endpush

@@ -8,11 +8,11 @@
             <div class="page-header">
                 <div class="page-header-left d-flex align-items-center">
                     <div class="page-header-title">
-                        <h5 class="m-b-10">Clients</h5>
+                        <h5 class="m-b-10">Users</h5>
                     </div>
                     <ul class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{ route('admin.users.index') }}">Home</a></li>
-                        <li class="breadcrumb-item">Clients</li>
+                        <li class="breadcrumb-item">Users</li>
                     </ul>
                 </div>
                 <div class="page-header-right ms-auto">
@@ -96,7 +96,7 @@
                             </div>
                             <a href="{{ route('admin.users.create') }}" class="btn btn-primary">
                                 <i class="feather-plus me-2"></i>
-                                <span>Create Client</span>
+                                <span>Create User</span>
                             </a>
                         </div>
                     </div>
@@ -209,68 +209,19 @@
                                         <thead>
                                             <tr>
                                                 <th class="wd-30">
-                                                    <div class="btn-group mb-1">
-                                                        <div class="custom-control custom-checkbox ms-1">
-                                                            <input type="checkbox" class="custom-control-input" id="checkAllCustomer">
-                                                            <label class="custom-control-label" for="checkAllCustomer"></label>
-                                                        </div>
-                                                    </div>
+                                                   S.No.
                                                 </th>
+                                                <th>Logo</th>
                                                 <th>Full Name</th>
                                                 <th>Email</th>
                                                 <th>Phone</th>
-                                                <th>Image</th>
+                                                <th>Type</th>
+                                               
                                                 <th>Status</th>
                                                 <th class="">Actions</th>
                                             </tr>
                                         </thead>
-                                        <!-- <tbody>
-                                            <tr class="single-item">
-                                                <td>
-                                                    <div class="item-checkbox ms-1">
-                                                        <div class="custom-control custom-checkbox">
-                                                            <input type="checkbox" class="custom-control-input checkbox" id="checkBox_1">
-                                                            <label class="custom-control-label" for="checkBox_1"></label>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <a href="customers-view.html" class="hstack gap-3">
-                                                        <div class="avatar-image avatar-md">
-                                                            <img src="{{ asset('public/assets/images/avatar/1.png')}}" alt="" class="img-fluid">
-                                                        </div>
-                                                        <div>
-                                                            <span class="text-truncate-1-line">Alexandra Della</span>
-                                                        </div>
-                                                    </a>
-                                                </td>
-                                                <td><a href="apps-email.html">alex.della@outlook.com</a></td>
-                                                
-                                                <td><a href="tel:">+1 (375) 9632 548</a></td>
-                                                <td>2023-04-05, 00:05PM</td>
-                                                <td>
-                                                    <select class="form-control" data-select2-selector="status">
-                                                        <option value="success" data-bg="bg-success" selected>Active</option>
-                                                        <option value="warning" data-bg="bg-warning">Inactive</option>
-                                                        <option value="danger" data-bg="bg-danger">Declined</option>
-                                                    </select>
-                                                </td>
-                                                <td>
-                                                    <div class="hstack gap-2 justify-content-end">
-                                                        <a href="customers-view.html" class="avatar-text avatar-md">
-                                                            <i class="feather feather-eye"></i>
-                                                        </a>
-                                                        <a href="" class="avatar-text avatar-md edit-action">
-                                                            <i class="feather feather-edit"></i>
-                                                        </a>
-                                                        <a href="customers-delete.html" class="avatar-text avatar-md delete-action">
-                                                            <i class="feather feather-trash-2"></i>
-                                                        </a>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                          
-                                        </tbody> -->
+                                       
                                     </table>
                                 </div>
                             </div>
@@ -315,10 +266,6 @@
 				}
 			});
 
-			// $(".selectstatus").on("click", function () {
-			// 	id = $(this).data("id");
-			// 	alert(id);
-			// });
 			var table = $('#customerList').DataTable({
 				processing: true,
 				serverSide: true,
@@ -332,7 +279,9 @@
 					type: "POST",
 					data: {
 						status: $('select[name=status]').val(),
-						search: $('input[name=fullname]').val(),
+						search: $('input[name=first_name]').val(),
+						search: $('input[name=last_name]').val(),
+						search: $('input[name=role]').val(),
 						search: $('input[email=email]').val(),
 						search: $('input[email=phone_number]').val(),
 
@@ -348,10 +297,12 @@
 				"aoColumns": [{
 					"data": "id"
 				},
+                { "data": "avatar" },
 				{ "data": "fullname" },
                 { "data": "email" },
                 { "data": "phone_number" },
-                { "data": "avatar" },
+                { "data": "role" },
+                
 				{ "data": "status" },
 				{ "data": "view" },
 
@@ -419,7 +370,7 @@
                         success: function(response) {
                             Swal.fire(
                                 'Deleted!',
-                                'The client has been deleted.',
+                                'The user has been deleted.',
                                 'success'
                             );
                             
@@ -430,7 +381,7 @@
                         error: function(response) {
                             Swal.fire(
                                 'Failed!',
-                                'There was an error deleting the client.',
+                                'There was an error deleting the user.',
                                 'error'
                             );
                         }

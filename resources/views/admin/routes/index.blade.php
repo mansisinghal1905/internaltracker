@@ -1,6 +1,13 @@
 
 @extends('admin.layouts.backend.app')
-
+@push('style')
+<style>
+#toast-container .toast-success {
+    background-color: #28a745; /* Green color */
+    color: #fff;
+}
+</style>
+@endpush
 @section('content')
 <main class="nxl-container">
         <div class="nxl-content">
@@ -8,11 +15,11 @@
             <div class="page-header">
                 <div class="page-header-left d-flex align-items-center">
                     <div class="page-header-title">
-                        <h5 class="m-b-10">Invoice</h5>
+                        <h5 class="m-b-10">Route</h5>
                     </div>
                     <ul class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ route('admin.invoices.index') }}">Home</a></li>
-                        <li class="breadcrumb-item">Invoice</li>
+                        <li class="breadcrumb-item"><a href="{{ route('admin.routes.index') }}">Home</a></li>
+                        <li class="breadcrumb-item">Route</li>
                     </ul>
                 </div>
                 <div class="page-header-right ms-auto">
@@ -91,9 +98,9 @@
                                     </a>
                                 </div>
                             </div>
-                            <a href="{{ route('admin.invoices.create') }}" class="btn btn-primary">
+                            <a href="{{ route('admin.routes.create') }}" class="btn btn-primary">
                                 <i class="feather-plus me-2"></i>
-                                <span>Create Invoice</span>
+                                <span>Create Route</span>
                             </a>
                         </div>
                     </div>
@@ -104,96 +111,7 @@
                     </div>
                 </div>
             </div>
-            <!-- <div id="collapseOne" class="accordion-collapse collapse page-header-collapse">
-                <div class="accordion-body pb-2">
-                    <div class="row">
-                        <div class="col-xxl-3 col-md-6">
-                            <div class="card stretch stretch-full">
-                                <div class="card-body">
-                                    <div class="d-flex align-items-center justify-content-between">
-                                        <div class="d-flex align-items-center gap-3">
-                                            <div class="avatar-text avatar-xl rounded">
-                                                <i class="feather-users"></i>
-                                            </div>
-                                            <a href="javascript:void(0);" class="fw-bold d-block">
-                                                <span class="text-truncate-1-line">Total Customers</span>
-                                                <span class="fs-24 fw-bolder d-block">26,595</span>
-                                            </a>
-                                        </div>
-                                        <div class="badge bg-soft-success text-success">
-                                            <i class="feather-arrow-up fs-10 me-1"></i>
-                                            <span>36.85%</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xxl-3 col-md-6">
-                            <div class="card stretch stretch-full">
-                                <div class="card-body">
-                                    <div class="d-flex align-items-center justify-content-between">
-                                        <div class="d-flex align-items-center gap-3">
-                                            <div class="avatar-text avatar-xl rounded">
-                                                <i class="feather-user-check"></i>
-                                            </div>
-                                            <a href="javascript:void(0);" class="fw-bold d-block">
-                                                <span class="text-truncate-1-line">Active Customers</span>
-                                                <span class="fs-24 fw-bolder d-block">2,245</span>
-                                            </a>
-                                        </div>
-                                        <div class="badge bg-soft-danger text-danger">
-                                            <i class="feather-arrow-down fs-10 me-1"></i>
-                                            <span>24.56%</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xxl-3 col-md-6">
-                            <div class="card stretch stretch-full">
-                                <div class="card-body">
-                                    <div class="d-flex align-items-center justify-content-between">
-                                        <div class="d-flex align-items-center gap-3">
-                                            <div class="avatar-text avatar-xl rounded">
-                                                <i class="feather-user-plus"></i>
-                                            </div>
-                                            <a href="javascript:void(0);" class="fw-bold d-block">
-                                                <span class="text-truncate-1-line">New Customers</span>
-                                                <span class="fs-24 fw-bolder d-block">1,254</span>
-                                            </a>
-                                        </div>
-                                        <div class="badge bg-soft-success text-success">
-                                            <i class="feather-arrow-up fs-10 me-1"></i>
-                                            <span>33.29%</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xxl-3 col-md-6">
-                            <div class="card stretch stretch-full">
-                                <div class="card-body">
-                                    <div class="d-flex align-items-center justify-content-between">
-                                        <div class="d-flex align-items-center gap-3">
-                                            <div class="avatar-text avatar-xl rounded">
-                                                <i class="feather-user-minus"></i>
-                                            </div>
-                                            <a href="javascript:void(0);" class="fw-bold d-block">
-                                                <span class="text-truncate-1-line">Inactive Customers</span>
-                                                <span class="fs-24 fw-bolder d-block">4,586</span>
-                                            </a>
-                                        </div>
-                                        <div class="badge bg-soft-danger text-danger">
-                                            <i class="feather-arrow-down fs-10 me-1"></i>
-                                            <span>42.47%</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
+       
             <!-- [ page-header ] end -->
             <!-- [ Main Content ] start -->
             <div class="main-content">
@@ -202,25 +120,23 @@
                         <div class="card stretch stretch-full">
                             <div class="card-body p-0">
                                 <div class="table-responsive">
-                                    <table class="table table-hover data-table1 table stripe hover nowrap" id="invoiceList">
+                                    <table class="table table-hover data-table1 table stripe hover nowrap" id="routeList">
                                         <thead>
                                             <tr>
                                                 <th class="wd-30">
                                                     <div class="btn-group mb-1">
                                                         <div class="custom-control custom-checkbox ms-1">
-                                                            <input type="checkbox" class="custom-control-input" id="checkAllCustomer">
-                                                            <label class="custom-control-label" for="checkAllCustomer"></label>
+                                                            <input type="checkbox" class="custom-control-input" id="checkAllCustomers">
+                                                            <label class="custom-control-label" for="checkAllCustomers"></label>
                                                         </div>
                                                     </div>
                                                 </th>
-                                                
-                                                <th>Invoice ID</th>
-                                                <th>Client Name</th>
-                                                <th>Project</th>
-                                                <th>Amount</th>
-                                                <!-- <th>Payment</th> -->
+                                                <th>Full Name</th>
+                                                <th>Email</th>
+                                                <th>Phone</th>
+                                                <!-- <th>Type</th> -->
+                                                <th>Image</th>
                                                 <th>Status</th>
-                                                <!-- <th>Status</th> -->
                                                 <th class="">Actions</th>
                                             </tr>
                                         </thead>
@@ -273,7 +189,7 @@
 			// 	id = $(this).data("id");
 			// 	alert(id);
 			// });
-			var table = $('#invoiceList').DataTable({
+			var table = $('#routeList').DataTable({
 				processing: true,
 				serverSide: true,
 				"scrollY": "400px", // Set the height for the container
@@ -282,13 +198,10 @@
 				pagingType: "simple_numbers", // Use simple pagination (Previous/Next)
 
 				ajax: {
-					url: "{{ route('admin.invoiceAjax') }}",
+					url: "{{ route('admin.customerAjax') }}",
 					type: "POST",
 					data: {
-                        status: $('input[name=project_status]').val(),
-						search: $('input[name=title]').val(),
-                        search: $('input[name=project_id]').val(),
-                        search: $('input[name=user_id]').val(),
+                        status: $('input[name=status]').val(),
 					},
 					dataSrc: "data"
 				},
@@ -300,13 +213,13 @@
 				"aoColumns": [{
 					"data": "id"
 				},
-                { "data": "invoice_id" },
-				{ "data": "client_id" },
-                { "data": "project_id" },
-				{ "data": "paid_amount" },
-                { "data": "status" },
-				{ "data": "view" },
-
+                { "data": "fullname" },
+                { "data": "email" },
+                { "data": "phone_number" },
+                // { "data": "role" },
+                { "data": "avatar" },
+				{ "data": "status" },
+                { "data": "view" },
 				],
                 columnDefs: [
                     { "targets": [], "orderable": false }, // Disable sorting on the "job_id" column
@@ -314,37 +227,10 @@
                 ]
 			});
 
-			// for chnage status
-            $(document).on('change', '.invoiceStatusToggle', function () {
-                var id = $(this).attr("data-id");
-                var status = $(this).is(':checked') ? 1 : 0;
-
-                $.ajax({
-                    type: "POST",
-                    url: @json(route('admin.ChangeInvoiceStatus')),
-                    data: { id: id, status: status },
-                    dataType: "JSON",
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    success: function (response) {
-                        if (response.status) {
-                            toastr.success(response.message); // Show success toast
-                            table.ajax.reload(); // Reload the table to reflect the changes
-                        } else {
-                            toastr.error(response.message); // Show error toast
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        toastr.error("An error occurred while changing the status."); // Show generic error toast
-                        console.error(error);
-                    }
-                });
-            });
 		});
 
 
-        function deleteInvoices(element) {
+        function deleteRoutes(element) {
             var url = element.getAttribute('data-url');
             var id = element.getAttribute('data-id');
             
@@ -370,7 +256,7 @@
                         success: function(response) {
                             Swal.fire(
                                 'Deleted!',
-                                'The Client User has been deleted.',
+                                'The Route has been deleted.',
                                 'success'
                             );
                             
@@ -381,7 +267,7 @@
                         error: function(response) {
                             Swal.fire(
                                 'Failed!',
-                                'There was an error deleting the Client User.',
+                                'There was an error deleting the Route.',
                                 'error'
                             );
                         }
@@ -389,6 +275,9 @@
                 }
             });
         }
+
+
+
 
 	</script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

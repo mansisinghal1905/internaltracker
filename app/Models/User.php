@@ -6,10 +6,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable,SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -17,10 +19,13 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'first_name',
+        'last_name',
         'email',
         'password',
     ];
+    protected $guarded = [];
+
 
     /**
      * The attributes that should be hidden for serialization.
@@ -56,12 +61,15 @@ class User extends Authenticatable
             $query->whereRaw('DATE_FORMAT(created_at, "%Y-%m-%d") <= "' . date("Y-m-d", strtotime($request->end_date)) . '"');
         }
 
-        if (isset($request['search']['value'])) {
-            $query->where(function ($q) use ($request) {
-                $q->where('name', 'like', '%' . $request['search']['value'] . '%');
-                $q->where('phone_number', 'like', '%' . $request['search']['value'] . '%');
-                
-                $q->where('email', 'like', '%' . $request['search']['value'] . '%');
+       
+        if (isset($request['search']['value']) && !empty($request['search']['value'])) {
+            $searchValue = $request['search']['value'];
+
+            $query->where(function ($q) use ($searchValue) {
+                $q->where('first_name', 'like', '%' . $searchValue . '%')
+                  ->orWhere('last_name', 'like', '%' . $searchValue . '%')
+                  ->orWhere('email', 'like', '%' . $searchValue . '%')
+                  ->orWhere('phone_number', 'like', '%' . $searchValue . '%');
             });
         }
         if (isset($request->status)) {
@@ -90,9 +98,89 @@ class User extends Authenticatable
         }
         return asset('images/no_avatar.jpg');
     } 
-
     public function tasks()
     {
-        return $this->belongsToMany(Task::class, 'task_client');
+        return $this->hasMany(Task::class);
+    }
+
+    public function tasksAsVendor()
+    {
+        return $this->hasMany(Task::class, 'vendor_id');
+    }
+
+    public function customers()
+    {
+        return $this->hasManyThrough(
+            User::class,       // Target model (Customer)
+            Task::class,       // Intermediate model (Task)
+            'vendor_id',       // Foreign key on Task model (vendor_id)
+            'id',              // Foreign key on User model (customer_id)
+            'id',              // Local key on User model (vendor_id)
+            'user_id'      // Local key on Task model (customer_id)
+        )->where('role', '2');
+    }
+
+    public function fetchRoute($request, $columns) {
+      
+        $query = User::where('id', '!=', 1)->where('status','!=',2)->where('role','2')->orderBy('id', 'desc');
+
+        if (isset($request->from_date)) {
+            $query->whereRaw('DATE_FORMAT(created_at, "%Y-%m-%d") >= "' . date("Y-m-d", strtotime($request->from_date)) . '"');
+        }
+        if (isset($request->end_date)) {
+            $query->whereRaw('DATE_FORMAT(created_at, "%Y-%m-%d") <= "' . date("Y-m-d", strtotime($request->end_date)) . '"');
+        }
+
+        if (isset($request['search']['value'])) {
+            $query->where(function ($q) use ($request) {
+                $q->where('first_name', 'like', '%' . $request['search']['value'] . '%');
+                $q->where('last_name', 'like', '%' . $request['search']['value'] . '%');
+                $q->where('role', 'like', '%' . $request['search']['value'] . '%');
+                $q->where('phone_number', 'like', '%' . $request['search']['value'] . '%');
+                $q->where('email', 'like', '%' . $request['search']['value'] . '%');
+
+            });
+        }
+        if (isset($request->status)) {
+            $query->where('status', $request->status);
+        }
+        if (isset($request->order_column)) {
+            $categories = $query->orderBy($columns[$request->order_column], $request->order_dir);
+        } else {
+            $categories = $query->orderBy('created_at', 'desc');
+        }
+        return $categories;
+    }
+    
+     public function fetchvendor($request, $columns) {
+      
+        $query = User::where('id', '!=', 1)->where('status','!=',2)->where('role','3')->orderBy('id', 'desc');
+
+        if (isset($request->from_date)) {
+            $query->whereRaw('DATE_FORMAT(created_at, "%Y-%m-%d") >= "' . date("Y-m-d", strtotime($request->from_date)) . '"');
+        }
+        if (isset($request->end_date)) {
+            $query->whereRaw('DATE_FORMAT(created_at, "%Y-%m-%d") <= "' . date("Y-m-d", strtotime($request->end_date)) . '"');
+        }
+
+        if (isset($request['search']['value'])) {
+            $query->where(function ($q) use ($request) {
+                $q->where('first_name', 'like', '%' . $request['search']['value'] . '%');
+                $q->where('last_name', 'like', '%' . $request['search']['value'] . '%');
+                $q->where('role', 'like', '%' . $request['search']['value'] . '%');
+                $q->where('phone_number', 'like', '%' . $request['search']['value'] . '%');
+                $q->where('email', 'like', '%' . $request['search']['value'] . '%');
+
+            });
+        }
+        if (isset($request->status)) {
+            $query->where('status', $request->status);
+        }
+        if (isset($request->order_column)) {
+            $categories = $query->orderBy($columns[$request->order_column], $request->order_dir);
+        } else {
+            $categories = $query->orderBy('created_at', 'desc');
+        }
+        return $categories;
     }
 }

@@ -8,10 +8,10 @@
             <div class="page-header">
                 <div class="page-header-left d-flex align-items-center">
                     <div class="page-header-title">
-                        <h5 class="m-b-10">Clients</h5>
+                        <h5 class="m-b-10">Users</h5>
                     </div>
                     <ul class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ route('admin.users.index') }}">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('admin.users.index') }}">User</a></li>
                         <li class="breadcrumb-item">Create</li>
                     </ul>
                 </div>
@@ -72,7 +72,7 @@
 
                                         <div class="mb-4 d-flex align-items-center justify-content-between">
                                             <h5 class="fw-bold mb-0 me-4">
-                                                <span class="d-block mb-2">Personal Information:</span>
+                                                <span class="d-block mb-2">User Information:</span>
                                                 <span class="fs-12 fw-normal text-muted text-truncate-1-line">Following information is publicly displayed, be careful! </span>
                                             </h5>
                                         </div>
@@ -136,12 +136,22 @@
                                                 @enderror
                                             </div>  
                                             <div class="col-lg-4">
-                                                <label for="fullnameInput" class="fw-semibold">Date Of Birth: </label>
-                                                    <div class="input-group">
-                                                        <input type="date" class="form-control" name="dob" value="{{ isset($user->dob) && !empty($user->dob) ? $user->dob : ''}}" id="companyInput" placeholder="Date Of Birth">
-                                                    </div>
+                                                <label for="fullnameInput" class="fw-semibold">Role: </label>
+                                                <div class="input-group">
+                                                    <select class="form-control @error('role') is-invalid @enderror" data-select2-selector="tag" name="role" id="role">
+                                                    
+                                                            <option value="">Select Role</option>
+                                                            <option value="2" {{ old('role', isset($user->role) ? $user->role : '') == '2' ? 'selected' : '' }}>Customer</option>
+                                                            <option value="3" {{ old('role', isset($user->role) ? $user->role : '') == '3' ? 'selected' : '' }}>Vendor</option>
+
+                                                    </select>
+                                                </div>
+                                                @error('role')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
                                             </div>
                                         </div>
+
                                         <div class="d-flex justify-content-end">
                                             <button type="submit" class="btn btn-primary">Save Changes</button>
                                         </div>

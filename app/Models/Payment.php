@@ -6,10 +6,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class ClientUser extends Authenticatable
+
+class Payment extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable,SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -35,9 +37,9 @@ class ClientUser extends Authenticatable
      * @return array<string, string>
      */
 
-    public function fetchClientUser($request, $columns) {
+    public function fetchPayment($request, $columns) {
       
-        $query = ClientUser::where('status','!=',2)->orderBy('id', 'desc');
+        $query = Payment::orderBy('id', 'desc');
 
         if (isset($request->from_date)) {
             $query->whereRaw('DATE_FORMAT(created_at, "%Y-%m-%d") >= "' . date("Y-m-d", strtotime($request->from_date)) . '"');
@@ -48,15 +50,10 @@ class ClientUser extends Authenticatable
 
         if (isset($request['search']['value'])) {
             $query->where(function ($q) use ($request) {
-                $q->where('client_name', 'like', '%' . $request['search']['value'] . '%');
-                $q->where('first_name', 'like', '%' . $request['search']['value'] . '%');
-                $q->where('last_name', 'like', '%' . $request['search']['value'] . '%');
-
+                $q->where('total_amount', 'like', '%' . $request['search']['value'] . '%');
             });
         }
-        if (isset($request->status)) {
-            $query->where('status', $request->status);
-        }
+       
 
         if (isset($request->order_column)) {
             $categories = $query->orderBy($columns[$request->order_column], $request->order_dir);
@@ -66,13 +63,9 @@ class ClientUser extends Authenticatable
         return $categories;
     }
 
-    public function getCLient() {
-        return $this->belongsTo(User::class, 'client_id', 'id')->where('id', '!=', 1)->where('status','!=','0'); 
-    }
+    public function getCustomer() {
 
-    
-    public function tasks()
-    {
-        return $this->belongsToMany(Task::class, 'task_user');
+        return $this->belongsTo(User::class,'customer_id','id')->where('id', '!=', 1)->where('status','!=','0'); 
+
     }
 }

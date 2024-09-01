@@ -1,6 +1,8 @@
 
 @extends('admin.layouts.backend.app')
-
+@push('style')
+<link rel="stylesheet" type="text/css" href="{{ asset('public/assets/css/addon.css')}}" />
+@endpush
 @section('content')
 <main class="nxl-container">
         <div class="nxl-content">
@@ -8,17 +10,17 @@
             <div class="page-header">
                 <div class="page-header-left d-flex align-items-center">
                     <div class="page-header-title">
-                        <h5 class="m-b-10">Client Users</h5>
+                        <h5 class="m-b-10">Route</h5>
                     </div>
                     <ul class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ route('admin.clientusers.index') }}">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('admin.routes.index') }}">Home</a></li>
                         <li class="breadcrumb-item">Create</li>
                     </ul>
                 </div>
                 <div class="page-header-right ms-auto">
                     <div class="page-header-right-items">
                         <div class="d-flex align-items-center">
-                            <a href="{{ route('admin.clientusers.index') }}" class="btn btn-outline-primary d-flex align-items-center">
+                            <a href="{{ route('admin.routes.index') }}" class="btn btn-outline-primary d-flex align-items-center">
                                 <i class="feather-arrow-left me-2"></i>
                                 <span>Back</span>
                             </a>
@@ -55,9 +57,9 @@
                                 <div class="tab-pane fade show active" id="profileTab" role="tabpanel">
                                     <div class="card-body personal-info">
 
-                                    <form action="{{ $clientuser ? route('admin.clientusers.update', $clientuser->id) : route('admin.clientusers.store') }}" method="POST" enctype="multipart/form-data">
+                                    <form action="{{ $route ? route('admin.routes.update', $route->id) : route('admin.routes.store') }}" method="POST" enctype="multipart/form-data">
                                         {{csrf_field()}}
-                                        @if($clientuser)
+                                        @if($route)
                                             @method('PUT')
                                         @endif
                                         @if (session('status'))
@@ -72,96 +74,76 @@
 
                                         <div class="mb-4 d-flex align-items-center justify-content-between">
                                             <h5 class="fw-bold mb-0 me-4">
-                                                <span class="d-block mb-2">User Information:</span>
-                                                <span class="fs-12 fw-normal text-muted text-truncate-1-line">Following information is publicly displayed, be careful! </span>
+                                                <span class="d-block mb-2">Route Information:</span>
+                                                <!-- <span class="fs-12 fw-normal text-muted text-truncate-1-line">Following information is publicly displayed, be careful! </span> -->
                                             </h5>
                                         </div>
                                        
                                         <div class="row mb-4 align-items-center">
                                             <div class="col-lg-4">
-                                                <label class="fw-semibold">Client: </label>
+                                                <label class="fw-semibold">Customer: </label>
                                             </div>
                                             <div class="col-lg-8">
-                                                <select class="form-control @error('client_id') is-invalid @enderror" data-select2-selector="country" name="client_id" id="client_id">
-                                                    @if(count($clientlist) > 0)
-                                                        <option value="">Select Client</option>
-                                                        @foreach($clientlist as $client)
-                                                            <option value="{{ $client->id }}" @if(isset($clientuser) && $clientuser->client_id == $client->id) selected @endif>{{ ucfirst($client->name) }}</option>
+                                                <select class="form-control @error('customer_id') is-invalid @enderror" data-select2-selector="tag" name="customer_id" id="customer_id">
+                                                    @if(count($customerlist) > 0)
+                                                        <option value="">Select Customer</option>
+                                                        @foreach($customerlist as $customer)
+                                                            <option value="{{ $customer->id }}" @if(isset($route) && $route->customer_id == $customer->id) selected @endif>{{ ucfirst($customer->first_name) }} {{ ucfirst($customer->last_name) }}</option>
                                                         @endforeach
                                                     @else
-                                                        <option value=''>No Client found</option>
+                                                        <option value=''>No Customer found</option>
                                                     @endif
                                                 </select>
-                                                @error('client_id')
+                                                @error('customer_id')
                                                     <span class="text-danger">{{ $message }}</span>
                                                 @enderror
                                             </div>
                                         </div>
 
-                                            <div class="row mb-4 align-items-center">
-                                                <div class="col-lg-4">
-                                                    <label for="fullnameInput" class="fw-semibold"> First Name: </label>
-                                                </div>
-                                                    <div class="col-lg-8"> 
-                                                        <div class="input-group">
-                                                            <input type="text" name="first_name" class="form-control @error('first_name') is-invalid @enderror" value="{{ isset($clientuser->first_name) && !empty($clientuser->first_name) ? $clientuser->first_name : ''}}" id="fullnameInput" placeholder="First Name">
-                                                        </div>
-                                                        @error('first_name')
-                                                            <span class="text-danger">{{ $message }}</span>
-                                                        @enderror
-                                                    </div>
-                                                
-                                            </div>
-
-                                            <div class="row mb-4 align-items-center">
-                                                <div class="col-lg-4">
-                                                    <label for="fullnameInput" class="fw-semibold"> Last Name: </label>
-                                                </div>
-                                                <div class="col-lg-8">
-                                                    <div class="input-group">
-                                                        <input type="text" name="last_name" class="form-control @error('last_name') is-invalid @enderror" value="{{ isset($clientuser->last_name) && !empty($clientuser->last_name) ? $clientuser->last_name : ''}}" id="fullnameInput" placeholder="Last Name">
-                                                    </div>
-                                                    @error('last_name')
-                                                        <span class="text-danger">{{ $message }}</span>
-                                                    @enderror
-                                                
-                                                </div>
-                                            </div>
-							
                                         <div class="row mb-4 align-items-center">
                                             <div class="col-lg-4">
-                                                <label for="fullnameInput" class="fw-semibold">Email: </label>
+                                                <label class="fw-semibold">Vendor: </label>
                                             </div>
                                             <div class="col-lg-8">
-												<div class="input-group">
-                                                 <input type="text" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ isset($clientuser->email) && !empty($clientuser->email) ? $clientuser->email : ''}}" id="mailInput" placeholder="Email">
-                                                </div>
-                                                @error('email')
+                                                <select class="form-control @error('vendor_id') is-invalid @enderror" data-select2-selector="tag" name="vendor_id" id="vendor_id">
+                                                    @if(count($vendorlist) > 0)
+                                                        <option value="">Select Vendor</option>
+                                                        @foreach($vendorlist as $vendor)
+                                                            <option value="{{ $vendor->id }}" @if(isset($route) && $route->vendor_id == $vendor->id) selected @endif>{{ ucfirst($vendor->first_name) }} {{ ucfirst($vendor->last_name) }}</option>
+                                                        @endforeach
+                                                    @else
+                                                        <option value=''>No Vendor found</option>
+                                                    @endif
+                                                </select>
+                                                @error('vendor_id')
                                                     <span class="text-danger">{{ $message }}</span>
                                                 @enderror
                                             </div>
                                         </div>
-                                        <div class="row mb-4 align-items-center">
-											<div class="col-lg-4">
-                                                <label for="fullnameInput" class="fw-semibold">Mobile: </label>
-                                            </div>
-                                            <div class="col-lg-8">
-												<div class="input-group">
-                                                 <input type="text" class="form-control" name="phone" value="{{ isset($clientuser->phone) && !empty($clientuser->phone) ? $clientuser->phone : ''}}" id="phoneInput" placeholder="Phone">
-                                                </div>
-                                              
-                                            </div>
-                                        </div>
+
                                         <div class="row mb-4 align-items-center">
                                             <div class="col-lg-4">
-                                                <label for="fullnameInput" class="fw-semibold">Designation: </label>
+                                                <label for="fullnameInput" class="fw-semibold">Customer Trunk: </label>
                                             </div>
                                             <div class="col-lg-8">
                                                 <div class="input-group">
-                                                    <input type="text" class="form-control" name="position" value="{{ isset($clientuser->position) && !empty($clientuser->position) ? $clientuser->position : ''}}" id="companyInput" placeholder="Designation">
+                                                    <textarea class="form-control"
+                                                    id="editor1" name="customer_trunk"  id="addressInput_2" cols="30" rows="3" placeholder="Customer Trunk">{{ isset($route->customer_trunk) && !empty($route->customer_trunk) ? $route->customer_trunk : ''}}</textarea>
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="row mb-4 align-items-center">
+                                            <div class="col-lg-4">
+                                                <label for="fullnameInput" class="fw-semibold">Vendor Trunk: </label>
+                                            </div>
+                                            <div class="col-lg-8">
+                                                <div class="input-group">
+                                                    <textarea class="form-control"
+                                                    id="editor2" name="vendor_trunk"  id="addressInput_2" cols="30" rows="3" placeholder="Vendor Trunk">{{ isset($route->vendor_trunk) && !empty($route->vendor_trunk) ? $route->vendor_trunk : ''}}</textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                       
                                         <div class="d-flex justify-content-end">
                                             <button type="submit" class="btn btn-primary">Save Changes</button>
                                         </div>
@@ -199,6 +181,22 @@
     </main>
 @endsection
 @push('script')
+<script src="{{ asset('public/assets/js/custom.js')}}"></script>
+<script src="https://cdn.ckeditor.com/ckeditor5/23.0.0/classic/ckeditor.js"></script>
+<script>
+    ClassicEditor.create( document.querySelector( '#editor1' ) )
+        .catch( error => {
+            console.error( error );
+        } );
 
+    ClassicEditor.create( document.querySelector( '#editor2' ) )
+    .catch( error => {
+        console.error( error );
+    } );
+</script>
 
+<!-- <script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
+<script>
+    CKEDITOR.replace('editor1');
+</script> -->
 @endpush

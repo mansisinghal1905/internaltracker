@@ -11,12 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('send_purposals', function (Blueprint $table) {
+        Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('client_id')->nullable();
-            $table->date('schedule_date')->nullable(); 
-            $table->string('document')->nullable();
-            $table->string('status')->default('pending'); // Status of the invoice (e.g., pending,approved,rejected)        
+            $table->unsignedBigInteger('customer_id')->nullable();
+            $table->decimal('total_amount', 8, 2);
             $table->timestamps();
         });
     }
@@ -26,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('send_purposals');
+        Schema::dropIfExists('payments');
     }
 };

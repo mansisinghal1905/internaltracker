@@ -5,8 +5,8 @@
             <div class="m-header">
                 <a href="{{ route('admin.adminDashboard') }}" class="b-brand">
                     <!-- ========   change your logo hear   ============ -->
-                    <img src="{{ asset('public/assets/images/logo-full.png')}}" alt="" class="logo logo-lg" />
-                    <img src="{{ asset('public/assets/images/logo-abbr.png')}}" alt="" class="logo logo-sm" />
+                    <img src="{{ asset('public/assets/images/logo.png')}}" alt="" style="height: 50px;width: 200px;" class="logo logo-lg" />
+                    <img src="{{ asset('public/assets/images/logo-icon.png')}}" alt="" class="logo logo-sm" />
                 </a>
             </div>
             <div class="navbar-content">
@@ -44,72 +44,38 @@
                             <li class="nxl-item"><a class="nxl-link" href="proposal-create.html">Proposal Create</a></li>
                         </ul>
                     </li> -->
-                     <!-- <li class="nxl-item nxl-hasmenu">
-                        <a href="javascript:void(0);" class="nxl-link">
-                            <span class="nxl-micon"><i class="feather-users"></i></span>
-                            <span class="nxl-mtext"> Customers</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
-                        </a>
-                        <ul class="nxl-submenu">
-                            <li class="nxl-item"><a class="nxl-link" href="{{ route('admin.users.index') }}"> Clients Management</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="{{ route('admin.clientusers.index') }}">Clients User Management</a></li>
-                        </ul>
-                    </li>  -->
+                    
                     <li class="nxl-item nxl-hasmenu">
                         <a href="{{ route('admin.users.index') }}" class="nxl-link">
                             <span class="nxl-micon"><i class="feather-users"></i></span>
-                            <span class="nxl-mtext">Clients</span>
+                            <span class="nxl-mtext">Users Management</span>
                         </a>
                     </li>
-                    <!-- <li class="nxl-item nxl-hasmenu">
-                        <a href="{{ route('admin.clientusers.index') }}" class="nxl-link">
-                            <span class="nxl-micon"><i class="feather-users"></i></span>
-                            <span class="nxl-mtext">Client User</span>
-                        </a>
-                    </li> -->
-
-                    <!-- <li class="nxl-item nxl-hasmenu">
-                        <a href="{{ route('admin.projects.index') }}" class="nxl-link">
-                            <span class="nxl-micon"><i class="feather-briefcase"></i></span>
-                            <span class="nxl-mtext">Projects Management</span>
-                        </a>  
-                    </li>
-                    <li class="nxl-item nxl-hasmenu">
-                        <a href="{{ route('admin.projectstatus.index') }}" class="nxl-link">
-                            <span class="nxl-micon"><i class="feather-layout"></i></span>
-                            <span class="nxl-mtext">project Status Management</span>
-                        </a>  
-                    </li> -->
+                   
                     <li class="nxl-item nxl-hasmenu">
                         <a href="{{ route('admin.tasks.index') }}" class="nxl-link">
                             <span class="nxl-micon"><i class="feather-briefcase"></i></span>
                             <span class="nxl-mtext">Task Management</span>
                         </a>
-                        
                     </li>
-                    <!-- <li class="nxl-item nxl-hasmenu">
-                        <a href="{{ route('admin.category.index') }}" class="nxl-link">
-                            <span class="nxl-micon"><i class="feather-layout"></i></span>
-                            <span class="nxl-mtext">Designation Management</span>
-                        </a>  
-                    </li>
+                    
+                     <li class="nxl-item nxl-hasmenu">
+                        <a href="javascript:void(0);" class="nxl-link">
+                            <span class="nxl-micon"><i class="feather-briefcase"></i></span>
+                            <span class="nxl-mtext"> Route Module</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
+                        </a>
+                        <ul class="nxl-submenu">
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('admin.routes.index') }}"> Customer Management</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('admin.vendorindex') }}">Vendor Management</a></li>
+                        </ul>
+                    </li>  
                     <li class="nxl-item nxl-hasmenu">
-                        <a href="{{ route('admin.quotation.index') }}" class="nxl-link">
-                            <span class="nxl-micon"><i class="feather-users"></i></span>
-                            <span class="nxl-mtext">Quotation Management</span>
-                        </a>  
-                    </li> -->
-                    <!-- <li class="nxl-item nxl-hasmenu">
-                        <a href="{{ route('admin.sendpurposal.index') }}" class="nxl-link">
-                            <span class="nxl-micon"><i class="feather-users"></i></span>
-                            <span class="nxl-mtext">Send Purposal Management</span>
-                        </a>  
+                        <a href="{{ route('admin.payments.index') }}" class="nxl-link">
+                            <span class="nxl-micon"><i class="feather-briefcase"></i></span>
+                            <span class="nxl-mtext">Account Management</span>
+                        </a>
                     </li>
-                    <li class="nxl-item nxl-hasmenu">
-                        <a href="{{ route('admin.invoices.index') }}" class="nxl-link">
-                            <span class="nxl-micon"><i class="feather-users"></i></span>
-                            <span class="nxl-mtext">Invoice Management</span>
-                        </a>  
-                    </li> -->
+                   
                  
                     <!-- <li class="nxl-item nxl-hasmenu">
                         <a href="javascript:void(0);" class="nxl-link">

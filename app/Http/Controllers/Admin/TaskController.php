@@ -26,8 +26,8 @@ class TaskController extends Controller
         $this->columns = [
             "id",
             "title",
-            "project_id",
-            "project status",
+            "user_id",
+            "status",
             
 
         ];
@@ -48,7 +48,7 @@ class TaskController extends Controller
             $request->order_dir = $request->order[0]['dir'];
         }
          // Fetch project statuses
-        $projectStatuses = ProjectStatus::all();
+        // $projectStatuses = ProjectStatus::all();
         $records = $this->Model->fetchTask($request, $this->columns);
         $total = $records->get();
         if (isset($request->start)) {
@@ -58,42 +58,23 @@ class TaskController extends Controller
         }
         $result = [];
         $i = 1;
+        // dd($value->getUser);
         foreach ($categories as $value) {
             $data = [];
             $data['id'] = $i++;
             $data['title'] = $value->title;
-            $data['project_id'] = $value->getProject->title;
+            // $data['user_id'] = $value->getUser->first_name;
+            $data['user_id'] = $value->getUser ? $value->getUser->first_name . ' ' . $value->getUser->last_name : 'N/A';
+            $data['vendor_id'] = $value->getVendor ? $value->getVendor->first_name . ' ' . $value->getVendor->last_name : 'N/A';
 
-            // Fetch and display multiple user names
-            // $clientUsers = $value->clientUsers;
-            // $userNames = $clientUsers->pluck('first_name')->map(function($name) {
-            //     return ucfirst($name);
-            // })->implode(', ');
 
-            // $data['user_id'] = !empty($userNames) ? $userNames : '-';
+            $data['task_status'] = '<select class="form-control status-select" name="task_status" data-id="' . $value->id . '">';
+            $data['task_status'] .= '<option value="open"' . ($value->task_status == 'open' ? ' selected' : '') . '>Open</option>';
+            $data['task_status'] .= '<option value="process"' . ($value->task_status == 'process' ? ' selected' : '') . '>Process</option>';
+            $data['task_status'] .= '<option value="close"' . ($value->task_status == 'close' ? ' selected' : '') . '>Close</option>';
+            $data['task_status'] .= '</select>';
 
-            // $data['user_id'] = !empty($value->getClientuser->first_name) ?  ucfirst($value->getClientuser->first_name) : '-'  ;
-
-            // $data['project_status'] = ucfirst($value->project_status);
-
-             // Construct the project status dropdown
-             $data['project_status'] = '<select class="form-control status-select" data-id="' . $value->id . '" data-select2-selector="status">';
-
-             if(count($projectStatuses) > 0) {
-                //  $data['project_status'] .= '<option value="">Select Project Status</option>';
-                 foreach($projectStatuses as $status) {
-                     $selected = ($value->project_status == $status->id) ? ' selected' : '';
-                     $data['project_status'] .= '<option value="' . $status->id . '" data-bg="bg-success"' . $selected . '>' . ucfirst($status->name) . '</option>';
-                 }
-             } else {
-                 $data['project_status'] .= '<option value="">No Project Status found</option>';
-             }
-             
-             $data['project_status'] .= '</select>';
-             
-
-    
-            // $status = "<div class='form-check form-switch form-switch-sm'><input class='form-check-input c-pointer clientuserStatusToggle' type='checkbox' id='formSwitchDropbox_{$value->id}' data-id='{$value->id}'" . ($value->status == 1 ? 'checked' : '') . "><label class='form-check-label fw-500 text-dark c-pointer' for='formSwitchDropbox_{$value->id}'>" . ($value->status == 1 ? 'Active' : 'Inactive') . "</label></div>";
+            $status = "<div class='form-check form-switch form-switch-sm'><input class='form-check-input c-pointer taskStatusToggle' type='checkbox' id='formSwitchDropbox_{$value->id}' data-id='{$value->id}'" . ($value->status == 1 ? 'checked' : '') . "><label class='form-check-label fw-500 text-dark c-pointer' for='formSwitchDropbox_{$value->id}'>" . ($value->status == 1 ? 'Active' : 'Inactive') . "</label></div>";
         
             $action = '<div class="actionBtn d-flex align-itemss-center" style="gap:8px">';
 
@@ -105,7 +86,7 @@ class TaskController extends Controller
             $action.="</div>";
 
             $data['view'] = $action;
-            // $data['status'] = $status;
+            $data['status'] = $status;
             $result[] = $data;
 
         }
@@ -123,15 +104,10 @@ class TaskController extends Controller
     public function create()
     {
         $task = null;
-        $clientlist = User::where("status","1")->where('id', '!=', 1)->get(['id',"name"]);
-        $clientuserlist = ClientUser::where("status","1")->get(['id',"first_name","last_name"]);
+        $clientlist = User::where("status","1")->where('id', '!=', 1)->where('role','2')->get(['id',"first_name","last_name"]);
+        $vendorlist = User::where("status","1")->where('id', '!=', 1)->where('role','3')->get(['id',"first_name","last_name"]);
 
-        // dd($clientlist);
-        $projectlist = Project::where("status","1")->get(['id',"title"]);
-        $projectstatus = ProjectStatus::where("status","1")->get(['id',"name"]);
-
-
-        return view('admin.tasks.create',compact('task','clientlist','projectlist','clientuserlist','projectstatus'));
+        return view('admin.tasks.create',compact('task','clientlist','vendorlist'));
     }
 
     /**
@@ -143,16 +119,16 @@ class TaskController extends Controller
       
         $validate = Validator($request->all(), [
             'title' => 'required',
-            'project_id' => 'required',
-            'user_id' => 'required|array',
-            'client_id' => 'required|array',
+            'user_id' => 'required',
+            'vendor_id' => 'required',
+
     
         ]);
         $attr = [
             'title' => 'Title',
-            'project_id' => 'project Name',
-            'user_id' => 'User Name',
-            'client_id' => 'Client Name'
+            'user_id' => 'Customer Name',
+            'vendor_id' => 'Vendor Name',
+
         ];
         $validate->setAttributeNames($attr);
         if ($validate->fails()) {
@@ -161,41 +137,19 @@ class TaskController extends Controller
             try {
                 $task = new Task;
 
-                $task->project_id = $request->project_id;
+                $task->user_id = $request->user_id;
+                $task->vendor_id = $request->vendor_id;
                 $task->title =  $request->title;
-                $task->project_status = $request->project_status;
-                $task->priority = $request->priority;
                 $task->description = $request->description;
-                // $task->user_id = $request->user_id;
-                // $task->client_id = $request->client_id;
+                $task->destination = $request->destination;
+                $task->credit_limit = $request->credit_limit;
+                $task->billing_cycle = $request->billing_cycle;
+                $task->agreement_review = $request->agreement_review;
+                $task->agreement_sign = $request->agreement_sign;
+                $task->technical_interconnection = $request->technical_interconnection;
                 $task->created_at = date('Y-m-d H:i:s');
                 $task->updated_at = date('Y-m-d H:i:s');
                 if ($task->save()) {
-
-                    $user = $request->input('user_id', []); 
-                    $client = $request->input('client_id', []); 
-
-                    foreach ($user as $key => $user) {
-                        
-                            $userdata = new TaskUser;
-                            $userdata->task_id = $task->id;
-                            $userdata->user_id = $user;
-                            $userdata->save();
-                    }
-
-                    foreach ($client as $key => $client) {
-                        
-                        $clientdata = new TaskClient;
-                        $clientdata->task_id = $task->id;
-                        $clientdata->client_id = $client;
-                        $clientdata->save();
-                    }
-            
-                    // Attach the selected users to the task
-                    // $task->taskusers()->attach($request->user_id);
-                    // $task->taskclients()->attach($request->client_id);
-
-
                     $request->session()->flash('success', 'Task added successfully');
                     return redirect()->route('admin.tasks.index');
                 } else {
@@ -215,13 +169,10 @@ class TaskController extends Controller
      */
     public function show(string $id)
     {
-        $task=Task::with('getclienttask','getusertask')->find($id);
-        $getClient = User::whereIn("id",$task->getclienttask->pluck('client_id'))->pluck('name')->toArray();
-        $task->client_name = $getClient;
-        // dd($task);
-        $getClientUser = ClientUser::whereIn("id",$task->getusertask->pluck('user_id'))->get(['first_name','last_name'])->toArray();
-        $task->client_user_name = $getClientUser;
-        return view('admin.tasks.view',compact('task'));
+        $task=Task::find($id);
+        $clientlist = User::where("status","1")->where('id', '!=', 1)->get(['id',"first_name","last_name"]);
+
+        return view('admin.tasks.view',compact('task','clientlist'));
     }
 
     /**
@@ -230,28 +181,17 @@ class TaskController extends Controller
     public function edit(Request $request, $id = null) {
         if (isset($id) && $id != null) {
             // $task = Task::where('id', $id)->first();
-            $task = Task::with('getclienttask','getusertask')->find($id);
+            $task = Task::find($id);
             // dd($task);
             
             if (isset($task->id)) {
             
                 $type = 'edit';
                
-                $clientlist = User::where("status","1")->where('id', '!=', 1)->get(['id',"name"]);
-                
-                $projectstatus = ProjectStatus::where("status","1")->get(['id',"name"]);
-
-                // Fetch selected client IDs for the task (assuming many-to-many relationship)
-                $selectedClientIds = $task->getclienttask->pluck('client_id')->toArray();
+                $clientlist = User::where("status","1")->where('id', '!=', 1)->where('role','2')->get(['id',"first_name","last_name"]);
+                $vendorlist = User::where("status","1")->where('id', '!=', 1)->where('role','3')->get(['id',"first_name","last_name"]);
             
-                $clientuserlist = ClientUser::where("status","1")->get(['id',"first_name","last_name"]);
-
-                // Fetch selected clientuser IDs for the task (assuming many-to-many relationship)
-                $selectedClientUserIds = $task->getusertask->pluck('user_id')->toArray();
-            
-                $projectlist = Project::where("status","1")->get(['id',"title"]);
-            
-                return view('admin.tasks.create', compact('task', 'type','clientlist','clientuserlist','projectlist','selectedClientIds','selectedClientUserIds','projectstatus'));
+                return view('admin.tasks.create', compact('task', 'type','clientlist','vendorlist'));
             } else {
                 $request->session()->flash('error', 'Invalid Data');
                 return redirect()->route('admin.tasks.index');
@@ -274,15 +214,15 @@ class TaskController extends Controller
             if (isset($task->id)) {
                 $validate = Validator($request->all(),  [
                     'title' => 'required',
-                    'project_id' => 'required',
-                    'user_id' => 'required|array',
-                    'client_id' => 'required|array',
+                    'user_id' => 'required',
+                    'vendor_id' => 'required',
+
                 ]);
                 $attr = [
                     'title' => 'Title',
-                    'project_id' => 'project Name',
-                    'user_id' => 'User Name',
-                    'client_id' => 'Client Name'
+                    'user_id' => 'Customer Name',
+                    'vendor_id' => 'Vendor Name'
+
                 ];
 
                 $validate->setAttributeNames($attr);
@@ -291,54 +231,20 @@ class TaskController extends Controller
                     return redirect()->route('edittasks', ['id' => $task->id])->withInput($request->all())->withErrors($validate);
                 } else {
                     try {
-                        $task->project_id = $request->project_id;
+                        $task->user_id = $request->user_id;
+                        $task->vendor_id = $request->vendor_id;
                         $task->title =  $request->title;
-                        $task->project_status = $request->project_status;
-                        $task->priority = $request->priority;
                         $task->description = $request->description;
+                        $task->destination = $request->destination;
+                        $task->credit_limit = $request->credit_limit;
+                        $task->billing_cycle = $request->billing_cycle;
+                        $task->agreement_review = $request->agreement_review;
+                        $task->agreement_sign = $request->agreement_sign;
+                        $task->technical_interconnection = $request->technical_interconnection;
                         $task->updated_at = date('Y-m-d H:i:s');
                         
                         // dd($task);
                         if ($task->save()) {
-
-                            // $user = $request->input('user_id', []); 
-                            // $client = $request->input('client_id', []); 
-        
-                            // foreach ($user as $key => $user) {
-                                
-                            //         $userdata = new TaskUser;
-                            //         $userdata->task_id = $task->id;
-                            //         $userdata->user_id = $user;
-                            //         $userdata->save();
-                            // }
-        
-                            // foreach ($client as $key => $client) {
-                                
-                            //     $clientdata = new TaskClient;
-                            //     $clientdata->task_id = $task->id;
-                            //     $clientdata->client_id = $client;
-                            //     $clientdata->save();
-                            // }
-
-                             // Delete existing user and client relationships
-                            TaskUser::where('task_id', $task->id)->delete();
-                            TaskClient::where('task_id', $task->id)->delete();
-
-                            // Re-insert the new user relationships
-                            foreach ($request->input('user_id', []) as $userId) {
-                                TaskUser::create([
-                                    'task_id' => $task->id,
-                                    'user_id' => $userId
-                                ]);
-                            }
-
-                            // Re-insert the new client relationships
-                            foreach ($request->input('client_id', []) as $clientId) {
-                                TaskClient::create([
-                                    'task_id' => $task->id,
-                                    'client_id' => $clientId
-                                ]);
-                            }
 
                             $request->session()->flash('success', 'Task updated successfully');
                             return redirect()->route('admin.tasks.index');
@@ -369,31 +275,13 @@ class TaskController extends Controller
     {
         $id = $request->id;
         $record = Task::findOrFail($id);
-        $record->status = 2; 
-        $record->save();
+        $record->delete();
         return redirect()->route('admin.tasks.index')->with('success', 'Task deleted successfully.');;
     }
 
-    // public function ChangeTaskStatus(Request $request)
-    // {
-    //     $response = $this->Model->where('id', $request->id)->update(['status' => $request->status]);
-    //     if ($response) {
-    //         return json_encode([
-    //             'status' => true,
-    //             "message" => "Status Changes Successfully"
-    //         ]);
-    //     } else {
-    //         return json_encode([
-    //             'status' => false,
-    //             "message" => "Status Changes Fails"
-    //         ]);
-    //     }
-    // }
-
-    public function updateProjectStatus(Request $request)
+    public function ChangeTaskStatus(Request $request)
     {
-        $response = $this->Model->where('id', $request->id)->update(['project_status' => $request->project_status]);
-       
+        $response = $this->Model->where('id', $request->id)->update(['status' => $request->status]);
         if ($response) {
             return json_encode([
                 'status' => true,
@@ -403,6 +291,24 @@ class TaskController extends Controller
             return json_encode([
                 'status' => false,
                 "message" => "Status Changes Fails"
+            ]);
+        }
+    }
+
+    public function updateProjectStatus(Request $request)
+    {
+        $response = $this->Model->where('id', $request->id)->update(['task_status' => $request->task_status]);
+        
+        // dd($response);
+        if ($response) {
+            return json_encode([
+                'status' => true,
+                "message" => "Task Status Changes Successfully"
+            ]);
+        } else {
+            return json_encode([
+                'status' => false,
+                "message" => "Task Status Changes Fails"
             ]);
         }
       

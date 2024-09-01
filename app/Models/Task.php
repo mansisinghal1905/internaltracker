@@ -6,10 +6,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 
 class Task extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable,SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -46,13 +48,16 @@ class Task extends Authenticatable
             $query->whereRaw('DATE_FORMAT(created_at, "%Y-%m-%d") <= "' . date("Y-m-d", strtotime($request->end_date)) . '"');
         }
 
-        if (isset($request['search']['value'])) {
-            $query->where(function ($q) use ($request) {
-                $q->where('title', 'like', '%' . $request['search']['value'] . '%');
-                $q->where('project_id', 'like', '%' . $request['search']['value'] . '%');
+       
+        if (isset($request['search']['value']) && !empty($request['search']['value'])) {
+            $searchValue = $request['search']['value'];
 
+            $query->where(function ($q) use ($searchValue) {
+                $q->where('title', 'like', '%' . $searchValue . '%')
+                  ->orWhere('client_id', 'like', '%' . $searchValue . '%');
             });
         }
+
         if (isset($request->status)) {
             $query->where('status', $request->status);
         }
@@ -65,18 +70,14 @@ class Task extends Authenticatable
         return $categories;
     }
 
-    public function getClientuser() {
-        return $this->belongsTo(ClientUser::class, 'client_id', 'id')->where('status','!=','0'); 
-    }
-    public function getProject() {
-        return $this->belongsTo(Project::class, 'project_id', 'id')->where('status','!=','0'); 
+    public function getUser() {
+        return $this->belongsTo(User::class, 'user_id')->where('role',2)->where('id', '!=', 1); 
     }
 
-    public function getusertask() {
-        return $this->hasMany(TaskUser::class, 'task_id'); 
+    public function getVendor() {
+        return $this->belongsTo(User::class, 'vendor_id')->where('role',3)->where('id', '!=', 1); 
     }
 
-    public function getclienttask() {
-        return $this->hasMany(TaskClient::class, 'task_id'); 
-    }
+
+    
 }

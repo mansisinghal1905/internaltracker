@@ -6,10 +6,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class TaskUser extends Authenticatable
+
+class PaymentHistory extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable,SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -17,8 +19,7 @@ class TaskUser extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'task_id',   
-        'user_id',
+        
     ];
 
     /**
@@ -36,10 +37,11 @@ class TaskUser extends Authenticatable
      * @return array<string, string>
      */
 
-    public function getusertask() {
-        return $this->belongsTo(Task::class, 'task_id', 'id')->where('status','!=','0'); 
-    }
+    
 
-    
-    
+    public function getCustomer() {
+
+        return $this->belongsTo(User::class,'customer_id','id')->where('id', '!=', 1)->where('status','!=','0'); 
+
+    }
 }

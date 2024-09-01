@@ -213,19 +213,13 @@
                                         <thead>
                                             <tr>
                                                 <th class="wd-30">
-                                                    <div class="btn-group mb-1">
-                                                        <div class="custom-control custom-checkbox ms-1">
-                                                            <input type="checkbox" class="custom-control-input" id="checkAllCustomer">
-                                                            <label class="custom-control-label" for="checkAllCustomer"></label>
-                                                        </div>
-                                                    </div>
+                                                   S.No.
                                                 </th>
-                                                
+                                                <th>Vendor</th>
+                                                <th>Customer</th>
                                                 <th>Title</th>
-                                                <th>Project</th>
-                                                <!-- <th>Assign User</th> -->
-                                                <th>Project Status</th>
-                                                <!-- <th>Status</th> -->
+                                                <th>Task Status</th>
+                                                <th>Status</th>
                                                 <th class="">Actions</th>
                                             </tr>
                                         </thead>
@@ -290,10 +284,9 @@
 					url: "{{ route('admin.taskAjax') }}",
 					type: "POST",
 					data: {
-                        status: $('input[name=project_status]').val(),
+                        status: $('input[name=status]').val(),
 						search: $('input[name=title]').val(),
-                        search: $('input[name=project_id]').val(),
-                        search: $('input[name=user_id]').val(),
+                        search: $('input[name=client_id]').val(),
 					},
 					dataSrc: "data"
 				},
@@ -305,11 +298,11 @@
 				"aoColumns": [{
 					"data": "id"
 				},
+                { "data": "vendor_id" },
+                { "data": "user_id" },
                 { "data": "title" },
-                { "data": "project_id" },
-				// { "data": "user_id" },
-				{ "data": "project_status" },
-                // { "data": "status" },
+				{ "data": "task_status" },
+                { "data": "status" },
 				{ "data": "view" },
 
 				],
@@ -348,7 +341,7 @@
                         success: function(response) {
                             Swal.fire(
                                 'Deleted!',
-                                'The Client User has been deleted.',
+                                'The Task has been deleted.',
                                 'success'
                             );
                             
@@ -359,7 +352,7 @@
                         error: function(response) {
                             Swal.fire(
                                 'Failed!',
-                                'There was an error deleting the Client User.',
+                                'There was an error deleting the Task.',
                                 'error'
                             );
                         }
@@ -378,7 +371,7 @@
                 method: 'POST',
                 data: {
                     id: recordId,
-                    project_status: status
+                    task_status: status
                 },
                 dataType: "JSON",
                 headers: {
@@ -393,13 +386,40 @@
                         toastr.error(response.message); // Show error toast with red background
                     }
                 },
-                error: function(xhr, project_status, error) {
+                error: function(xhr, status, error) {
                     toastr.error("An error occurred while changing the status."); // Show generic error toast with red background
                     console.error(error);
                 }
             });
         });
 
+        // for chnage status
+        $(document).on('change', '.taskStatusToggle', function () {
+                var id = $(this).attr("data-id");
+                var status = $(this).is(':checked') ? 1 : 0;
+
+                $.ajax({
+                    type: "POST",
+                    url: @json(route('admin.ChangeTaskStatus')),
+                    data: { id: id, status: status },
+                    dataType: "JSON",
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function (response) {
+                        if (response.status) {
+                            toastr.success(response.message); // Show success toast
+                            table.ajax.reload(); // Reload the table to reflect the changes
+                        } else {
+                            toastr.error(response.message); // Show error toast
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        toastr.error("An error occurred while changing the status."); // Show generic error toast
+                        console.error(error);
+                    }
+                });
+            });
 
 
 	</script>

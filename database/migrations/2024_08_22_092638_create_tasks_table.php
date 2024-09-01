@@ -20,15 +20,15 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id')->nullable();
             $table->unsignedBigInteger('client_id')->nullable();
             $table->text('description')->nullable();
-            $table->tinyInteger('status')->default(1);
+            $table->string('credit_limit')->nullable();
+            $table->string('billing_cycle')->nullable();
+            $table->text('agreement_review')->nullable();
+            $table->string('agreement_sign')->nullable();
+            $table->string('technical_interconnection')->nullable();
+            $table->tinyInteger('status')->default('open');
             $table->timestamps();
 
-            // $table->foreign('project_id')->references('id')->on('projects')->onDelete('set null');
-
-            // $table->foreign('client_id')->references('id')->on('users')->onDelete('set null');
             
-            // $table->foreign('user_id')->references('id')->on('client_users')->onDelete('set null');
-
 
         });
     }

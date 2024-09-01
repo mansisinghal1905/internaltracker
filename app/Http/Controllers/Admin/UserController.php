@@ -29,7 +29,6 @@ class UserController extends Controller
             "email",
             "phone_number",
             "avatar",
-            "dob",
             "status",
 
         ];
@@ -52,6 +51,7 @@ class UserController extends Controller
 
     public function userAjax(Request $request)
     {
+        // dd($request->search);
         $request->search = $request->search;
         if (isset($request->order[0]['column'])) {
             $request->order_column = $request->order[0]['column'];
@@ -73,6 +73,9 @@ class UserController extends Controller
             $data['fullname'] = ucfirst($value->first_name . ' ' . $value->last_name);
             $data['email'] = $value->email;
             $data['phone_number'] = $value->phone_number;
+            // $data['role'] = $value->role;
+            $data['role'] = $value->role == 2 ? 'Customer' : ($value->role == 3 ? 'Vendor' : 'Unknown');
+
             $data['avatar'] = ($value->avatar != null) ? '<img src="'. $value->avatar.'" height="40%"width="40%" />' : '-';
 
         
@@ -86,11 +89,8 @@ class UserController extends Controller
             
             $action .= '<a href="' . route('admin.users.show', $value->id) . '" class="toolTip" data-toggle="tooltip" data-placement="bottom" title="View Detail"><i class="fa fa-eye"></i></a>';
 
-         
-            
             $action .= '<a href="javascript:void(0)" onclick="deleteUsers(this)" data-url="' . route('admin.userdestory') . '" class="toolTip deleteUsers" data-toggle="tooltip" data-id="' . $value->id . '" data-placement="bottom" title="Delete"><i class="fa fa-times"></i></a>';
  
-
             $action.="</div>";
 
             $data['view'] = $action;
@@ -112,10 +112,6 @@ class UserController extends Controller
     public function create()
     {
         $user = null;
-        // $countrylist = Country::where("status","active")->get(['id',"name"]);
-        // $statelist = null;//State::where("status",'active')->get();
-		// $citylist = null;//City::where("status",'active')->get();
-        // $categorylist = Category::where("status","1")->get(['id',"name"]);
 
         return view('admin.users.create',compact('user'));
     }
@@ -134,6 +130,8 @@ class UserController extends Controller
             'last_name' => 'required',
             'email' => 'required|email',
             'phone_number' => 'required|numeric',
+            'role' => 'required',
+
         ]);
     
         $attr = [
@@ -141,6 +139,7 @@ class UserController extends Controller
             'last_name' => 'Last Name',
             'email' => 'Email',
             'phone_number' => 'Phone no',
+            'role' => 'Role',
         ];
         $validate->setAttributeNames($attr);
     
@@ -177,14 +176,14 @@ class UserController extends Controller
                 $user->email = $request->email;
                 $user->phone_number = $request->phone_number;
                 $user->password = Hash::make($password);
-                $user->dob = $request->dob;
-                // $user->country_id = $request->country_id;
+                // $user->dob = $request->dob;
+                $user->role = $request->role;
                 // $user->state_id = $request->state_id;
                 // $user->city_id = $request->city_id;
                 // $user->zip_code = $request->zip_code;
                 // $user->website = $request->website;
                 // $user->address = $request->address;
-                $user->role = 2;
+                // $user->role = 2;
                 $user->save();
                 $request->session()->flash('success', 'User added successfully');
                 return redirect()->route('admin.users.index');
@@ -202,6 +201,8 @@ class UserController extends Controller
     public function show(string $id)
     {
         $user=User::find($id);
+        // $usercustomer = User::with('tasks')->find($id);
+        // dd($usercustomer);
         return view('admin.users.view',compact('user'));
     }
 
@@ -267,12 +268,14 @@ class UserController extends Controller
                     'last_name' => 'required',
                     'email' => 'required|email',
                     'phone_number' => 'required|min:8|numeric',
+                    'role' => 'required',
                 ]);
                 $attr = [
                     'first_name' => 'First Name',
                     'last_name' => 'Last Name',
                     'user_email' => 'Email',
                     'phone_number' => 'Mobile',
+                    'role' => 'Role',
                 ];
 
                 $validate->setAttributeNames($attr);
@@ -303,7 +306,8 @@ class UserController extends Controller
                         // $user->company_name =  $request->company_name;
                         $user->email = $request->email;
                         $user->phone_number = $request->phone_number;
-                        $user->dob = $request->dob;
+                        // $user->dob = $request->dob;
+                        $user->role = $request->role;
 
                         // $user->category = $request->category;
                         // $user->country_id = $request->country_id;
@@ -312,7 +316,6 @@ class UserController extends Controller
                         // $user->zip_code = $request->zip_code;
                         // $user->website = $request->website;
                         // $user->address = $request->address;
-                        $user->role = 2;
                         $user->updated_at = date('Y-m-d H:i:s');
                         
                         // dd($user);
@@ -346,8 +349,7 @@ class UserController extends Controller
     {
         $id = $request->id;
         $record = User::findOrFail($id);
-        $record->status = 2; 
-        $record->save();
+        $record->delete();
 
         // BankInformation::where('user_id', $user->id)->delete();
         return redirect()->route('admin.users.index')->with('success', 'User deleted Successfully.');;

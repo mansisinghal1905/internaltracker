@@ -36,7 +36,7 @@
         <!-- [ Main Content ] start -->
         <div class="main-content">
             <div class="row">
-                <div class="col-xxl-12 col-xl-6">
+                <div class="col-xxl-12">
                     <div class="card border-top-0 p-4">
                         <h6 class="mb-4">Task Details</h6>
                         <div class="row mb-3">
@@ -44,38 +44,43 @@
                             <div class="col-md-8"><p class="text-muted mb-0">{{ $task->title }}</p></div>
                         </div>
                         <div class="row mb-3">
-                            <div class="col-md-4"><strong>Task Priority:</strong></div>
-                            <div class="col-md-8"><p class="text-muted mb-0">{{ $task->priority }}</p></div>
+                            <div class="col-md-4"><strong>Customer:</strong></div>
+                            <div class="col-md-8"><p class="text-muted mb-0">{{ $task->getUser->first_name}} {{ $task->getUser->last_name}}</p></div>
                         </div>
                         <div class="row mb-3">
-                            <div class="col-md-4"><strong>Project Status:</strong></div>
-                            <div class="col-md-8"><p class="text-muted mb-0">{{ $task->project_status }}</p></div>
+                            <div class="col-md-4"><strong>Vendor:</strong></div>
+                            <div class="col-md-8"><p class="text-muted mb-0">{{ $task->getVendor->first_name}} {{ $task->getVendor->last_name}}</p></div>
                         </div>
+                        
                         <div class="row mb-3">
                             <div class="col-md-4"><strong>Description:</strong></div>
-                            <div class="col-md-8"><p class="text-muted mb-0">{{ $task->description }}</p></div>
+                            <div class="col-md-8"><p class="text-muted mb-0">{!! Str::limit($task->description, 50) !!}</p></div>
                         </div>
                         <div class="row mb-3">
-                            <div class="col-md-4"><strong>Assign User:</strong></div>
-                            <div class="col-md-8">
-                                <p class="text-muted mb-0">
-                                @foreach($task->client_user_name as $client)
-                                    {{ $client['first_name'] }} {{ $client['last_name'] }}
-                                @endforeach
-                                </p>
-                            </div>
+                            <div class="col-md-4"><strong>Destination:</strong></div>
+                            <div class="col-md-8"><p class="text-muted mb-0">{!!$task->destination !!}</p></div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-4"><strong>Credit Limit:</strong></div>
+                            <div class="col-md-8"><p class="text-muted mb-0">{{ $task->credit_limit }}</p></div>
                         </div>
                         <div class="row mb-3">
-                            <div class="col-md-4"><strong>Client:</strong></div>
-                            <div class="col-md-8"><p class="text-muted mb-0"> 
-                                    @foreach($task->client_name as $value)
-                                        {{ $value}}
-                                    @endforeach
-                                </p></div>
+                            <div class="col-md-4"><strong>Billing Cycle:</strong></div>
+                            <div class="col-md-8"><p class="text-muted mb-0">{{ $task->billing_cycle }}</p></div>
                         </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4"><strong>Task Status:</strong></div>
+                            <div class="col-md-8"><p class="text-muted mb-0">{{ ucfirst($task->task_status) }}</p></div>
+                        </div>
+                       
                         <div class="row mb-3">
                             <div class="col-md-4"><strong>Created On:</strong></div>
                             <div class="col-md-8"><p class="text-muted mb-0">{{ date('Y, M d', strtotime($task->created_at)) }}</p></div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4"><strong>Status:</strong></div>
+                            <div class="col-md-8"><p class="text-muted mb-0">{{ $task->status == 1 ? 'Active' : 'Inactive' }}</p></div>
                         </div>
                        
                     </div>

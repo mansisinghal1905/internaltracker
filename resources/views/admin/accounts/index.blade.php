@@ -11,11 +11,11 @@
             <div class="page-header">
                 <div class="page-header-left d-flex align-items-center">
                     <div class="page-header-title">
-                        <h5 class="m-b-10">Designation</h5>
+                        <h5 class="m-b-10">Payment</h5>
                     </div>
                     <ul class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ route('admin.category.index') }}">Home</a></li>
-                        <li class="breadcrumb-item">Designation</li>
+                        <li class="breadcrumb-item"><a href="{{ route('admin.payments.index') }}">Home</a></li>
+                        <li class="breadcrumb-item">Payment</li>
                     </ul>
                 </div>
                 <div class="page-header-right ms-auto">
@@ -97,9 +97,9 @@
                                     </a>
                                 </div>
                             </div>
-                            <a href="{{ route('admin.category.create') }}" class="btn btn-primary">
+                            <a href="{{ route('admin.payments.create') }}" class="btn btn-primary">
                                 <i class="feather-plus me-2"></i>
-                                <span>Create Designation</span>
+                                <span>Create Payment</span>
                             </a>
                         </div>
                     </div>
@@ -208,69 +208,18 @@
                         <div class="card stretch stretch-full">
                             <div class="card-body p-0">
                                 <div class="table-responsive">
-                                    <table class="table table-hover data-table1 table stripe hover nowrap" id="categoryList">
+                                    <table class="table table-hover data-table1 table stripe hover nowrap" id="paymentList">
                                         <thead>
                                             <tr>
                                                 <th class="wd-30">
-                                                    <div class="btn-group mb-1">
-                                                        <div class="custom-control custom-checkbox ms-1">
-                                                            <input type="checkbox" class="custom-control-input" id="checkAllCustomer">
-                                                            <label class="custom-control-label" for="checkAllCustomer"></label>
-                                                        </div>
-                                                    </div>
+                                                    S.No.
                                                 </th>
-                                                <th>Name</th>
-                                                <th>Status</th>
+                                                <th>Customer</th>
+                                                <th>Amount($)</th>
                                                 <th class="">Actions</th>
                                             </tr>
                                         </thead>
-                                        <!-- <tbody>
-                                            <tr class="single-item">
-                                                <td>
-                                                    <div class="item-checkbox ms-1">
-                                                        <div class="custom-control custom-checkbox">
-                                                            <input type="checkbox" class="custom-control-input checkbox" id="checkBox_1">
-                                                            <label class="custom-control-label" for="checkBox_1"></label>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <a href="customers-view.html" class="hstack gap-3">
-                                                        <div class="avatar-image avatar-md">
-                                                            <img src="{{ asset('public/assets/images/avatar/1.png')}}" alt="" class="img-fluid">
-                                                        </div>
-                                                        <div>
-                                                            <span class="text-truncate-1-line">Alexandra Della</span>
-                                                        </div>
-                                                    </a>
-                                                </td>
-                                                <td><a href="apps-email.html">alex.della@outlook.com</a></td>
-                                                
-                                                <td><a href="tel:">+1 (375) 9632 548</a></td>
-                                                <td>2023-04-05, 00:05PM</td>
-                                                <td>
-                                                    <select class="form-control" data-select2-selector="status">
-                                                        <option value="success" data-bg="bg-success" selected>Active</option>
-                                                        <option value="warning" data-bg="bg-warning">Inactive</option>
-                                                        <option value="danger" data-bg="bg-danger">Declined</option>
-                                                    </select>
-                                                </td>
-                                                <td>
-                                                    <div class="hstack gap-2 justify-content-end">
-                                                        <a href="customers-view.html" class="avatar-text avatar-md">
-                                                            <i class="feather feather-eye"></i>
-                                                        </a>
-                                                        <a href="" class="avatar-text avatar-md edit-action">
-                                                            <i class="feather feather-edit"></i>
-                                                        </a>
-                                                        <a href="customers-delete.html" class="avatar-text avatar-md delete-action">
-                                                            <i class="feather feather-trash-2"></i>
-                                                        </a>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                          
-                                        </tbody> -->
+                                      
                                     </table>
                                 </div>
                             </div>
@@ -308,11 +257,8 @@
 				}
 			});
 
-			// $(".selectstatus").on("click", function () {
-			// 	id = $(this).data("id");
-			// 	alert(id);
-			// });
-			var table = $('#categoryList').DataTable({
+			
+			var table = $('#paymentList').DataTable({
 				processing: true,
 				serverSide: true,
 				"scrollY": "400px", // Set the height for the container
@@ -321,10 +267,10 @@
 				pagingType: "simple_numbers", // Use simple pagination (Previous/Next)
 
 				ajax: {
-					url: "{{ route('admin.categoryAjax') }}",
+					url: "{{ route('admin.paymentAjax') }}",
 					type: "POST",
 					data: {
-                        status: $('input[name=status]').val(),
+                    
 						search: $('input[name=name]').val(),
 					},
 					dataSrc: "data"
@@ -337,8 +283,8 @@
 				"aoColumns": [{
 					"data": "id"
 				},
-				{ "data": "name" },
-                { "data": "status" },
+				{ "data": "customer_id" },
+                { "data": "total_amount" },
 				{ "data": "view" },
 
 				],
@@ -349,13 +295,13 @@
 			});
 
 			// for chnage status
-            $(document).on('change', '.categoryStatusToggle', function () {
+            $(document).on('change', '.paymentStatusToggle', function () {
                 var id = $(this).attr("data-id");
                 var status = $(this).is(':checked') ? 1 : 0;
 
                 $.ajax({
                     type: "POST",
-                    url: @json(route('admin.changeCategoryStatus')),
+                    url: @json(route('admin.ChangePaymentStatus')),
                     data: { id: id, status: status },
                     dataType: "JSON",
                     headers: {
@@ -377,7 +323,7 @@
             });
 		});
 
-        function deleteCategory(element) {
+        function deletePayments(element) {
             var url = element.getAttribute('data-url');
             var id = element.getAttribute('data-id');
             
@@ -403,7 +349,7 @@
                         success: function(response) {
                             Swal.fire(
                                 'Deleted!',
-                                'The Designation has been deleted.',
+                                'The Payment has been deleted.',
                                 'success'
                             );
                             
@@ -414,7 +360,7 @@
                         error: function(response) {
                             Swal.fire(
                                 'Failed!',
-                                'There was an error deleting the Designation.',
+                                'There was an error deleting the Payment.',
                                 'error'
                             );
                         }

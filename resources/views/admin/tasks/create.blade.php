@@ -81,156 +81,38 @@
                                        
                                         <div class="row mb-4 align-items-center">
                                             <div class="col-lg-4">
-                                                <label class="fw-semibold">Project: </label>
+                                                <label class="fw-semibold">Vendor: </label>
                                             </div>
                                             <div class="col-lg-8">
-                                                <select class="form-control @error('project_id') is-invalid @enderror" data-select2-selector="country" name="project_id" id="project_id">
-                                                    @if(count($projectlist) > 0)
-                                                        <option value="">Select Project</option>
-                                                        @foreach($projectlist as $project)
-                                                            <option value="{{ $project->id }}" @if(isset($task) && $task->project_id == $project->id) selected @endif>{{ ucfirst($project->title) }}</option>
+                                                <select class="form-control @error('vendor_id') is-invalid @enderror" data-select2-selector="tag" name="vendor_id" id="vendor_id">
+                                                    @if(count($vendorlist) > 0)
+                                                        <option value="">Select Vendor</option>
+                                                        @foreach($vendorlist as $vendor)
+                                                            <option value="{{ $vendor->id }}" @if(isset($task) && $task->vendor_id == $vendor->id) selected @endif>{{ ucfirst($vendor->first_name) }} {{ ucfirst($vendor->last_name) }}</option>
                                                         @endforeach
                                                     @else
-                                                        <option value=''>No Project found</option>
+                                                        <option value=''>No Vendor found</option>
                                                     @endif
                                                 </select>
-                                                @error('project_id')
+                                                @error('vendor_id')
                                                     <span class="text-danger">{{ $message }}</span>
                                                 @enderror
                                             </div>
                                         </div>
-
-                                        <div class="row mb-4 align-items-center">
-                                                <div class="col-lg-4">
-                                                    <label for="fullnameInput" class="fw-semibold"> Title: </label>
-                                                </div>
-                                                    <div class="col-lg-8"> 
-                                                        <div class="input-group">
-                                                            <input type="text" name="title" class="form-control @error('title') is-invalid @enderror" value="{{ isset($task->title) && !empty($task->title) ? $task->title : ''}}" id="fullnameInput" placeholder="Title">
-                                                        </div>
-                                                        @error('title')
-                                                            <span class="text-danger">{{ $message }}</span>
-                                                        @enderror
-                                                    </div>
-                                                
-                                        </div>
-                                        <!-- <div class="row mb-4 align-items-center">
-                                            <div class="col-lg-4">
-                                                <label class="fw-semibold">Status: </label>
-                                            </div>
-                                            <div class="col-lg-8">
-                                                <select class="form-control" data-select2-selector="country" name="project_status" id="project_status">
-                                                    <option value="">Select Status</option>    
-                                                    <option value="new" {{ old('project_status', $task->project_status ?? 'default') == 'new' ? 'selected' : '' }}>New</option>
-                                                    <option value="in-progress" {{ old('project_status', $task->project_status ?? 'default') == 'in-progress' ? 'selected' : '' }}>In Progress</option>
-                                                    <option value="testing" {{ old('project_status', $task->project_status ?? 'default') == 'testing' ? 'selected' : '' }}>Testing</option>
-                                                    <option value="awaiting" {{ old('project_status', $task->project_status ?? 'default') == 'awaiting' ? 'selected' : '' }}>Awaiting</option>
-                                                    <option value="completed" {{ old('project_status', $task->project_status ?? 'default') == 'completed' ? 'selected' : '' }}>Completed</option>
-                                               
-                                                </select>
-                                            </div>
-                                        </div> -->
-
+                                        
                                         <div class="row mb-4 align-items-center">
                                             <div class="col-lg-4">
-                                                <label class="fw-semibold">Project Status: </label>
+                                                <label class="fw-semibold">Customer: </label>
                                             </div>
                                             <div class="col-lg-8">
-                                                <select class="form-control @error('project_status') is-invalid @enderror" data-select2-selector="country" name="project_status" id="project_id">
-                                                    @if(count($projectstatus) > 0)
-                                                        <option value="" disabled>Select Project</option>
-                                                        @foreach($projectstatus as $status)
-                                                            <option value="{{ $status->id }}" @if(isset($task) && $task->project_status == $status->id) selected @endif>{{ ucfirst($status->name) }}</option>
-                                                        @endforeach
-                                                    @else
-                                                        <option value=''>No Project Status found</option>
-                                                    @endif
-                                                </select>
-                                                @error('project_status')
-                                                    <span class="text-danger">{{ $message }}</span>
-                                                @enderror
-                                            </div>
-                                        </div>
-
-                                        <div class="row mb-4 align-items-center">
-                                            <div class="col-lg-4">
-                                                <label class="fw-semibold">Priority: </label>
-                                            </div>
-                                            <div class="col-lg-8">
-                                                <select class="form-control" data-select2-selector="country" name="priority" id="priority">
-                                                    <!-- <option value="">Select Priority</option>     -->
-                                                    <option value="normal" {{ old('priority', $task->priority ?? 'default') == 'normal' ? 'selected' : '' }}>Normal</option>
-                                                    <option value="low" {{ old('priority', $task->priority ?? 'default') == 'low' ? 'selected' : '' }}>Low</option>
-                                                    <option value="high" {{ old('priority', $task->priority ?? 'default') == 'high' ? 'selected' : '' }}>High</option>
-                                                    <option value="urgent" {{ old('priority', $task->priority ?? 'default') == 'urgent' ? 'selected' : '' }}>Urgent</option>
-                                               
-                                                </select>
-                                               
-                                            </div>
-                                        </div>
-
-                                        <!-- <div class="row mb-4 align-items-center">
-                                            <div class="col-lg-4">
-                                                <label class="fw-semibold">Client: </label>
-                                            </div>
-                                            <div class="col-lg-8">
-                                                <select class="form-control @error('client_id') is-invalid @enderror" data-select2-selector="country" name="client_id" id="client_id">
+                                                <select class="form-control @error('user_id') is-invalid @enderror" data-select2-selector="tag" name="user_id" id="user_id">
                                                     @if(count($clientlist) > 0)
-                                                        <option value="">Select Client</option>
+                                                        <option value="">Select Customer</option>
                                                         @foreach($clientlist as $client)
-                                                            <option value="{{ $client->id }}" @if(isset($task) && $task->client_id == $client->id) selected @endif>{{ ucfirst($client->name) }}</option>
+                                                            <option value="{{ $client->id }}" @if(isset($task) && $task->user_id == $client->id) selected @endif>{{ ucfirst($client->first_name) }} {{ ucfirst($client->last_name) }}</option>
                                                         @endforeach
                                                     @else
-                                                        <option value=''>No Client found</option>
-                                                    @endif
-                                                </select>
-                                                @error('client_id')
-                                                    <span class="text-danger">{{ $message }}</span>
-                                                @enderror
-                                            </div>
-                                        </div> -->
-
-                                        <div class="row mb-4 align-items-center">
-                                            <div class="col-lg-4">
-                                                <label for="Input" class="fw-semibold">Client: </label>
-                                            </div>
-                                            <div class="col-lg-8">
-                                                <select class="form-select form-control @error('client_id') is-invalid @enderror  max-select" name="client_id[]" data-select2-selector="tag" multiple>
-                                                @if(count($clientlist) > 0)
-                                                        <option value="" disabled >Select Client</option>
-                                                        @foreach($clientlist as $client)
-                                                            
-                                                            <!-- <option value="{{ $client->id }}" @if(isset($task) && in_array($client->id, $task->client_id ?? [])) selected @endif>{{ ucfirst($client->name) }}</option> -->
-                                                            <option value="{{ $client->id }}" @if(isset($selectedClientIds) && in_array($client->id, $selectedClientIds)) selected @endif>{{ ucfirst($client->name) }}</option>
-                                                        
-                                                        @endforeach
-                                                    @else
-                                                        <option value=''>No Client found</option>
-                                                    @endif
-                                                </select>
-                                                @error('client_id')
-                                                    <span class="text-danger">{{ $message }}</span>
-                                                @enderror
-                                            </div>
-                                        </div>
-
-                                        <div class="row mb-4 align-items-center">
-                                            <div class="col-lg-4">
-                                                <label for="Input" class="fw-semibold">User: </label>
-                                            </div>
-                                            <div class="col-lg-8">
-                                                <select class="form-select form-control @error('user_id') is-invalid @enderror  max-select" name="user_id[]" data-select2-selector="tag" multiple>
-                                                    @if(count($clientuserlist) > 0)
-                                                        <option value="" disabled >Select User</option>
-                                                        @foreach($clientuserlist as $clientuser)
-                                                           
-                                                            <!-- <option value="{{ $clientuser->id }}" @if(isset($task) && in_array($clientuser->id, $task->user_id ?? [])) selected @endif>{{ ucfirst($clientuser->first_name) }} {{ ucfirst($clientuser->last_name) }}</option> -->
-
-                                                            <option value="{{ $clientuser->id }}" @if(isset($selectedClientUserIds) && in_array($clientuser->id, $selectedClientUserIds)) selected @endif>{{ ucfirst($clientuser->first_name) }} {{ ucfirst($clientuser->last_name) }}</option>
-        
-                                                        @endforeach
-                                                    @else
-                                                        <option value=''>No User found</option>
+                                                        <option value=''>No Customer found</option>
                                                     @endif
                                                 </select>
                                                 @error('user_id')
@@ -239,19 +121,109 @@
                                             </div>
                                         </div>
 
+                                        
+
+                                        <div class="row mb-4 align-items-center">
+                                                <div class="col-lg-4">
+                                                    <label for="fullnameInput" class="fw-semibold"> Title: </label>
+                                                </div>
+                                                <div class="col-lg-8"> 
+                                                    <div class="input-group">
+                                                        <input type="text" name="title" class="form-control @error('title') is-invalid @enderror" value="{{ isset($task->title) && !empty($task->title) ? $task->title : ''}}" id="fullnameInput" placeholder="Title">
+                                                    </div>
+                                                    @error('title')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
+                                                </div>
+                                        </div>
+                                        
+                                     
+
                                         <div class="row mb-4 align-items-center">
                                             <div class="col-lg-4">
                                                 <label for="fullnameInput" class="fw-semibold">Description: </label>
                                             </div>
                                             <div class="col-lg-8">
                                                 <div class="input-group">
-                                                <textarea class="form-control w-100"
-                                                style="width:100% !important;"
-                                                id="editor1" name="description"  id="addressInput_2" cols="30" rows="3" placeholder="Description">{{ isset($task->description) && !empty($task->description) ? $task->description : ''}}</textarea>
-
+                                                    <textarea class="form-control"
+                                                    id="editor1" name="description"  id="addressInput_2" cols="30" rows="3" placeholder="Description">{{ isset($task->description) && !empty($task->description) ? $task->description : ''}}</textarea>
                                                 </div>
                                             </div>
-                                        </div> 
+                                        </div>
+                                        <div class="row mb-4 align-items-center">
+                                                <div class="col-lg-4">
+                                                    <label for="fullnameInput" class="fw-semibold"> Destination: </label>
+                                                </div>
+                                                <div class="col-lg-8"> 
+                                                    <div class="input-group">
+                                                        <input type="text" name="destination" class="form-control" value="{{ isset($task->destination) && !empty($task->destination) ? $task->destination : ''}}" id="fullnameInput" placeholder="Destination">
+                                                    </div>
+                                                </div>
+                                        </div>
+                                        <div class="row mb-4 align-items-center">
+                                            <div class="col-lg-4">
+                                                <label for="fullnameInput" class="fw-semibold">Credit Limit:</label>
+                                            </div>
+                                            <div class="col-lg-8"> 
+                                                <div class="input-group">
+                                                    <input type="text" name="credit_limit" class="form-control" 
+                                                        value="{{ isset($task->credit_limit) && !empty($task->credit_limit) ? '' . $task->credit_limit : ''}}" 
+                                                        id="creditLimitInput" placeholder="Credit Limit">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-4 align-items-center">
+                                                <div class="col-lg-4">
+                                                    <label for="fullnameInput" class="fw-semibold"> Billing Cycle: </label>
+                                                </div>
+                                                <div class="col-lg-8"> 
+                                                    <div class="input-group">
+                                                        <input type="text" name="billing_cycle" class="form-control" value="{{ isset($task->billing_cycle) && !empty($task->billing_cycle) ? $task->billing_cycle : ''}}" id="fullnameInput" placeholder="Billing Cycle">
+                                                    </div>
+                                                </div>
+                                        </div>
+                                        <div class="row mb-4 align-items-center">
+                                                <div class="col-lg-4">
+                                                    <label for="fullnameInput" class="fw-semibold"> Agreement Review: </label>
+                                                </div>
+                                                <div class="col-lg-8"> 
+                                                    <div class="input-group">
+                                                        <textarea class="form-control w-100"
+                                                        style="width:100% !important;"
+                                                        name="agreement_review"  id="" placeholder="Agreement Review">{{ isset($task->agreement_review) && !empty($task->agreement_review) ? $task->agreement_review : ''}}</textarea>
+                                                    </div>
+                                                </div>
+                                        </div>
+                                        <div class="row mb-4 align-items-center">
+                                            <div class="col-lg-4">
+                                                <label for="agreementSignYes" class="fw-semibold">Agreement Sign:</label>
+                                            </div>
+                                            <div class="col-lg-8"> 
+                                                <div class="input-group">
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio" name="agreement_sign" id="agreementSignYes" value="yes" 
+                                                            {{ isset($task->agreement_sign) && $task->agreement_sign === 'yes' ? 'checked' : '' }}>
+                                                        <label class="form-check-label" for="agreementSignYes">Yes</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input class="form-check-input" type="radio" name="agreement_sign" id="agreementSignNo" value="no" 
+                                                            {{ isset($task->agreement_sign) && $task->agreement_sign === 'no' ? 'checked' : '' }}>
+                                                        <label class="form-check-label" for="agreementSignNo">No</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-4 align-items-center">
+                                                <div class="col-lg-4">
+                                                    <label for="fullnameInput" class="fw-semibold"> Technical Interconnection: </label>
+                                                </div>
+                                                <div class="col-lg-8"> 
+                                                    <div class="input-group">
+                                                        <input type="text" name="technical_interconnection" class="form-control" value="{{ isset($task->technical_interconnection) && !empty($task->technical_interconnection) ? $task->technical_interconnection : ''}}" id="fullnameInput" placeholder="Technical Inter Connection">
+                                                    </div>
+                                                </div>
+                                        </div>
                                        
                                         <div class="d-flex justify-content-end">
                                             <button type="submit" class="btn btn-primary">Save Changes</button>
@@ -298,7 +270,14 @@
             console.error( error );
         } );
 </script>
-
+<script>
+    document.getElementById('creditLimitInput').addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\$/g, ''); // Remove any existing '$'
+        if (value) {
+            e.target.value = '$' + value; // Add '$' in front of the number
+        }
+    });
+</script>
 <!-- <script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
 <script>
     CKEDITOR.replace('editor1');

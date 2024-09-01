@@ -11,10 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('project_statuses', function (Blueprint $table) {
+        Schema::create('payment_histories', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->nullable();
-            $table->tinyInteger('status')->default(1);
+            $table->unsignedBigInteger('customer_id')->nullable();
+            $table->unsignedBigInteger('payment_id')->nullable();
+            $table->decimal('amount', 8, 2);
+            $table->string('payment_mode')->default('case');
             $table->timestamps();
         });
     }
@@ -24,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('project_statuses');
+        Schema::dropIfExists('payment_histories');
     }
 };
