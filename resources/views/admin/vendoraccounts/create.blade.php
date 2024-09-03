@@ -8,17 +8,17 @@
             <div class="page-header">
                 <div class="page-header-left d-flex align-items-center">
                     <div class="page-header-title">
-                        <h5 class="m-b-10">Customer Payment</h5>
+                        <h5 class="m-b-10">Vendor Payment</h5>
                     </div>
                     <ul class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ route('admin.customer-payments.index') }}">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('admin.vendor-payments.index') }}">Home</a></li>
                         <li class="breadcrumb-item">Create</li>
                     </ul>
                 </div>
                 <div class="page-header-right ms-auto">
                     <div class="page-header-right-items">
                         <div class="d-flex align-items-center">
-                            <a href="{{ route('admin.customer-payments.index') }}" class="btn btn-outline-primary d-flex align-items-center">
+                            <a href="{{ route('admin.vendor-payments.index') }}" class="btn btn-outline-primary d-flex align-items-center">
                                 <i class="feather-arrow-left me-2"></i>
                                 <span>Back</span>
                             </a>
@@ -43,9 +43,9 @@
                                 <div class="tab-pane fade show active" id="profileTab" role="tabpanel">
                                     <div class="card-body personal-info">
 
-                                    <form action="{{ $payment ? route('admin.customer-payments.update', $payment->id) : route('admin.customer-payments.store') }}" method="POST" enctype="multipart/form-data">
+                                    <form action="{{ $vendorpayment ? route('admin.vendor-payments.update', $vendorpayment->id) : route('admin.vendor-payments.store') }}" method="POST" enctype="multipart/form-data">
                                         {{csrf_field()}}
-                                        @if($payment)
+                                        @if($vendorpayment)
                                             @method('PUT')
                                         @endif
                                         @if (session('status'))
@@ -60,27 +60,27 @@
 
                                         <div class="mb-4 d-flex align-items-center justify-content-between">
                                             <h5 class="fw-bold mb-0 me-4">
-                                                <span class="d-block mb-2">Customer Payment Information:</span>
+                                                <span class="d-block mb-2">Payment Information:</span>
                                                 <span class="fs-12 fw-normal text-muted text-truncate-1-line">Following information is publicly displayed, be careful! </span>
                                             </h5>
                                         </div>
 
                                         <div class="row mb-4 align-items-center">
                                             <div class="col-lg-4">
-                                                <label class="fw-semibold">Customer: </label>
+                                                <label class="fw-semibold">Vendor: </label>
                                             </div>
                                             <div class="col-lg-8">
-                                                <select class="form-control @error('customer_id') is-invalid @enderror" data-select2-selector="tag" name="customer_id" id="customer_id">
-                                                    @if(count($customerlist) > 0)
-                                                        <option value="">Select Customer</option>
-                                                        @foreach($customerlist as $customer)
-                                                            <option value="{{ $customer->id }}" @if(isset($payment) && $payment->customer_id == $customer->id) selected @endif>{{ ucfirst($customer->first_name) }} {{ ucfirst($customer->last_name) }}</option>
+                                                <select class="form-control @error('vendor_id') is-invalid @enderror" data-select2-selector="tag" name="vendor_id" id="vendor_id">
+                                                    @if(count($vendorlist) > 0)
+                                                        <option value="">Select Vendor</option>
+                                                        @foreach($vendorlist as $vendor)
+                                                            <option value="{{ $vendor->id }}" @if(isset($vendorpayment) && $vendorpayment->vendor_id == $vendor->id) selected @endif>{{ ucfirst($vendor->first_name) }} {{ ucfirst($vendor->last_name) }}</option>
                                                         @endforeach
                                                     @else
-                                                        <option value=''>No Customer found</option>
+                                                        <option value=''>No Vendor found</option>
                                                     @endif
                                                 </select>
-                                                @error('customer_id')
+                                                @error('vendor_id')
                                                     <span class="text-danger">{{ $message }}</span>
                                                 @enderror
                                             </div>
@@ -93,21 +93,20 @@
                                             <div class="col-lg-8">
                                                 <div class="input-group">
                                                    
-                                                    <input type="number" class="form-control @error('total_amount') is-invalid @enderror" name="total_amount" value="{{ isset($payment->total_amount) ? $payment->total_amount : old('total_amount') }}" id="titleInput" placeholder=" Amount">
+                                                    <input type="number" class="form-control @error('total_amount') is-invalid @enderror" name="total_amount" value="{{ isset($vendorpayment->total_amount) ? $vendorpayment->total_amount : old('total_amount') }}" id="titleInput" placeholder=" Amount">
                                                 </div>
                                                 @error('total_amount')
                                                     <span class="text-danger">{{ $message }}</span>
                                                 @enderror
                                             </div>
                                         </div>
-
                                         <div class="row mb-4 align-items-center">
                                             <div class="col-lg-4">
                                                 <label for="titleInput" class="fw-semibold">Purpose Of Payment: </label>
                                             </div>
                                             <div class="col-lg-8">
                                                 <div class="input-group">
-                                                <textarea class="form-control" id="" name="payment_purpose"  id="addressInput_2" cols="30" rows="3" placeholder="Description">{{ isset($payment->payment_purpose) && !empty($payment->payment_purpose) ? $payment->payment_purpose : ''}}</textarea>
+                                                <textarea class="form-control" id="" name="payment_purpose"  id="addressInput_2" cols="30" rows="3" placeholder="Description">{{ isset($vendorpayment->payment_purpose) && !empty($vendorpayment->payment_purpose) ? $vendorpayment->payment_purpose : ''}}</textarea>
                                                    
                                                 </div>
                                                 

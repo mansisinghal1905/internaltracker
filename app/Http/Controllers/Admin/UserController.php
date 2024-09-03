@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Country;
 use App\Models\State;
 use App\Models\City;
-use App\Models\Category;
+use App\Models\UserDocumentUpload;
 use App\Models\BankInformation;
 use App\Models\User;
 use DB;
@@ -172,19 +172,30 @@ class UserController extends Controller
     
                 $user->first_name = ucfirst($request->first_name);
                 $user->last_name = ucfirst($request->last_name);
-                // $user->company_name = $request->company_name;
                 $user->email = $request->email;
                 $user->phone_number = $request->phone_number;
                 $user->password = Hash::make($password);
-                // $user->dob = $request->dob;
+                $user->ip = $request->ip;
                 $user->role = $request->role;
-                // $user->state_id = $request->state_id;
-                // $user->city_id = $request->city_id;
-                // $user->zip_code = $request->zip_code;
-                // $user->website = $request->website;
-                // $user->address = $request->address;
-                // $user->role = 2;
                 $user->save();
+
+                    // Handle multiple document uploads
+                    $departmentTypes = $request->input('department_type', []); 
+                    $documents = $request->file('document', []);
+
+                    foreach ($departmentTypes as $key => $departmentType) {
+                        if (isset($documents[$key])) {
+                            $documentFile = $documents[$key];
+                            $documentFilename = time() . $documentFile->getClientOriginalName();
+                            $documentFile->move(public_path('user_documents'), $documentFilename);
+
+                            $userDocument = new UserDocumentUpload;
+                            $userDocument->user_id = $user->id;
+                            $userDocument->department_type = $departmentType;
+                            $userDocument->document = $documentFilename;
+                            $userDocument->save();
+                        }
+                    }
                 $request->session()->flash('success', 'User added successfully');
                 return redirect()->route('admin.users.index');
             } catch (Exception $e) {
@@ -212,23 +223,13 @@ class UserController extends Controller
     public function edit(Request $request, $id = null) {
         if (isset($id) && $id != null) {
             // $user = User::where('id', $id)->first();
-            $user = User::find($id);
+            $user = User::with('getDocument')->find($id);
             // $CountryCode =Country::select('shortname')->first();
-            
+            // dd($user);
             if (isset($user->id)) {
                 // $user->country_flag = $CountryCode->shortname ??'IL';
             
                 $type = 'edit';
-                // $url = route('admin.users.update', ['id' => $user->id]);
-                // $roles = Role::pluck('name','name')->all();
-                // $userRole = $user->roles->pluck('name','name')->all();
-                // Fetch related bank information
-                // $bankInformation = BankInformation::where('user_id', $id)->first();
-               
-                //  $countrylist = Country::where("status","active")->get(['id',"name"]);
-                //  $statelist = State::where("status","active")->where("country_id",$user->country_id)->get(['id',"name"]);
-                //  $cityList = City::where("state_id",$user->state_id)->get(['id',"name"]);
-                //  $categorylist = Category::where("status","1")->get(['id',"name"]);
 
                 return view('admin.users.create', compact('user', 'type'));
             } else {
@@ -247,100 +248,121 @@ class UserController extends Controller
     public function update(Request $request, string $id)
     {
         if (isset($id) && $id != null) {
-
-            $user = User::where('id', $id)->first();
-            $checkedMail = User::where("id","!=",$id)->where("email",$request->email)->first();
-            if($checkedMail)
-            {
-                 $request->session()->flash('error', 'Email address already exists');
-                 return redirect()->back();
+    
+            $user = User::find($id);
+            if (!$user) {
+                $request->session()->flash('error', 'User not found');
+                return redirect()->route('admin.users.edit', ['id' => $id]);
             }
-             $checkedPhone = User::where("status","!=","delete")->where("phone_number",$request->phone_number)->where("id","!=",$id)->first();
-                if($checkedPhone)
-                {
-                    $request->session()->flash('error', 'Phone number already exists');
-                    return redirect()->back();
+    
+            $checkedMail = User::where("id", "!=", $id)
+                ->where("email", $request->email)
+                ->first();
+    
+            if ($checkedMail) {
+                $request->session()->flash('error', 'Email address already exists');
+                return redirect()->back();
+            }
+    
+            $checkedPhone = User::where("status", "!=", "delete")
+                ->where("phone_number", $request->phone_number)
+                ->where("id", "!=", $id)
+                ->first();
+    
+            if ($checkedPhone) {
+                $request->session()->flash('error', 'Phone number already exists');
+                return redirect()->back();
+            }
+    
+           
+            $request->validate([
+                'first_name' => 'required',
+                'last_name' => 'required',
+                'email' => 'required|email',
+                'phone_number' => 'required|min:8|numeric',
+                'role' => 'required',
+            ]);
+    
+            $attr = [
+                'first_name' => 'First Name',
+                'last_name' => 'Last Name',
+                'email' => 'Email',
+                'phone_number' => 'Mobile',
+                'role' => 'Role',
+            ];
+    
+
+    
+            try {
+                // Handle avatar upload
+                if ($request->hasFile('avatar')) {
+                    $file = $request->file('avatar');
+                    $filename = time() . '_' . str_replace(' ', '', $file->getClientOriginalName());
+                    $filename = str_replace('.jpeg', '.jpg', $filename);
+                    $file->move(public_path('profileimage'), $filename);
+    
+                    if ($user->avatar && file_exists(public_path('profileimage/' . $user->avatar)) && $user->avatar != 'noimage.jpg') {
+                        unlink(public_path('profileimage/' . $user->avatar));
+                    }
+    
+                    $user->avatar = $filename;
                 }
-
-            if (isset($user->id)) {
-                $validate = Validator($request->all(),  [
-                    'first_name' => 'required',
-                    'last_name' => 'required',
-                    'email' => 'required|email',
-                    'phone_number' => 'required|min:8|numeric',
-                    'role' => 'required',
-                ]);
-                $attr = [
-                    'first_name' => 'First Name',
-                    'last_name' => 'Last Name',
-                    'user_email' => 'Email',
-                    'phone_number' => 'Mobile',
-                    'role' => 'Role',
-                ];
-
-                $validate->setAttributeNames($attr);
-
-                if ($validate->fails()) {
-                    return redirect()->route('editUsers', ['id' => $user->id])->withInput($request->all())->withErrors($validate);
-                } else {
-                    try {
-                        $filename = "";
-                        if ($request->hasfile('avatar')) {
-                            $file = $request->file('avatar');
-                            $filename = time() . $file->getClientOriginalName();
-                            $filename = str_replace(' ', '', $filename);
-                            $filename = str_replace('.jpeg', '.jpg', $filename);
-                            $file->move(public_path('profileimage'), $filename);
-                            if ($user->avatar != null && file_exists(public_path('profileimage/' . $user->avatar))) {
-                                if ($user->avatar != 'noimage.jpg') {
-                                    unlink(public_path('profileimage/' . $user->avatar));
+    
+                $user->first_name = ucfirst($request->first_name);
+                $user->last_name = ucfirst($request->last_name);
+                $user->email = $request->email;
+                $user->phone_number = $request->phone_number;
+                $user->role = $request->role;
+                $user->ip = $request->ip();
+                $user->updated_at = now();
+    
+                if ($user->save()) {
+    
+                    // Handle multiple document uploads
+                    $departmentTypes = $request->input('department_type', []);
+                    $documents = $request->file('document', []);
+                    $user_document_ids = $request->input('user_document_id', []);
+    
+                    foreach ($departmentTypes as $key => $departmentType) {
+                        if (isset($documents[$key])) {
+                            $documentFile = $documents[$key];
+                            $documentFilename = time() . '_' . str_replace(' ', '', $documentFile->getClientOriginalName());
+                            $documentFile->move(public_path('user_documents'), $documentFilename);
+    
+                            if (isset($user_document_ids[$key])) {
+                                $userDocument = UserDocumentUpload::find($user_document_ids[$key]);
+                                if ($userDocument) {
+                                    $userDocument->department_type = $departmentType;
+                                    $userDocument->document = $documentFilename;
+                                    $userDocument->save();
                                 }
+                            } else {
+                                $userDocument = new UserDocumentUpload;
+                                $userDocument->user_id = $user->id;
+                                $userDocument->department_type = $departmentType;
+                                $userDocument->document = $documentFilename;
+                                $userDocument->save();
                             }
                         }
-                        if ($filename != "") {
-                            $user->avatar = $filename;
-                        }
-
-                        $user->first_name = ucfirst($request->first_name);
-                        $user->last_name = ucfirst($request->last_name);
-                        // $user->company_name =  $request->company_name;
-                        $user->email = $request->email;
-                        $user->phone_number = $request->phone_number;
-                        // $user->dob = $request->dob;
-                        $user->role = $request->role;
-
-                        // $user->category = $request->category;
-                        // $user->country_id = $request->country_id;
-                        // $user->state_id = $request->state_id;
-                        // $user->city_id = $request->city_id;
-                        // $user->zip_code = $request->zip_code;
-                        // $user->website = $request->website;
-                        // $user->address = $request->address;
-                        $user->updated_at = date('Y-m-d H:i:s');
-                        
-                        // dd($user);
-                        if ($user->save()) {
-                            $request->session()->flash('success', 'User updated successfully');
-                            return redirect()->route('admin.users.index');
-                        } else {
-                            $request->session()->flash('error', 'Something went wrong. Please try again later.');
-                            return redirect()->route('admin.users.edit', ['id' => $id]);
-                        }
-                    } catch (Exception $e) {
-                        $request->session()->flash('error', 'Something went wrong. Please try again later.');
-                        return redirect()->route('admin.users.edit', ['id' => $id]);
                     }
+    
+                    $request->session()->flash('success', 'User updated successfully');
+                    return redirect()->route('admin.users.index');
+                } else {
+                    $request->session()->flash('error', 'Something went wrong. Please try again later.');
+                    return redirect()->route('admin.users.edit', ['id' => $id]);
                 }
-            } else {
-                $request->session()->flash('error', 'Invalid Data');
+            } catch (Exception $e) {
+                $request->session()->flash('error', 'Something went wrong. Please try again later.');
                 return redirect()->route('admin.users.edit', ['id' => $id]);
             }
         } else {
             $request->session()->flash('error', 'Invalid Data');
             return redirect()->route('admin.users.edit', ['id' => $id]);
         }
-
     }
+    
+
 
     /**
      * Remove the specified resource from storage.

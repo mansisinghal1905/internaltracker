@@ -11,11 +11,11 @@
             <div class="page-header">
                 <div class="page-header-left d-flex align-items-center">
                     <div class="page-header-title">
-                        <h5 class="m-b-10">Customer Payment</h5>
+                        <h5 class="m-b-10">Customer</h5>
                     </div>
                     <ul class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ route('admin.customer-payments.index') }}">Home</a></li>
-                        <li class="breadcrumb-item">Customer Payment</li>
+                        <li class="breadcrumb-item"><a href="{{ route('admin.technical-customers.index') }}">Home</a></li>
+                        <li class="breadcrumb-item">Customer</li>
                     </ul>
                 </div>
                 <div class="page-header-right ms-auto">
@@ -26,18 +26,16 @@
                                 <span>Back</span>
                             </a>
                         </div>
-                        <div class="d-flex align-items-center gap-2 page-header-right-items-wrapper">
-                           
-                            <a href="{{ route('admin.customer-payments.create') }}" class="btn btn-primary">
-                                <i class="feather-plus me-2"></i>
-                                <span>Create Customer Payment</span>
-                            </a>
-                        </div>
+                       
                     </div>
-                    
+                    <div class="d-md-none d-flex align-items-center">
+                        <a href="javascript:void(0)" class="page-header-right-open-toggle">
+                            <i class="feather-align-right fs-20"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
-            <!-- <div id="collapseOne" class="accordion-collapse collapse page-header-collapse">
+            <div id="collapseOne" class="accordion-collapse collapse page-header-collapse">
                 <div class="accordion-body pb-2">
                     <div class="row">
                         <div class="col-xxl-3 col-md-6">
@@ -126,7 +124,7 @@
                         </div>
                     </div>
                 </div>
-            </div> -->
+            </div>
             <!-- [ page-header ] end -->
             <!-- [ Main Content ] start -->
             <div class="main-content">
@@ -135,16 +133,16 @@
                         <div class="card stretch stretch-full">
                             <div class="card-body p-0">
                                 <div class="table-responsive">
-                                    <table class="table table-hover data-table1 table stripe hover nowrap" id="paymentList">
+                                    <table class="table table-hover data-table1 table stripe hover nowrap" id="technicalcustomerList">
                                         <thead>
                                             <tr>
                                                 <th class="wd-30">
                                                     S.No.
                                                 </th>
                                                 <th>Customer</th>
-                                                <th>Amount($)</th>
                                                 <th>Date</th>
-                                                <th class="">Actions</th>
+                                                <th>Action</th>
+
                                             </tr>
                                         </thead>
                                       
@@ -179,105 +177,61 @@
 
 <script type="text/javascript">
 		$(function () {
-			$.ajaxSetup({
-				headers: {
-					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-				}
-			});
-
-			
-			var table = $('#paymentList').DataTable({
-				processing: true,
-				serverSide: true,
-				"scrollY": "400px", // Set the height for the container
-				"scrollCollapse": true, // Allow the container to collapse when the content is smaller
-				"scrollX": false,
-				pagingType: "simple_numbers", // Use simple pagination (Previous/Next)
-
-				ajax: {
-					url: "{{ route('admin.paymentAjax') }}",
-					type: "POST",
-					data: {
-						search: $('input[name=total_amount]').val(),
-						search: $('input[name=created_at]').val(),
-
-					},
-					dataSrc: "data"
-				},
-				paging: true,
-				pageLength: 10,
-				"bServerSide": true,
-				"bLengthChange": false,
-				'searching': true,
-				"aoColumns": [{
-					"data": "id"
-				},
-				{ "data": "customer_id" },
-                { "data": "total_amount" },
-                { "data": "created_at" },
-				{ "data": "view" },
-
-				],
-                columnDefs: [
-                    { "targets": [2,3], "orderable": false }, // Disable sorting on the "job_id" column
-                    { "targets": [], "orderable": false } // Disable sorting on the "job_id" column
-                ]
-			});
-
-			
-		});
-
-        function deletePayments(element) {
-            var url = element.getAttribute('data-url');
-            var id = element.getAttribute('data-id');
-            
-            // Show the SweetAlert confirmation dialog
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        url: url,
-                        method: 'post',
-                    
-                        data: {
-                            id: id,
-                            _token: '{{ csrf_token() }}'
-                        },
-                        success: function(response) {
-                            Swal.fire(
-                                'Deleted!',
-                                'The Payment has been deleted.',
-                                'success'
-                            );
-                            
-                            setTimeout(function() {
-                            location.reload();
-                        }, 2000);
-                        },
-                        error: function(response) {
-                            Swal.fire(
-                                'Failed!',
-                                'There was an error deleting the Payment.',
-                                'error'
-                            );
-                        }
-                    });
-                }
-            });
+    // Set up CSRF token for AJAX requests
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
+    });
 
+    // Initialize DataTable
+    var table = $('#technicalcustomerList').DataTable({
+        processing: true,          // Enable processing display
+        serverSide: true,          // Enable server-side processing
+        scrollY: "400px",          // Set height for the container
+        scrollCollapse: true,      // Allow container to collapse when content is smaller
+        scrollX: false,            // Disable horizontal scrolling
+        pagingType: "simple_numbers", // Use simple pagination (Previous/Next)
+        paging: true,              // Enable pagination
+        pageLength: 10,            // Set the number of records per page
+        lengthChange: false,       // Disable ability to change page length
+        searching: true,           // Enable the search functionality
+
+        // Define AJAX call
+        ajax: {
+            url: "{{ route('admin.technicalcustomerAjax') }}", // Your server-side route
+            type: "POST",            // Use POST method for AJAX request
+            data: function (d) {
+                d.first_name = $('input[name=first_name]').val();
+                d.last_name = $('input[name=last_name]').val();
+                d.created_at = $('input[name=created_at]').val();
+            },
+            dataSrc: "data"     
+        },
+
+        // Define the columns
+        columns: [
+            { data: "id" },
+            { data: "fullname" },
+            { data: "created_at" },
+            { data: "view" }
+
+        ],
+
+        // Column definitions
+        columnDefs: [
+            { targets: [2], orderable: false } // Disable sorting on the "created_at" column
+        ]
+    });
+});
+
+
+       
 
 
 
 	</script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> -->
 
 
 @endpush

@@ -1,13 +1,9 @@
 
 @extends('admin.layouts.backend.app')
+
 @push('style')
-<style>
-#toast-container .toast-success {
-    background-color: #28a745; /* Green color */
-    color: #fff;
-}
-</style>
-@endpush
+
+@Endpush
 @section('content')
 <main class="nxl-container">
         <div class="nxl-content">
@@ -15,11 +11,11 @@
             <div class="page-header">
                 <div class="page-header-left d-flex align-items-center">
                     <div class="page-header-title">
-                        <h5 class="m-b-10">Route</h5>
+                        <h5 class="m-b-10">Vendor Payment</h5>
                     </div>
                     <ul class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ route('admin.routes.index') }}">Home</a></li>
-                        <li class="breadcrumb-item">Route</li>
+                        <li class="breadcrumb-item"><a href="{{ route('admin.vendor-payments.index') }}">Home</a></li>
+                        <li class="breadcrumb-item">Vendor Payment</li>
                     </ul>
                 </div>
                 <div class="page-header-right ms-auto">
@@ -30,16 +26,18 @@
                                 <span>Back</span>
                             </a>
                         </div>
-                       
+                        <div class="d-flex align-items-center gap-2 page-header-right-items-wrapper">
+                            
+                            <a href="{{ route('admin.vendor-payments.create') }}" class="btn btn-primary">
+                                <i class="feather-plus me-2"></i>
+                                <span>Create Vendor Payment</span>
+                            </a>
+                        </div>
                     </div>
-                    <div class="d-md-none d-flex align-items-center">
-                        <a href="javascript:void(0)" class="page-header-right-open-toggle">
-                            <i class="feather-align-right fs-20"></i>
-                        </a>
-                    </div>
+                   
                 </div>
             </div>
-       
+           
             <!-- [ page-header ] end -->
             <!-- [ Main Content ] start -->
             <div class="main-content">
@@ -48,21 +46,19 @@
                         <div class="card stretch stretch-full">
                             <div class="card-body p-0">
                                 <div class="table-responsive">
-                                    <table class="table table-hover data-table1 table stripe hover nowrap" id="routeList">
+                                    <table class="table table-hover data-table1 table stripe hover nowrap" id="paymentList">
                                         <thead>
                                             <tr>
                                                 <th class="wd-30">
-                                                   S.No.
+                                                    S.No.
                                                 </th>
-                                                <th>Image</th>
-                                                <th>Full Name</th>
-                                                <th>Email</th>
-                                                <th>Phone</th>
-                                                <th>Status</th>
+                                                <th>Vendors</th>
+                                                <th>Amount($)</th>
+                                                <th>Date</th>
                                                 <th class="">Actions</th>
                                             </tr>
                                         </thead>
-                                       
+                                      
                                     </table>
                                 </div>
                             </div>
@@ -91,13 +87,6 @@
 @endsection
 
 @push('script')
-<!-- 
-<script src="{{ asset('public/assets/src/plugins/datatables/js/jquery.dataTables.min.js')}}"></script>
-	<script src="{{ asset('public/assets/src/plugins/datatables/js/dataTables.bootstrap4.min.js')}}"></script>
-	<script src="{{ asset('public/assets/src/plugins/datatables/js/dataTables.responsive.min.js')}}"></script>
-	<script src="{{ asset('public/assets/src/plugins/datatables/js/responsive.bootstrap4.min.js')}}"></script>
-	<script src="{{ asset('public/assets/vendors/scripts/datatable-setting.js')}}"></script> -->
-
 
 <script type="text/javascript">
 		$(function () {
@@ -107,11 +96,8 @@
 				}
 			});
 
-			// $(".selectstatus").on("click", function () {
-			// 	id = $(this).data("id");
-			// 	alert(id);
-			// });
-			var table = $('#routeList').DataTable({
+			
+			var table = $('#paymentList').DataTable({
 				processing: true,
 				serverSide: true,
 				"scrollY": "400px", // Set the height for the container
@@ -120,10 +106,12 @@
 				pagingType: "simple_numbers", // Use simple pagination (Previous/Next)
 
 				ajax: {
-					url: "{{ route('admin.customerAjax') }}",
+					url: "{{ route('admin.vendorpaymentAjax') }}",
 					type: "POST",
 					data: {
-                        status: $('input[name=status]').val(),
+                    
+						search: $('input[name=total_amount]').val(),
+						search: $('input[name=created_at]').val(),
 					},
 					dataSrc: "data"
 				},
@@ -135,23 +123,22 @@
 				"aoColumns": [{
 					"data": "id"
 				},
-                { "data": "avatar" },
-                { "data": "fullname" },
-                { "data": "email" },
-                { "data": "phone_number" },
-				{ "data": "status" },
-                { "data": "view" },
+				{ "data": "vendor_id" },
+                { "data": "total_amount" },
+                { "data": "created_at" },
+				{ "data": "view" },
+
 				],
                 columnDefs: [
-                    { "targets": [], "orderable": false }, // Disable sorting on the "job_id" column
+                    { "targets": [2,3], "orderable": false }, // Disable sorting on the "job_id" column
                     { "targets": [], "orderable": false } // Disable sorting on the "job_id" column
                 ]
 			});
 
+			
 		});
 
-
-        function deleteRoutes(element) {
+        function deletePayments(element) {
             var url = element.getAttribute('data-url');
             var id = element.getAttribute('data-id');
             
@@ -177,7 +164,7 @@
                         success: function(response) {
                             Swal.fire(
                                 'Deleted!',
-                                'The Route has been deleted.',
+                                'The Payment has been deleted.',
                                 'success'
                             );
                             
@@ -188,7 +175,7 @@
                         error: function(response) {
                             Swal.fire(
                                 'Failed!',
-                                'There was an error deleting the Route.',
+                                'There was an error deleting the Payment.',
                                 'error'
                             );
                         }
@@ -202,5 +189,6 @@
 
 	</script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
 @endpush

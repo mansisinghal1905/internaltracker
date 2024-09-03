@@ -120,7 +120,7 @@ class RouteController extends Controller
         }
          // Fetch project statuses
         // $projectStatuses = ProjectStatus::all();
-        $records = $this->Model1->fetchvendor($request, $this->columns);
+        $records = $this->Model->fetchvendor($request, $this->columns);
         $total = $records->get();
         if (isset($request->start)) {
             $categories = $records->offset($request->start)->limit($request->length)->get();

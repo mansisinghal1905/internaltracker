@@ -1,4 +1,5 @@
 
+
 @extends('admin.layouts.backend.app')
 
 @section('content')
@@ -152,6 +153,68 @@
                                             </div>
                                         </div>
 
+                                        <div class="row mb-4 align-items-center">
+                                        
+                                            <div class="col-lg-4">
+                                                <label for="fullnameInput" class="fw-semibold">Add IP: </label>
+                                                <div class="input-group">
+                                                <input type="text" class="form-control" name="ip" value="{{ isset($user->ip) && !empty($user->ip) ? $user->ip : ''}}" id="mailInput" placeholder="Enter Ip">
+                                                </div>
+                                               
+                                            </div>
+                    @if(isset($user->getDocument) && !empty($user->getDocument))
+                    <div class="col-lg-8">
+                    @foreach($user->getDocument as $row)
+                         @if($row->department_type=='agreement')
+                         <label><input type="checkbox" checked name="department_type[]" value="agreement" class="doc-checkbox" data-target="upload-input-1"> Agreement</label>
+                          @endif
+                          @if($row->department_type=='technical_document' )
+                         <label><input type="checkbox" checked name="department_type[]" value="technical_document" class="doc-checkbox" data-target="upload-input-1"> Technical Document</label>
+                        
+                         <input type="file" accept=".pdf" name="document[]" value="" id="upload-input-1" class="upload-input" style="display:;">
+                                @if(isset($row->document) && !empty($row->document))
+                                    <p>Current Document: <a href="{{ asset($row->document) }}" target="_blank"> View Technical Document</a></p>
+                                @endif
+                          @endif
+                          @if($row->department_type=='trade_reference')
+                         <label><input type="checkbox" checked name="department_type[]" value="trade_reference" class="doc-checkbox" data-target="upload-input-1"> Trade Reference</label>
+                          @endif 
+                   @endforeach  
+                   </div>
+                    @else
+                    <div class="col-lg-8">
+                        <label><input type="checkbox" name="department_type[]" value="trade_reference" class="doc-checkbox" data-target="upload-input-1"> Trade Reference</label>
+                                                <input type="file" accept=".pdf" name="document[]" value="" id="upload-input-1" class="upload-input" style="display:none;">
+                                                @if(isset($user->document) && !empty($user->document))
+                                                    <p>Current Document: 
+                                                        <a href="{{ asset($user->document) }}" target="_blank">
+                                                            {{ $user->document }}
+                                                        </a>
+                                                    </p>
+                                                @endif
+                                                <label><input type="checkbox" name="department_type[]" value="agreement" class="doc-checkbox" data-target="upload-input-2"> Agreement</label>
+                                                <input type="file" accept=".pdf" name="document[]" id="upload-input-2" class="upload-input" style="display:none;">
+                                                @if(isset($user->document) && !empty($user->document))
+                                                    <p>Current Document: 
+                                                        <a href="{{ asset($user->document) }}" target="_blank">
+                                                            {{ $user->document }}
+                                                        </a>
+                                                    </p>
+                                                @endif
+                                                <label><input type="checkbox" name="department_type[]" value="technical_document" class="doc-checkbox" data-target="upload-input-3"> Technical Document</label>
+                                                <input type="file" accept=".pdf" name="document[]" id="upload-input-3" class="upload-input" style="display:none;">
+                                                @if(isset($user->document) && !empty($user->document))
+                                                    <p>Current Document: 
+                                                        <a href="{{ asset($user->document) }}" target="_blank">
+                                                            {{ $user->document }}
+                                                        </a>
+                                                    </p>
+                                                @endif                                            
+                                            </div>                   
+                    @endif                     
+
+                                        </div>
+
                                         <div class="d-flex justify-content-end">
                                             <button type="submit" class="btn btn-primary">Save Changes</button>
                                         </div>
@@ -292,4 +355,22 @@
     })
 </script>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    const checkboxes = document.querySelectorAll('.doc-checkbox');
+
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function () {
+            const targetId = checkbox.getAttribute('data-target');
+            const uploadInput = document.getElementById(targetId);
+
+            if (checkbox.checked) {
+                uploadInput.style.display = 'block';
+            } else {
+                uploadInput.style.display = 'none';
+            }
+        });
+    });
+});
+</script>
 @endpush

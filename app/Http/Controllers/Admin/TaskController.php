@@ -228,7 +228,7 @@ class TaskController extends Controller
                 $validate->setAttributeNames($attr);
 
                 if ($validate->fails()) {
-                    return redirect()->route('edittasks', ['id' => $task->id])->withInput($request->all())->withErrors($validate);
+                    return redirect()->route('admin.tasks.edit', ['id' => $id])->withInput($request->all())->withErrors($validate);
                 } else {
                     try {
                         $task->user_id = $request->user_id;

@@ -62,7 +62,8 @@
                      <li class="nxl-item nxl-hasmenu">
                         <a href="javascript:void(0);" class="nxl-link">
                             <span class="nxl-micon"><i class="feather-briefcase"></i></span>
-                            <span class="nxl-mtext"> Route Module</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
+                            <span class="nxl-mtext"> Route Management</span>
+                            <span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                         </a>
                         <ul class="nxl-submenu">
                             <li class="nxl-item"><a class="nxl-link" href="{{ route('admin.routes.index') }}"> Customer Management</a></li>
@@ -70,10 +71,27 @@
                         </ul>
                     </li>  
                     <li class="nxl-item nxl-hasmenu">
-                        <a href="{{ route('admin.payments.index') }}" class="nxl-link">
+                        <a href="javascript:void(0);" class="nxl-link">
                             <span class="nxl-micon"><i class="feather-briefcase"></i></span>
                             <span class="nxl-mtext">Account Management</span>
+                            <span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                         </a>
+                        <ul class="nxl-submenu">
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('admin.customer-payments.index') }}"> Customer Payment Management</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('admin.vendor-payments.index') }}">Vendor Payment Management</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="nxl-item nxl-hasmenu">
+                        <a href="javascript:void(0);" class="nxl-link">
+                            <span class="nxl-micon"><i class="feather-briefcase"></i></span>
+                            <span class="nxl-mtext">Technical Details</span>
+                            <span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
+                        </a>
+                        <ul class="nxl-submenu">
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('admin.technical-customers.index') }}"> Customer Technical Details</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('admin.technical-vendors.index') }}">Vendor Technical Details</a></li>
+                        </ul>
                     </li>
                    
                  

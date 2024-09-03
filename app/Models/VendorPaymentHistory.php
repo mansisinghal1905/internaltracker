@@ -9,7 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 
-class Payment extends Authenticatable
+class VendorPaymentHistory extends Authenticatable
 {
     use HasFactory, Notifiable,SoftDeletes;
 
@@ -37,9 +37,10 @@ class Payment extends Authenticatable
      * @return array<string, string>
      */
 
-    public function fetchPayment($request, $columns) {
+    public function fetchVendorPayment1($request, $columns1) {
       
-        $query = Payment::orderBy('id', 'desc');
+        $query = VendorPaymentHistory::where("vendor_payment_id",$request->vendor_payment_id)
+                ->orderBy('id', 'desc');
 
         if (isset($request->from_date)) {
             $query->whereRaw('DATE_FORMAT(created_at, "%Y-%m-%d") >= "' . date("Y-m-d", strtotime($request->from_date)) . '"');
@@ -52,23 +53,30 @@ class Payment extends Authenticatable
         if (isset($request['search']['value']) && !empty($request['search']['value'])) {
             $searchValue = $request['search']['value'];
             $query->where(function ($q) use ($searchValue) {
-                $q->where('total_amount', 'like', '%' . $searchValue . '%')
-                  ->orWhere('created_at', 'like', '%' . $searchValue . '%');
+                $q->where('amount', 'like', '%' . $searchValue . '%')
+                  ->orWhere('created_at', 'like', '%' . $searchValue . '%')
+                  ->orWhere('payment_purpose', 'like', '%' . $searchValue . '%');
+
             });
         }
        
 
         if (isset($request->order_column)) {
-            $categories = $query->orderBy($columns[$request->order_column], $request->order_dir);
+            $categories = $query->orderBy($columns1[$request->order_column], $request->order_dir);
         } else {
             $categories = $query->orderBy('created_at', 'desc');
         }
         return $categories;
     }
 
-    public function getCustomer() {
+    public function getVendor() {
 
-        return $this->belongsTo(User::class,'customer_id','id')->where('id', '!=', 1)->where('status','!=','0'); 
+        return $this->belongsTo(User::class,'vendor_id','id')->where('id', '!=', 1)->where('status','!=','0'); 
+
+    }
+    public function getvendorpayment() {
+
+        return $this->belongsTo(VendorPayment::class,'vendor_payment_id','id'); 
 
     }
 }

@@ -38,10 +38,48 @@ class PaymentHistory extends Authenticatable
      */
 
     
+    
+    public function fetchPayment1($request, $columns) {
+      
+        $query = PaymentHistory::where("payment_id",$request->payment_id)->orderBy('id', 'desc');
+
+        if (isset($request->from_date)) {
+            $query->whereRaw('DATE_FORMAT(created_at, "%Y-%m-%d") >= "' . date("Y-m-d", strtotime($request->from_date)) . '"');
+        }
+        if (isset($request->end_date)) {
+            $query->whereRaw('DATE_FORMAT(created_at, "%Y-%m-%d") <= "' . date("Y-m-d", strtotime($request->end_date)) . '"');
+        }
+
+        
+        if (isset($request['search']['value']) && !empty($request['search']['value'])) {
+            $searchValue = $request['search']['value'];
+            $query->where(function ($q) use ($searchValue) {
+                $q->where('amount', 'like', '%' . $searchValue . '%')
+                  ->orWhere('created_at', 'like', '%' . $searchValue . '%')
+                  ->orWhere('payment_purpose', 'like', '%' . $searchValue . '%');
+
+            });
+        }
+       
+
+        if (isset($request->order_column)) {
+            $categories = $query->orderBy($columns[$request->order_column], $request->order_dir);
+        } else {
+            $categories = $query->orderBy('created_at', 'desc');
+        }
+        return $categories;
+    }
+   
 
     public function getCustomer() {
 
         return $this->belongsTo(User::class,'customer_id','id')->where('id', '!=', 1)->where('status','!=','0'); 
+
+    }
+
+    public function getpayment() {
+
+        return $this->belongsTo(Payment::class,'payment_id','id'); 
 
     }
 }

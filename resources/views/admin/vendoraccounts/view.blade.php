@@ -1,11 +1,49 @@
 
 @extends('admin.layouts.backend.app')
+
 @push('style')
 <style>
-#toast-container .toast-success {
-    background-color: #28a745; /* Green color */
-    color: #fff;
-}
+    .cust-payment {
+        position: relative;
+    }
+
+    .cust-payment .cust-paymet-calen {
+        position: absolute;
+        top: 5px;
+        padding: 15px;
+    }
+
+    .cust-payment .cust-paymet-calen input {
+        border-color: #939497 !important;
+        padding: 12px;
+        font-size: 14px;
+        color: #000;
+        margin: 0px 4px;
+        height: 45px;
+    }
+
+
+    .cust-payment .cust-paymet-calen button {
+        color: #fff;
+        border: none;
+        background: #3454d1;
+        padding: 10px 15px;
+        font-size: 14px;
+        border-radius: 5px;
+        min-height: 45px;
+        height: 100%;
+        transition: 0.5s;
+        box-shadow: 0 5px 15px rgba(40, 60, 80, .15);
+    }
+
+    .cust-payment .cust-paymet-calen button:hover {
+        background: #000;
+        transition: 0.5s;
+    }
+
+    .cust-payment .cust-paymet-calen input:focus {
+        border-color: #3454d1 !important;
+    }
 </style>
 @endpush
 @section('content')
@@ -15,11 +53,11 @@
             <div class="page-header">
                 <div class="page-header-left d-flex align-items-center">
                     <div class="page-header-title">
-                        <h5 class="m-b-10">Route</h5>
+                        <h5 class="m-b-10">Customer History Payment</h5>
                     </div>
                     <ul class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ route('admin.routes.index') }}">Home</a></li>
-                        <li class="breadcrumb-item">Route</li>
+                        <li class="breadcrumb-item"><a href="{{ route('admin.vendor-payments.index') }}">Home</a></li>
+                        <li class="breadcrumb-item">Customer History Payment</li>
                     </ul>
                 </div>
                 <div class="page-header-right ms-auto">
@@ -39,30 +77,35 @@
                     </div>
                 </div>
             </div>
-       
+           
             <!-- [ page-header ] end -->
             <!-- [ Main Content ] start -->
             <div class="main-content">
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="card stretch stretch-full">
-                            <div class="card-body p-0">
+                            <div class="card-body p-0 cust-payment">
+                            <div class="cust-paymet-calen">
+                                <input type="date" id="from_date" name="from_date">
+                                <input type="date" id="end_date" name="end_date">
+                                <button id="filter">Filter</button>
+                                <button id="reset">Reset</button>
+                            </div>
                                 <div class="table-responsive">
-                                    <table class="table table-hover data-table1 table stripe hover nowrap" id="routeList">
+                                    <table class="table table-hover data-table1 table stripe hover nowrap" id="vendorpayment1List">
                                         <thead>
                                             <tr>
                                                 <th class="wd-30">
-                                                   S.No.
+                                                    S.No.
                                                 </th>
-                                                <th>Image</th>
-                                                <th>Full Name</th>
-                                                <th>Email</th>
-                                                <th>Phone</th>
-                                                <th>Status</th>
-                                                <th class="">Actions</th>
+                                                <th>Vendor</th>
+                                                <th>Amount($)</th>
+                                                <th>Purpose Of Payment</th>
+                                                <th>Date</th>
+                                                <!-- <th class="">Actions</th> -->
                                             </tr>
                                         </thead>
-                                       
+                                      
                                     </table>
                                 </div>
                             </div>
@@ -91,67 +134,64 @@
 @endsection
 
 @push('script')
-<!-- 
-<script src="{{ asset('public/assets/src/plugins/datatables/js/jquery.dataTables.min.js')}}"></script>
-	<script src="{{ asset('public/assets/src/plugins/datatables/js/dataTables.bootstrap4.min.js')}}"></script>
-	<script src="{{ asset('public/assets/src/plugins/datatables/js/dataTables.responsive.min.js')}}"></script>
-	<script src="{{ asset('public/assets/src/plugins/datatables/js/responsive.bootstrap4.min.js')}}"></script>
-	<script src="{{ asset('public/assets/vendors/scripts/datatable-setting.js')}}"></script> -->
-
 
 <script type="text/javascript">
 		$(function () {
-			$.ajaxSetup({
-				headers: {
-					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-				}
-			});
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
 
-			// $(".selectstatus").on("click", function () {
-			// 	id = $(this).data("id");
-			// 	alert(id);
-			// });
-			var table = $('#routeList').DataTable({
-				processing: true,
-				serverSide: true,
-				"scrollY": "400px", // Set the height for the container
-				"scrollCollapse": true, // Allow the container to collapse when the content is smaller
-				"scrollX": false,
-				pagingType: "simple_numbers", // Use simple pagination (Previous/Next)
+    var table = $('#vendorpayment1List').DataTable({
+        processing: true,
+        serverSide: true,
+        scrollY: "400px", // Set the height for the container
+        scrollCollapse: true, // Allow the container to collapse when the content is smaller
+        pagingType: "simple_numbers", // Use simple pagination (Previous/Next)
+        ajax: {
+            url: "{{ route('admin.vendorpaymenthistoryAjax') }}",
+            type: "POST",
+            data: function(d) {
+                d.vendor_payment_id = "{{ $id }}";
+                d.amount = $('input[name=amount]').val();
+                d.created_at = $('input[name=created_at]').val();
+                d.payment_purpose = $('input[name=payment_purpose]').val();
+                d.from_date = $('#from_date').val();
+                d.end_date = $('#end_date').val();
+            },
+            dataSrc: "data"
+        },
+        columns: [
+            { data: "id" },
+            { data: "vendor_id" },
+            { data: "amount" },
+            { data: "payment_purpose" },
+            { data: "created_at" },
+            // { data: "view" }
+        ],
+        columnDefs: [
+            { targets: [2,3], orderable: false }
+        ],
+        paging: true,
+        pageLength: 10,
+        lengthChange: false,
+        searching: true
+    });
+    // Trigger filtering when the filter button is clicked
+    $('#filter').click(function() {
+        table.draw();
+    });
+    // Reset filters and reload the table
+    $('#reset').click(function() {
+        $('#from_date').val('');
+        $('#end_date').val('');
+        table.draw();
+    });
+});
 
-				ajax: {
-					url: "{{ route('admin.customerAjax') }}",
-					type: "POST",
-					data: {
-                        status: $('input[name=status]').val(),
-					},
-					dataSrc: "data"
-				},
-				paging: true,
-				pageLength: 10,
-				"bServerSide": true,
-				"bLengthChange": false,
-				'searching': true,
-				"aoColumns": [{
-					"data": "id"
-				},
-                { "data": "avatar" },
-                { "data": "fullname" },
-                { "data": "email" },
-                { "data": "phone_number" },
-				{ "data": "status" },
-                { "data": "view" },
-				],
-                columnDefs: [
-                    { "targets": [], "orderable": false }, // Disable sorting on the "job_id" column
-                    { "targets": [], "orderable": false } // Disable sorting on the "job_id" column
-                ]
-			});
 
-		});
-
-
-        function deleteRoutes(element) {
+        function deletePayments(element) {
             var url = element.getAttribute('data-url');
             var id = element.getAttribute('data-id');
             
@@ -177,7 +217,7 @@
                         success: function(response) {
                             Swal.fire(
                                 'Deleted!',
-                                'The Route has been deleted.',
+                                'The Payment has been deleted.',
                                 'success'
                             );
                             
@@ -188,7 +228,7 @@
                         error: function(response) {
                             Swal.fire(
                                 'Failed!',
-                                'There was an error deleting the Route.',
+                                'There was an error deleting the Payment.',
                                 'error'
                             );
                         }
@@ -202,5 +242,6 @@
 
 	</script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
 @endpush

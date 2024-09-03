@@ -10,7 +10,10 @@ use App\Http\Controllers\Admin\ProjectStatusController;
 use App\Http\Controllers\Admin\ClientUserController;
 use App\Http\Controllers\Admin\TaskController;
 use App\Http\Controllers\Admin\RouteController;
-use App\Http\Controllers\Admin\AccountController;
+use App\Http\Controllers\Admin\CustomerAccountController;
+use App\Http\Controllers\Admin\VendorAccountController;
+use App\Http\Controllers\Admin\TechnicalCustomerController;
+use App\Http\Controllers\Admin\TechnicalVendorController;
 use App\Http\Controllers\Admin\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Admin\Auth\ForgetPasswordController;
 use App\Http\Middleware\AuthCheck;
@@ -68,13 +71,28 @@ Route::middleware([AuthCheck::class])->group(function(){
         Route::post('admin/vendors/vendor-ajax', [RouteController::class, 'vendorAjax'])->name('vendorAjax');
         Route::get('/vendors/view/{id?}', [RouteController::class, 'vendorshow'])->name('vendorshow');
 
-        // Account route
-        Route::resource('payments', AccountController::class);
-        Route::post('admin/payments/payment-ajax', [AccountController::class, 'paymentAjax'])->name('paymentAjax');
-        Route::post('change-payment-status', [AccountController::class, 'ChangePaymentStatus'])->name('ChangePaymentStatus');
-        Route::post('admin/payments/destory', [AccountController::class, 'paymentdestory'])->name('paymentdestory');
+        // Customer Account route
+        Route::resource('customer-payments', CustomerAccountController::class);
+        Route::post('admin/customer-payments/payment-ajax', [CustomerAccountController::class, 'paymentAjax'])->name('paymentAjax');
+        // Route::post('change-payment-status', [CustomerAccountController::class, 'ChangePaymentStatus'])->name('ChangePaymentStatus');
+        // Route::post('admin/payments/destory', [CustomerAccountController::class, 'paymentdestory'])->name('paymentdestory');
+        Route::post('admin/payments/paymenthistory-ajax', [CustomerAccountController::class, 'paymenthistoryAjax'])->name('paymenthistoryAjax');
         
+        // Vendor Account route
+        Route::resource('vendor-payments', VendorAccountController::class);
+        Route::post('admin/vendor-payments/payment-ajax', [VendorAccountController::class, 'vendorpaymentAjax'])->name('vendorpaymentAjax');
+        // Route::post('change-payment-status', [VendorAccountController::class, 'ChangePaymentStatus'])->name('ChangePaymentStatus');
+        // Route::post('admin/payments/destory', [CustomerAccountController::class, 'paymentdestory'])->name('paymentdestory');
+        Route::post('admin/vendorpayments/vendorpaymenthistory-ajax', [VendorAccountController::class, 'vendorpaymenthistoryAjax'])->name('vendorpaymenthistoryAjax');
         
+        Route::resource('technical-customers', TechnicalCustomerController::class);
+        Route::post('admin/technical-customers/technicalcustomer-ajax', [TechnicalCustomerController::class, 'technicalcustomerAjax'])->name('technicalcustomerAjax');
+        Route::get('/download/{filename}', [TechnicalCustomerController::class, 'download'])->name('file.download');
+
+        Route::resource('technical-vendors', TechnicalVendorController::class);
+        Route::post('admin/technical-vendors/technicalvendor-ajax', [TechnicalVendorController::class, 'technicalvendorAjax'])->name('technicalvendorAjax');
+        Route::get('/vendor-download/{filename}', [TechnicalVendorController::class, 'vendorfiledownload'])->name('file.vendorfiledownload');
+
     });
 });
 

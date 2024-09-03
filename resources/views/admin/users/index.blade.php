@@ -24,10 +24,10 @@
                             </a>
                         </div>
                         <div class="d-flex align-items-center gap-2 page-header-right-items-wrapper">
-                            <a href="javascript:void(0);" class="btn btn-icon btn-light-brand" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                            <!-- <a href="javascript:void(0);" class="btn btn-icon btn-light-brand" data-bs-toggle="collapse" data-bs-target="#collapseOne">
                                 <i class="feather-bar-chart"></i>
-                            </a>
-                            <div class="dropdown">
+                            </a> -->
+                            <!-- <div class="dropdown">
                                 <a class="btn btn-icon btn-light-brand" data-bs-toggle="dropdown" data-bs-offset="0, 10" data-bs-auto-close="outside">
                                     <i class="feather-filter"></i>
                                 </a>
@@ -36,10 +36,10 @@
                                         <i class="feather-eye me-3"></i>
                                         <span>All</span>
                                     </a>
-                                    <!-- <a href="javascript:void(0);" class="dropdown-item">
+                                    <a href="javascript:void(0);" class="dropdown-item">
                                         <i class="feather-users me-3"></i>
                                         <span>Group</span>
-                                    </a> -->
+                                    </a> 
                                     <a href="javascript:void(0);" class="dropdown-item">
                                         <i class="feather-flag me-3"></i>
                                         <span>Country</span>
@@ -61,8 +61,8 @@
                                         <span>Inactive</span>
                                     </a>
                                 </div>
-                            </div>
-                            <div class="dropdown">
+                            </div> -->
+                            <!-- <div class="dropdown">
                                 <a class="btn btn-icon btn-light-brand" data-bs-toggle="dropdown" data-bs-offset="0, 10" data-bs-auto-close="outside">
                                     <i class="feather-paperclip"></i>
                                 </a>
@@ -93,7 +93,7 @@
                                         <span>Print</span>
                                     </a>
                                 </div>
-                            </div>
+                            </div> -->
                             <a href="{{ route('admin.users.create') }}" class="btn btn-primary">
                                 <i class="feather-plus me-2"></i>
                                 <span>Create User</span>
@@ -107,7 +107,7 @@
                     </div>
                 </div>
             </div>
-            <div id="collapseOne" class="accordion-collapse collapse page-header-collapse">
+            <!-- <div id="collapseOne" class="accordion-collapse collapse page-header-collapse">
                 <div class="accordion-body pb-2">
                     <div class="row">
                         <div class="col-xxl-3 col-md-6">
@@ -196,7 +196,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
             <!-- [ page-header ] end -->
             <!-- [ Main Content ] start -->
             <div class="main-content">

@@ -162,11 +162,11 @@
                                         </div>
                                         <div class="row mb-4 align-items-center">
                                             <div class="col-lg-4">
-                                                <label for="fullnameInput" class="fw-semibold">Credit Limit:</label>
+                                                <label for="fullnameInput" class="fw-semibold">Credit Limit($):</label>
                                             </div>
                                             <div class="col-lg-8"> 
                                                 <div class="input-group">
-                                                    <input type="text" name="credit_limit" class="form-control" 
+                                                    <input type="number" name="credit_limit" class="form-control" 
                                                         value="{{ isset($task->credit_limit) && !empty($task->credit_limit) ? '' . $task->credit_limit : ''}}" 
                                                         id="creditLimitInput" placeholder="Credit Limit">
                                                 </div>
@@ -270,14 +270,14 @@
             console.error( error );
         } );
 </script>
-<script>
+<!-- <script>
     document.getElementById('creditLimitInput').addEventListener('input', function(e) {
         let value = e.target.value.replace(/\$/g, ''); // Remove any existing '$'
         if (value) {
             e.target.value = '$' + value; // Add '$' in front of the number
         }
     });
-</script>
+</script> -->
 <!-- <script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
 <script>
     CKEDITOR.replace('editor1');

@@ -34,7 +34,7 @@
                             <!-- <a href="javascript:void(0);" class="btn btn-icon btn-light-brand" data-bs-toggle="collapse" data-bs-target="#collapseOne">
                                 <i class="feather-bar-chart"></i>
                             </a> -->
-                            <div class="dropdown">
+                            <!-- <div class="dropdown">
                                 <a class="btn btn-icon btn-light-brand" data-bs-toggle="dropdown" data-bs-offset="0, 10" data-bs-auto-close="outside">
                                     <i class="feather-filter"></i>
                                 </a>
@@ -65,8 +65,8 @@
                                         <span>Inactive</span>
                                     </a>
                                 </div>
-                            </div>
-                            <div class="dropdown">
+                            </div> -->
+                            <!-- <div class="dropdown">
                                 <a class="btn btn-icon btn-light-brand" data-bs-toggle="dropdown" data-bs-offset="0, 10" data-bs-auto-close="outside">
                                     <i class="feather-paperclip"></i>
                                 </a>
@@ -97,7 +97,7 @@
                                         <span>Print</span>
                                     </a>
                                 </div>
-                            </div>
+                            </div> -->
                             <a href="{{ route('admin.tasks.create') }}" class="btn btn-primary">
                                 <i class="feather-plus me-2"></i>
                                 <span>Create Task</span>
