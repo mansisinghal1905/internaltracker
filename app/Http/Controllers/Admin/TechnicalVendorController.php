@@ -75,7 +75,8 @@ class TechnicalVendorController extends Controller
                 
                 $action .= '<a href="' .route('admin.file.vendorfiledownload', ['filename' => $getUserDocumentUpload->document]) . '" class="toolTip" data-toggle="tooltip" data-placement="bottom" title="Download PDF"><i class="fa fa-download"></i></a>';
             }else{
-                // $action .= ' <a href="" download class="toolTip" data-toggle="tooltip" data-placement="bottom" title="Download PDF"><i class="fa fa-download"></i></a>';
+                $action.="N/A";
+
             }
             $action.="</div>";
 

@@ -7,11 +7,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Permission\Traits\HasRoles;
+use Spatie\Permission\Models\Role;
+
 
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable,SoftDeletes;
+    use HasFactory, Notifiable,SoftDeletes,HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -52,7 +55,7 @@ class User extends Authenticatable
 
     public function fetchUser($request, $columns) {
       
-        $query = User::where('id', '!=', 1)->where('status','!=',2)->orderBy('id', 'desc');
+        $query = User::where('id', '!=', 31)->where('status','!=',2)->orderBy('id', 'desc');
 
         if (isset($request->from_date)) {
             $query->whereRaw('DATE_FORMAT(created_at, "%Y-%m-%d") >= "' . date("Y-m-d", strtotime($request->from_date)) . '"');
@@ -125,6 +128,11 @@ class User extends Authenticatable
     public function getDocument()
     {
         return $this->hasMany(UserDocumentUpload::class, 'user_id');
+    }
+
+    public function getRole()
+    {
+        return $this->hasMany(Role::class, 'role');
     }
     
 

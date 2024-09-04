@@ -18,8 +18,8 @@ class UserDocumentUpload extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected $fillable = [
-        
+    protected $guarded = [
+
     ];
 
     /**
@@ -28,7 +28,7 @@ class UserDocumentUpload extends Authenticatable
      * @var array<int, string>
      */
     protected $hidden = [
-       
+
     ];
 
     /**
@@ -36,13 +36,13 @@ class UserDocumentUpload extends Authenticatable
      *
      * @return array<string, string>
      */
-    public function getdocumentAttribute($details)
-    {
-        if ($details != '') {
-            return asset('public/user_documents').'/'.$details;
-        }
-        return asset('images/no_avatar.jpg');
-    } 
+    // public function getdocumentAttribute($details)
+    // {
+    //     if ($details != '') {
+    //         return asset('public/user_documents').'/'.$details;
+    //     }
+    //     return asset('images/no_avatar.jpg');
+    // }
 
      public function FetchTechnicaluser($request, $columns) {
         // Join with the user_document_uploads table
@@ -50,14 +50,14 @@ class UserDocumentUpload extends Authenticatable
             ->where('users.role', '2')
             ->where('users.status', '!=', 2)->whereNull('users.deleted_at')
             ->orderBy('id', 'desc');
-        
+
         if (isset($request->from_date)) {
             $query->whereRaw('DATE_FORMAT(users.created_at, "%Y-%m-%d") >= "' . date("Y-m-d", strtotime($request->from_date)) . '"');
         }
         if (isset($request->end_date)) {
             $query->whereRaw('DATE_FORMAT(users.created_at, "%Y-%m-%d") <= "' . date("Y-m-d", strtotime($request->end_date)) . '"');
         }
-    
+
         if (isset($request['search']['value']) && !empty($request['search']['value'])) {
             $searchValue = $request['search']['value'];
             $query->where(function ($q) use ($searchValue) {
@@ -66,35 +66,35 @@ class UserDocumentUpload extends Authenticatable
                   ->orWhere('users.created_at', 'like', '%' . $searchValue . '%');
             });
         }
-    
+
         if (isset($request->status)) {
             $query->where('users.status', $request->status);
         }
-    
+
         if (isset($request->order_column)) {
             $categories = $query->orderBy($columns[$request->order_column], $request->order_dir);
         } else {
             $categories = $query->orderBy('users.created_at', 'desc');
         }
-    
+
         return $categories->select('users.*');
     }
-    
+
     public function FetchTechnicalVendor($request, $columns) {
         // Join with the user_document_uploads table
         $query = User::where('users.id', '!=', 1)  // Specify 'users.id' instead of just 'id'
             ->where('users.role', '3')
             ->where('users.status', '!=', 2)->whereNull('users.deleted_at')
-            
+
             ->orderBy('id', 'desc');
-        
+
         if (isset($request->from_date)) {
             $query->whereRaw('DATE_FORMAT(users.created_at, "%Y-%m-%d") >= "' . date("Y-m-d", strtotime($request->from_date)) . '"');
         }
         if (isset($request->end_date)) {
             $query->whereRaw('DATE_FORMAT(users.created_at, "%Y-%m-%d") <= "' . date("Y-m-d", strtotime($request->end_date)) . '"');
         }
-    
+
         if (isset($request['search']['value']) && !empty($request['search']['value'])) {
             $searchValue = $request['search']['value'];
             $query->where(function ($q) use ($searchValue) {
@@ -103,22 +103,22 @@ class UserDocumentUpload extends Authenticatable
                   ->orWhere('users.created_at', 'like', '%' . $searchValue . '%');
             });
         }
-    
+
         if (isset($request->status)) {
             $query->where('users.status', $request->status);
         }
-    
+
         if (isset($request->order_column)) {
             $categories = $query->orderBy($columns[$request->order_column], $request->order_dir);
         } else {
             $categories = $query->orderBy('users.created_at', 'desc');
         }
-    
+
         return $categories->select('users.*');
     }
      public function getDocument() {
 
-        return $this->belongsTo(User::class,'user_id','id')->where('id', '!=', 1)->where('status','!=','0'); 
+        return $this->belongsTo(User::class,'user_id','id')->where('id', '!=', 1)->where('status','!=','0');
 
     }
 }

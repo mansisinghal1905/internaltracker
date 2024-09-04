@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\CustomerAccountController;
 use App\Http\Controllers\Admin\VendorAccountController;
 use App\Http\Controllers\Admin\TechnicalCustomerController;
 use App\Http\Controllers\Admin\TechnicalVendorController;
+use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Admin\Auth\ForgetPasswordController;
 use App\Http\Middleware\AuthCheck;
@@ -92,6 +93,9 @@ Route::middleware([AuthCheck::class])->group(function(){
         Route::resource('technical-vendors', TechnicalVendorController::class);
         Route::post('admin/technical-vendors/technicalvendor-ajax', [TechnicalVendorController::class, 'technicalvendorAjax'])->name('technicalvendorAjax');
         Route::get('/vendor-download/{filename}', [TechnicalVendorController::class, 'vendorfiledownload'])->name('file.vendorfiledownload');
+
+        Route::resource('roles', RoleController::class);
+        Route::post('admin/roles/role-ajax', [RoleController::class, 'roleAjax'])->name('roleAjax');
 
     });
 });

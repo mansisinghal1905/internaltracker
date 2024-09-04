@@ -44,21 +44,23 @@
                             <li class="nxl-item"><a class="nxl-link" href="proposal-create.html">Proposal Create</a></li>
                         </ul>
                     </li> -->
-                    
+                    @can('Users-Management')
                     <li class="nxl-item nxl-hasmenu">
                         <a href="{{ route('admin.users.index') }}" class="nxl-link">
                             <span class="nxl-micon"><i class="feather-users"></i></span>
                             <span class="nxl-mtext">Users Management</span>
                         </a>
                     </li>
-                   
+                    @endcan
+                    @can('Task-Management')
                     <li class="nxl-item nxl-hasmenu">
                         <a href="{{ route('admin.tasks.index') }}" class="nxl-link">
                             <span class="nxl-micon"><i class="feather-briefcase"></i></span>
                             <span class="nxl-mtext">Task Management</span>
                         </a>
                     </li>
-                    
+                    @endcan
+                    @can('Route-Management')
                      <li class="nxl-item nxl-hasmenu">
                         <a href="javascript:void(0);" class="nxl-link">
                             <span class="nxl-micon"><i class="feather-briefcase"></i></span>
@@ -69,7 +71,9 @@
                             <li class="nxl-item"><a class="nxl-link" href="{{ route('admin.routes.index') }}"> Customer Management</a></li>
                             <li class="nxl-item"><a class="nxl-link" href="{{ route('admin.vendorindex') }}">Vendor Management</a></li>
                         </ul>
-                    </li>  
+                    </li> 
+                    @endcan 
+                    @can('Account-Management')
                     <li class="nxl-item nxl-hasmenu">
                         <a href="javascript:void(0);" class="nxl-link">
                             <span class="nxl-micon"><i class="feather-briefcase"></i></span>
@@ -81,7 +85,8 @@
                             <li class="nxl-item"><a class="nxl-link" href="{{ route('admin.vendor-payments.index') }}">Vendor Payment Management</a></li>
                         </ul>
                     </li>
-
+                    @endcan
+                    @can('Technical-Management')
                     <li class="nxl-item nxl-hasmenu">
                         <a href="javascript:void(0);" class="nxl-link">
                             <span class="nxl-micon"><i class="feather-briefcase"></i></span>
@@ -93,8 +98,15 @@
                             <li class="nxl-item"><a class="nxl-link" href="{{ route('admin.technical-vendors.index') }}">Vendor Technical Details</a></li>
                         </ul>
                     </li>
-                   
-                 
+                    @endcan
+                    @can('Role-Management')
+                    <li class="nxl-item nxl-hasmenu">
+                        <a href="{{ route('admin.roles.index') }}" class="nxl-link">
+                            <span class="nxl-micon"><i class="feather-briefcase"></i></span>
+                            <span class="nxl-mtext">Role Management</span>
+                        </a>
+                    </li>
+                 @endcan
                     <!-- <li class="nxl-item nxl-hasmenu">
                         <a href="javascript:void(0);" class="nxl-link">
                             <span class="nxl-micon"><i class="feather-settings"></i></span>

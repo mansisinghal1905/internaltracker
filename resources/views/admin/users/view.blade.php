@@ -77,7 +77,7 @@
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4"><strong>Type:</strong></div>
-                            <div class="col-md-8"><p class="text-muted mb-0">{{ $user->role == 2 ? 'Customer' : ($user->role == 3 ? 'Vendor' : 'Unknown') }}</p></div>
+                            <div class="col-md-8"><p class="text-muted mb-0">{{ $user->getRoleNames()[0] }}</p></div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4"><strong>Created On:</strong></div>

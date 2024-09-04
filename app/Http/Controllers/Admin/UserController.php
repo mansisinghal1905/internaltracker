@@ -10,6 +10,7 @@ use App\Models\City;
 use App\Models\UserDocumentUpload;
 use App\Models\BankInformation;
 use App\Models\User;
+use Spatie\Permission\Models\Role;
 use DB;
 use Hash;
 
@@ -21,6 +22,7 @@ class UserController extends Controller
     function __construct()
     {
         $this->Model = new User;
+        $this->middleware('permission:Users-Management', ['only' => ['index','store','create','edit','destroy','update']]);
 
         $this->columns = [
             "id",
@@ -35,7 +37,7 @@ class UserController extends Controller
     }
 
     public static function generateReferralCode($user_id) {
-		
+
 		$letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
 		$code = substr($letters, mt_rand(0, 24), 2) . mt_rand(1000, 9999) . substr($letters, mt_rand(0, 23), 3) . mt_rand(10, 99).$user_id;
@@ -67,6 +69,7 @@ class UserController extends Controller
         $result = [];
         $i = 1;
         foreach ($categories as $value) {
+            // dd($value->getRoleNames());
             $data = [];
             $data['id'] = $i++;
 
@@ -74,23 +77,24 @@ class UserController extends Controller
             $data['email'] = $value->email;
             $data['phone_number'] = $value->phone_number;
             // $data['role'] = $value->role;
-            $data['role'] = $value->role == 2 ? 'Customer' : ($value->role == 3 ? 'Vendor' : 'Unknown');
+            $data['role'] =   $value->getRoleNames()[0];
+
 
             $data['avatar'] = ($value->avatar != null) ? '<img src="'. $value->avatar.'" height="40%"width="40%" />' : '-';
 
-        
+
             $status = "<div class='form-check form-switch form-switch-sm'><input class='form-check-input c-pointer userStatusToggle' type='checkbox' id='formSwitchDropbox_{$value->id}' data-id='{$value->id}'" . ($value->status == 1 ? 'checked' : '') . "><label class='form-check-label fw-500 text-dark c-pointer' for='formSwitchDropbox_{$value->id}'>" . ($value->status == 1 ? 'Active' : 'Inactive') . "</label></div>";
-        
+
             // $view = "<a href='" . route('admin.users.show', $value->id) . "' data-status='1' class='badge badge-secondary userStatus'>View</a>";
 
             $action = '<div class="actionBtn d-flex align-itemss-center" style="gap:8px">';
 
             $action .= '<a href="' . route('admin.users.edit', $value->id) . '" class="toolTip" data-toggle="tooltip" data-placement="bottom" title="Edit"><i class="fa fa-pencil"></i></a>';
-            
+
             $action .= '<a href="' . route('admin.users.show', $value->id) . '" class="toolTip" data-toggle="tooltip" data-placement="bottom" title="View Detail"><i class="fa fa-eye"></i></a>';
 
             $action .= '<a href="javascript:void(0)" onclick="deleteUsers(this)" data-url="' . route('admin.userdestory') . '" class="toolTip deleteUsers" data-toggle="tooltip" data-id="' . $value->id . '" data-placement="bottom" title="Delete"><i class="fa fa-times"></i></a>';
- 
+
             $action.="</div>";
 
             $data['view'] = $action;
@@ -112,19 +116,23 @@ class UserController extends Controller
     public function create()
     {
         $user = null;
+        $existingDocuments = [];
+       // $roles = Role::where('id','!=',1)->pluck('name','name')->all();
+       // $roles = Role::where("id","<>",1)->get();
+       $roles = Role::where("id","<>",1)->pluck('name','name')->all();
+       $userRole =null;// $user->roles->pluck('name','name')->all();
 
-        return view('admin.users.create',compact('user'));
+        return view('admin.users.create',compact('user','existingDocuments','roles'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-   
-   
+
+
 
     public function store(Request $request) {
         $input = $request->all();
-        
         $validate = Validator($request->all(), [
             'first_name' => 'required',
             'last_name' => 'required',
@@ -133,7 +141,7 @@ class UserController extends Controller
             'role' => 'required',
 
         ]);
-    
+
         $attr = [
             'first_name' => 'First Name',
             'last_name' => 'Last Name',
@@ -142,11 +150,13 @@ class UserController extends Controller
             'role' => 'Role',
         ];
         $validate->setAttributeNames($attr);
-    
+
         if ($validate->fails()) {
             return redirect()->route('admin.users.create')->withInput($request->all())->withErrors($validate);
         } else {
             try {
+                $roles = Role::where("name",$request->role)->first();
+
                 $checkedPhone = User::where("phone_number", $request->phone_number)
                                     ->where("status", "!=", "delete")
                                     ->first();
@@ -154,8 +164,9 @@ class UserController extends Controller
                     $request->session()->flash('error', 'Phone number already exists');
                     return redirect()->back();
                 }
-    
+
                 $user = new User;
+
                 $filename = "";
                 if ($request->hasfile('avatar')) {
                     $file = $request->file('avatar');
@@ -169,33 +180,46 @@ class UserController extends Controller
                 }
 
                 $password = $this->generateReferralCode(1);
-    
+
                 $user->first_name = ucfirst($request->first_name);
                 $user->last_name = ucfirst($request->last_name);
                 $user->email = $request->email;
                 $user->phone_number = $request->phone_number;
                 $user->password = Hash::make($password);
                 $user->ip = $request->ip;
-                $user->role = $request->role;
+                $user->role = $roles->id;
+
+
+                // dd($user);
                 $user->save();
 
-                    // Handle multiple document uploads
-                    $departmentTypes = $request->input('department_type', []); 
-                    $documents = $request->file('document', []);
+             
+                // Assign roles
+                $user->assignRole($roles->name);
+     
 
-                    foreach ($departmentTypes as $key => $departmentType) {
-                        if (isset($documents[$key])) {
-                            $documentFile = $documents[$key];
-                            $documentFilename = time() . $documentFile->getClientOriginalName();
-                            $documentFile->move(public_path('user_documents'), $documentFilename);
-
-                            $userDocument = new UserDocumentUpload;
-                            $userDocument->user_id = $user->id;
-                            $userDocument->department_type = $departmentType;
-                            $userDocument->document = $documentFilename;
-                            $userDocument->save();
+                if(isset($request->department_type)){
+                    foreach ($request->department_type as $key => $type) {
+                        // Check if a document is uploaded for the current type
+                        if ($request->hasFile("document.$type")) {
+                            $document = $request->file("document.$type");
+                            // Generate a unique filename
+                            $docfilename = time() . '_' . $document->getClientOriginalName();
+                            // Move the file to the public directory
+                            $document->move(public_path('user_documents'), $docfilename);
+                        } else {
+                            $docfilename = null;
                         }
+                    
+                        // Save the document information in the database
+                        $user->getDocument()->create([
+                            'department_type' => $type,
+                            'document' => $docfilename,
+                        ]);
                     }
+                }
+                
+            
                 $request->session()->flash('success', 'User added successfully');
                 return redirect()->route('admin.users.index');
             } catch (Exception $e) {
@@ -204,7 +228,7 @@ class UserController extends Controller
             }
         }
     }
-    
+
 
     /**
      * Display the specified resource.
@@ -222,16 +246,18 @@ class UserController extends Controller
      */
     public function edit(Request $request, $id = null) {
         if (isset($id) && $id != null) {
-            // $user = User::where('id', $id)->first();
             $user = User::with('getDocument')->find($id);
-            // $CountryCode =Country::select('shortname')->first();
-            // dd($user);
-            if (isset($user->id)) {
-                // $user->country_flag = $CountryCode->shortname ??'IL';
             
-                $type = 'edit';
+            if (isset($user->id)) {
 
-                return view('admin.users.create', compact('user', 'type'));
+                $type = 'edit';
+              // Retrieve existing documents for the user
+                $existingDocuments = $user->getDocument()->pluck('document', 'department_type')->toArray();
+
+                $roles = Role::where("id","<>",31)->pluck('name','name')->all();
+                $userRole = $user->roles->pluck('name','name')->all();
+        
+                return view('admin.users.create', compact('user', 'type','existingDocuments','roles','userRole'));
             } else {
                 $request->session()->flash('error', 'Invalid Data');
                 return redirect()->route('admin.users.index');
@@ -247,34 +273,35 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        // dd($request->all());
         if (isset($id) && $id != null) {
-    
+
             $user = User::find($id);
             if (!$user) {
                 $request->session()->flash('error', 'User not found');
                 return redirect()->route('admin.users.edit', ['id' => $id]);
             }
-    
+
             $checkedMail = User::where("id", "!=", $id)
                 ->where("email", $request->email)
                 ->first();
-    
+
             if ($checkedMail) {
                 $request->session()->flash('error', 'Email address already exists');
                 return redirect()->back();
             }
-    
+
             $checkedPhone = User::where("status", "!=", "delete")
                 ->where("phone_number", $request->phone_number)
                 ->where("id", "!=", $id)
                 ->first();
-    
+
             if ($checkedPhone) {
                 $request->session()->flash('error', 'Phone number already exists');
                 return redirect()->back();
             }
-    
-           
+
+
             $request->validate([
                 'first_name' => 'required',
                 'last_name' => 'required',
@@ -282,7 +309,7 @@ class UserController extends Controller
                 'phone_number' => 'required|min:8|numeric',
                 'role' => 'required',
             ]);
-    
+
             $attr = [
                 'first_name' => 'First Name',
                 'last_name' => 'Last Name',
@@ -290,62 +317,65 @@ class UserController extends Controller
                 'phone_number' => 'Mobile',
                 'role' => 'Role',
             ];
-    
 
-    
+
+
             try {
+                $roles = Role::where("name",$request->role)->first();
+
                 // Handle avatar upload
                 if ($request->hasFile('avatar')) {
                     $file = $request->file('avatar');
                     $filename = time() . '_' . str_replace(' ', '', $file->getClientOriginalName());
                     $filename = str_replace('.jpeg', '.jpg', $filename);
                     $file->move(public_path('profileimage'), $filename);
-    
+
                     if ($user->avatar && file_exists(public_path('profileimage/' . $user->avatar)) && $user->avatar != 'noimage.jpg') {
                         unlink(public_path('profileimage/' . $user->avatar));
                     }
-    
+
                     $user->avatar = $filename;
                 }
-    
+
                 $user->first_name = ucfirst($request->first_name);
                 $user->last_name = ucfirst($request->last_name);
                 $user->email = $request->email;
                 $user->phone_number = $request->phone_number;
-                $user->role = $request->role;
-                $user->ip = $request->ip();
+                $user->role = $roles->id;
+                $user->ip = $request->ip;
                 $user->updated_at = now();
-    
+
                 if ($user->save()) {
-    
-                    // Handle multiple document uploads
-                    $departmentTypes = $request->input('department_type', []);
-                    $documents = $request->file('document', []);
-                    $user_document_ids = $request->input('user_document_id', []);
-    
-                    foreach ($departmentTypes as $key => $departmentType) {
-                        if (isset($documents[$key])) {
-                            $documentFile = $documents[$key];
-                            $documentFilename = time() . '_' . str_replace(' ', '', $documentFile->getClientOriginalName());
-                            $documentFile->move(public_path('user_documents'), $documentFilename);
-    
-                            if (isset($user_document_ids[$key])) {
-                                $userDocument = UserDocumentUpload::find($user_document_ids[$key]);
-                                if ($userDocument) {
-                                    $userDocument->department_type = $departmentType;
-                                    $userDocument->document = $documentFilename;
-                                    $userDocument->save();
+                    // Handle document updates
+                    $existingDocuments = $user->getDocument()->pluck('document', 'department_type')->toArray();
+                    if(isset($request->department_type)){
+                        foreach ($request->department_type as $type) {
+                            if ($request->hasFile("document.$type")) {
+                                $document = $request->file("document.$type");
+                                $docfilename = time() . '_' . $document->getClientOriginalName();
+                                $document->move(public_path('user_documents'), $docfilename);
+        
+                                // Unlink old document if it exists
+                                if (isset($existingDocuments[$type]) && file_exists(public_path('user_documents/' . $existingDocuments[$type]))) {
+                                    unlink(public_path('user_documents/' . $existingDocuments[$type]));
                                 }
                             } else {
-                                $userDocument = new UserDocumentUpload;
-                                $userDocument->user_id = $user->id;
-                                $userDocument->department_type = $departmentType;
-                                $userDocument->document = $documentFilename;
-                                $userDocument->save();
+                                $docfilename = isset($existingDocuments[$type]) ? $existingDocuments[$type] : null;
                             }
+        
+                            $user->getDocument()->updateOrCreate(
+                                ['department_type' => $type],
+                                ['document' => $docfilename]
+                            );
                         }
                     }
+                    
+
+                    DB::table('model_has_roles')->where('model_id',$id)->delete();
     
+                        // Assign roles
+                    $user->assignRole($roles->name);
+                    
                     $request->session()->flash('success', 'User updated successfully');
                     return redirect()->route('admin.users.index');
                 } else {
@@ -361,7 +391,7 @@ class UserController extends Controller
             return redirect()->route('admin.users.edit', ['id' => $id]);
         }
     }
-    
+
 
 
     /**
@@ -375,7 +405,7 @@ class UserController extends Controller
 
         // BankInformation::where('user_id', $user->id)->delete();
         return redirect()->route('admin.users.index')->with('success', 'User deleted Successfully.');;
-   
+
     }
 
     public function changeUserStatus(Request $request)
@@ -399,9 +429,9 @@ class UserController extends Controller
     	if($request->selectedValues){
     	try{
     		$data = State::whereIn("country_id",$request->selectedValues)->where("status","active")->get(['id',"name"]);
-	     	
+
             if ($data->count() > 0) {
-	     		
+
 	     		$response['status'] = true;
 	     		$response['data'] = $data;
 	     	} else {
@@ -416,18 +446,18 @@ class UserController extends Controller
 		else{
 				$response['status'] =  false;
      		$response['data'] = null;
-	
+
 		}
 		return response()->json($response);
     }
 
     public function getCitylistByStateId(Request $request){
     	if($request->selectedValues){
- 		
+
  		try{
     		$data = City::whereIn("state_id",$request->selectedValues)->where("status","active")->get(['id',"name"]);
 	     	if ($data->count() > 0) {
-	     		
+
 	     		$response['status'] = true;
 	     		$response['data'] = $data;
 	     	} else {
@@ -438,7 +468,7 @@ class UserController extends Controller
 				$response['status'] =  false;
 	     		$response['data'] = null;
 			}
-			return response()->json($response);	
+			return response()->json($response);
     	}
     }
 }

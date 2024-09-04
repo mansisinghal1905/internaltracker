@@ -1,7 +1,55 @@
 
 
 @extends('admin.layouts.backend.app')
+@push('style')
+<style>
 
+.create-user-check-box-style {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+.create-user-check-box-style label {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    padding: 10px 5px;
+}
+
+.create-user-check-box-style label input {
+    margin-right: 5px;
+    width: 20px;
+    height: 20px;
+}
+
+.create-user-check-box-style input[type="file"] {
+    display: block;
+    padding: 5px;
+    width: 100%;
+}
+
+.create-user-check-box-style .upload-doc-check {
+    max-width: 250px;
+    display: flex;
+    flex-wrap: wrap;
+    min-width: 250px
+}
+.create-user-check-box-style .upload-doc-check a {
+    display: block;
+    padding: 5px 5px;
+    background: #494c51;
+    max-width: 160px;
+    text-align: center;
+    color: #fff;
+    border-radius: 5px;
+    width: 100%;
+}
+</style>
+
+@endpush
 @section('content')
 <main class="nxl-container">
         <div class="nxl-content">
@@ -25,7 +73,7 @@
                             </a>
                         </div>
                     </div>
-             
+
                     <div class="d-md-none d-flex align-items-center">
                         <a href="javascript:void(0)" class="page-header-right-open-toggle">
                             <i class="feather-align-right fs-20"></i>
@@ -40,7 +88,7 @@
                     <div class="col-lg-12">
                         <div class="card border-top-0">
                             <!-- <div class="card-header p-0">
-                               
+
                                 <ul class="nav nav-tabs flex-wrap w-100 text-center customers-nav-tabs" id="myTab" role="tablist">
                                     <li class="nav-item flex-fill border-top" role="presentation">
                                         <a href="javascript:void(0);" class="nav-link active" data-bs-toggle="tab" data-bs-target="#profileTab" role="tab">Profile</a>
@@ -48,11 +96,11 @@
                                     <li class="nav-item flex-fill border-top" role="presentation">
                                         <a href="javascript:void(0);" class="nav-link" data-bs-toggle="tab" data-bs-target="#passwordTab" role="tab">Bank Information</a>
                                     </li>
-                                  
+
                                 </ul>
                             </div> -->
                             <div class="tab-content">
-                                
+
                                 <div class="tab-pane fade show active" id="profileTab" role="tabpanel">
                                     <div class="card-body personal-info">
 
@@ -77,7 +125,7 @@
                                                 <span class="fs-12 fw-normal text-muted text-truncate-1-line">Following information is publicly displayed, be careful! </span>
                                             </h5>
                                         </div>
-                                       
+
                                         <div class="row mb-4 align-items-center">
                                             <div class="col-lg-4">
                                                 <label for="imageUpload" class="fw-semibold">Upload Image:</label>
@@ -91,10 +139,10 @@
                                                     </div>
                                                     <input type="file" id="file" name="avatar" accept=".jpg, .jpeg, .png" class="form-control">
                                                 </div>
-                                               
+
                                                 <!-- <img src="{{ isset($user->avatar) && !empty($user->avatar) ? $user->avatar : ''}} " style="width:80px;margin-top: 10px;"> -->
                                             </div>
-                                        
+
                                             <div class="col-lg-4">
                                                 <label for="fullnameInput" class="fw-semibold">First Name: </label>
 												 <div class="input-group">
@@ -113,11 +161,11 @@
                                                 @error('last_name')
                                                     <span class="text-danger">{{ $message }}</span>
                                                 @enderror
-                                            </div>	
+                                            </div>
                                         </div>
 
                                         <div class="row mb-4 align-items-center">
-                                        
+
                                             <div class="col-lg-4">
                                                 <label for="fullnameInput" class="fw-semibold">Email: </label>
                                                 <div class="input-group">
@@ -135,16 +183,23 @@
                                                 @error('phone_number')
                                                     <span class="text-danger">{{ $message }}</span>
                                                 @enderror
-                                            </div>  
+                                            </div>
                                             <div class="col-lg-4">
                                                 <label for="fullnameInput" class="fw-semibold">Role: </label>
                                                 <div class="input-group">
                                                     <select class="form-control @error('role') is-invalid @enderror" data-select2-selector="tag" name="role" id="role">
-                                                    
-                                                            <option value="">Select Role</option>
-                                                            <option value="2" {{ old('role', isset($user->role) ? $user->role : '') == '2' ? 'selected' : '' }}>Customer</option>
-                                                            <option value="3" {{ old('role', isset($user->role) ? $user->role : '') == '3' ? 'selected' : '' }}>Vendor</option>
 
+                                                            <option value="">Select Role</option>
+                                                       @if(isset($roles) && count($roles) > 0)
+                                            @foreach ($roles as $value => $label)
+                                            @php
+                                            @endphp
+                                             <option value="{{ $value }}"  {{ isset($userRole[$value]) ? 'selected' : ''}}>
+                                                                                        {{ $label }}
+                                                                                    </option>
+
+                                            @endforeach
+                                            @endif
                                                     </select>
                                                 </div>
                                                 @error('role')
@@ -154,67 +209,62 @@
                                         </div>
 
                                         <div class="row mb-4 align-items-center">
-                                        
+
                                             <div class="col-lg-4">
                                                 <label for="fullnameInput" class="fw-semibold">Add IP: </label>
                                                 <div class="input-group">
                                                 <input type="text" class="form-control" name="ip" value="{{ isset($user->ip) && !empty($user->ip) ? $user->ip : ''}}" id="mailInput" placeholder="Enter Ip">
                                                 </div>
+
+                                            </div>
+
+                                            
+                                            <!-- Trade Reference Checkbox and File Input -->
+                                            <div class="col-lg-8 create-user-check-box-style">
+                                                <!-- Trade Reference -->
+                                                 <div class="upload-doc-check">
+                                                 <label>
+                                                    <input type="checkbox" name="department_type[]" value="trade_reference" class="doc-checkbox" data-target="upload-input-1"
+                                                        {{ in_array('trade_reference', array_keys($existingDocuments)) ? 'checked' : '' }}> Trade Reference
+                                                </label>
+                                                @if(isset($existingDocuments['trade_reference']))
+                                                    <a href="{{ url('public/user_documents/' . $existingDocuments['trade_reference']) }}" target="_blank">View Document</a>
+                                                @endif
+                                                <input type="file" accept=".pdf" name="document[trade_reference]" id="upload-input-1" class="upload-input" style="display:none;">
+                                                 </div>
+
+                                                 <div class="upload-doc-check">
+                                                     <!-- Agreement -->
+                                                <label>
+                                                    <input type="checkbox" name="department_type[]" value="agreement" class="doc-checkbox" data-target="upload-input-2"
+                                                        {{ in_array('agreement', array_keys($existingDocuments)) ? 'checked' : '' }}> Agreement
+                                                </label>
+                                                @if(isset($existingDocuments['agreement']))
+                                                    <a href="{{ url('public/user_documents/' . $existingDocuments['agreement']) }}" target="_blank">View Document</a>
+                                                @endif
+                                                <input type="file" accept=".pdf" name="document[agreement]" id="upload-input-2" class="upload-input" style="display:none;">
+                                                    </div>
+
+                                                    <div class="upload-doc-check">
+                                                     <!-- Technical Document -->
+                                                <label>
+                                                    <input type="checkbox" name="department_type[]" value="technical_document" class="doc-checkbox" data-target="upload-input-3"
+                                                        {{ in_array('technical_document', array_keys($existingDocuments)) ? 'checked' : '' }}> Technical Document
+                                                </label>
+                                                @if(isset($existingDocuments['technical_document']))
+                                                    <a href="{{ url('public/user_documents/' . $existingDocuments['technical_document']) }}" target="_blank">View Document</a>
+                                                @endif
+                                                <input type="file" accept=".pdf" name="document[technical_document]" id="upload-input-3" class="upload-input" style="display:none;">
+                                                    </div>
+                                               
+
+                                               
+
                                                
                                             </div>
-                    @if(isset($user->getDocument) && !empty($user->getDocument))
-                    <div class="col-lg-8">
-                    @foreach($user->getDocument as $row)
-                         @if($row->department_type=='agreement')
-                         <label><input type="checkbox" checked name="department_type[]" value="agreement" class="doc-checkbox" data-target="upload-input-1"> Agreement</label>
-                          @endif
-                          @if($row->department_type=='technical_document' )
-                         <label><input type="checkbox" checked name="department_type[]" value="technical_document" class="doc-checkbox" data-target="upload-input-1"> Technical Document</label>
-                        
-                         <input type="file" accept=".pdf" name="document[]" value="" id="upload-input-1" class="upload-input" style="display:;">
-                                @if(isset($row->document) && !empty($row->document))
-                                    <p>Current Document: <a href="{{ asset($row->document) }}" target="_blank"> View Technical Document</a></p>
-                                @endif
-                          @endif
-                          @if($row->department_type=='trade_reference')
-                         <label><input type="checkbox" checked name="department_type[]" value="trade_reference" class="doc-checkbox" data-target="upload-input-1"> Trade Reference</label>
-                          @endif 
-                   @endforeach  
-                   </div>
-                    @else
-                    <div class="col-lg-8">
-                        <label><input type="checkbox" name="department_type[]" value="trade_reference" class="doc-checkbox" data-target="upload-input-1"> Trade Reference</label>
-                                                <input type="file" accept=".pdf" name="document[]" value="" id="upload-input-1" class="upload-input" style="display:none;">
-                                                @if(isset($user->document) && !empty($user->document))
-                                                    <p>Current Document: 
-                                                        <a href="{{ asset($user->document) }}" target="_blank">
-                                                            {{ $user->document }}
-                                                        </a>
-                                                    </p>
-                                                @endif
-                                                <label><input type="checkbox" name="department_type[]" value="agreement" class="doc-checkbox" data-target="upload-input-2"> Agreement</label>
-                                                <input type="file" accept=".pdf" name="document[]" id="upload-input-2" class="upload-input" style="display:none;">
-                                                @if(isset($user->document) && !empty($user->document))
-                                                    <p>Current Document: 
-                                                        <a href="{{ asset($user->document) }}" target="_blank">
-                                                            {{ $user->document }}
-                                                        </a>
-                                                    </p>
-                                                @endif
-                                                <label><input type="checkbox" name="department_type[]" value="technical_document" class="doc-checkbox" data-target="upload-input-3"> Technical Document</label>
-                                                <input type="file" accept=".pdf" name="document[]" id="upload-input-3" class="upload-input" style="display:none;">
-                                                @if(isset($user->document) && !empty($user->document))
-                                                    <p>Current Document: 
-                                                        <a href="{{ asset($user->document) }}" target="_blank">
-                                                            {{ $user->document }}
-                                                        </a>
-                                                    </p>
-                                                @endif                                            
-                                            </div>                   
-                    @endif                     
 
+                                            
                                         </div>
-
                                         <div class="d-flex justify-content-end">
                                             <button type="submit" class="btn btn-primary">Save Changes</button>
                                         </div>
@@ -223,7 +273,7 @@
                                 </div>
 
                                 <!-- Bank Detail -->
-                                
+
                             </div>
                         </div>
                     </div>
@@ -267,7 +317,7 @@
         $('#city_id').select2({
             placeholder: 'Select city', // Your placeholder text here
         });
-        //Country 
+        //Country
          $("#country_id").change(function() {
             selectedValues = [];
             selectedValues.push($(this).val());
@@ -289,9 +339,9 @@
             SelectChangeValue(data,url,id,null);
 
 
-           
+
         });
-        //State 
+        //State
          $("#state_id").change(function() {
             selectedValues = [];
             selectedValues.push($(this).val());
@@ -302,9 +352,9 @@
             id = "#city_id";
             SelectChangeValue(data,url,id,null);
 
-           
+
         });
-        
+
         function SelectChangeValue(data,url,id,selectedId){
             valuesArray = null;
             if(selectedId!=null)
@@ -324,27 +374,27 @@
             })
             .done(function(data) {
                 if (data.status == true) {
-                  
+
                   var result = data.data;
-                  var select_option = ''; 
+                  var select_option = '';
                   if (id === '#country_id') {
-                    select_option = 'Select Country'; 
+                    select_option = 'Select Country';
                   }else if(id === '#state_id'){
-                    select_option = 'Select State'; 
+                    select_option = 'Select State';
                   }else if(id === '#city_id'){
-                    select_option = 'Select City'; 
+                    select_option = 'Select City';
                   }else{
-                    select_option = 'Select Region'; 
+                    select_option = 'Select Region';
                   }
                   options="<option selected  value=''>"+select_option+"</option>";
-                  
+
                   $.each(result, function(key,val) {
                     /*if($.inArray(val.id, valuesArray) !== -1)
                     {
                         options+="<option value='"+val.id+"'>"+val.name+"</option>";
                     }
                     else{*/
-                     options+="<option  value='"+val.id+"'>"+val.name+"</option>";   
+                     options+="<option  value='"+val.id+"'>"+val.name+"</option>";
                     /*}*/
                   });
                 }
@@ -356,21 +406,17 @@
 </script>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-    const checkboxes = document.querySelectorAll('.doc-checkbox');
-
-    checkboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', function () {
-            const targetId = checkbox.getAttribute('data-target');
-            const uploadInput = document.getElementById(targetId);
-
-            if (checkbox.checked) {
-                uploadInput.style.display = 'block';
-            } else {
-                uploadInput.style.display = 'none';
-            }
-        });
+    $(document).ready(function () {
+    $('.doc-checkbox').change(function () {
+        var target = $(this).data('target');
+        if ($(this).is(':checked')) {
+            $('#' + target).show();
+        } else {
+            $('#' + target).hide().val('');
+        }
     });
 });
+
+
 </script>
 @endpush
