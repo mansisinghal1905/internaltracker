@@ -215,8 +215,8 @@
                                                 <th>Full Name</th>
                                                 <th>Email</th>
                                                 <th>Phone</th>
+                                                <th>Role</th>
                                                 <th>Type</th>
-                                               
                                                 <th>Status</th>
                                                 <th class="">Actions</th>
                                             </tr>
@@ -302,7 +302,7 @@
                 { "data": "email" },
                 { "data": "phone_number" },
                 { "data": "role" },
-                
+                { "data": "type" },
 				{ "data": "status" },
 				{ "data": "view" },
 

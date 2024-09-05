@@ -71,7 +71,7 @@ class VendorPaymentHistory extends Authenticatable
 
     public function getVendor() {
 
-        return $this->belongsTo(User::class,'vendor_id','id')->where('id', '!=', 1)->where('status','!=','0'); 
+        return $this->belongsTo(User::class,'vendor_id','id')->where('id', '!=', 31)->where('status','!=','0'); 
 
     }
     public function getvendorpayment() {

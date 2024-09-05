@@ -16,14 +16,14 @@
                 </ul>
             </div>
             <div class="page-header-right ms-auto">
-                <div class="page-header-right-items">
-                    <div class="d-flex d-md-none">
-                        <a href="javascript:void(0)" class="page-header-right-close-toggle">
-                            <i class="feather-arrow-left me-2"></i>
-                            <span>Back</span>
-                        </a>
-                    </div>
+            <div class="page-header-right-items">
+                <div class="d-flex align-items-center">
+                    <a href="{{ route('admin.tasks.index') }}" class="btn btn-outline-primary d-flex align-items-center">
+                        <i class="feather-arrow-left me-2"></i>
+                        <span>Back</span>
+                    </a>
                 </div>
+            </div>
                 <div class="d-md-none d-flex align-items-center">
                     <a href="javascript:void(0)" class="page-header-right-open-toggle">
                         <i class="feather-align-right fs-20"></i>

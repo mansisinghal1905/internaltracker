@@ -93,7 +93,7 @@ class ClientUserController extends Controller
     public function create()
     {
         $clientuser = null;
-        $clientlist = User::where("status","1")->where('id', '!=', 1)->get(['id',"name"]);
+        $clientlist = User::where("status","1")->where('id', '!=', 31)->get(['id',"name"]);
         // dd($clientlist);
         return view('admin.clientusers.create',compact('clientuser','clientlist'));
     }
@@ -170,7 +170,7 @@ class ClientUserController extends Controller
             
                 $type = 'edit';
                
-                 $clientlist = User::where("status","1")->where('id', '!=', 1)->get(['id',"name"]);
+                 $clientlist = User::where("status","1")->where('id', '!=', 31)->get(['id',"name"]);
                     // dd($clientlist);
                 return view('admin.clientusers.create', compact('clientuser', 'type','clientlist'));
             } else {

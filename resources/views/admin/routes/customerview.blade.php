@@ -67,7 +67,7 @@
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4"><strong>Type:</strong></div>
-                            <div class="col-md-8"><p class="text-muted mb-0">{{ $customer->role == 2 ? 'Customer' : ($customer->role == 3 ? 'Vendor' : 'Unknown') }}</p></div>
+                            <div class="col-md-8"><p class="text-muted mb-0">{{ $customer->type == 2 ? 'Customer' : ($customer->type == 1 ? 'Vendor' : 'Unknown') }}</p></div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4"><strong>Created On:</strong></div>

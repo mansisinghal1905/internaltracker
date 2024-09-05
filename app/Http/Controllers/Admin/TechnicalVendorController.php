@@ -20,6 +20,7 @@ class TechnicalVendorController extends Controller
     {
         $this->Model = new User;
         $this->Model1 = new UserDocumentUpload;
+        $this->middleware('permission:Technical-Management', ['only' => ['index','store','create','edit','destroy','update']]);
 
 
         $this->columns = [

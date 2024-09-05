@@ -14,7 +14,7 @@
     <title> Internal Tracker</title>
     <!--! END:  Apps Title-->
     <!--! BEGIN: Favicon-->
-    <link rel="shortcut icon" type="image/x-icon" href="assets/images/favicon.ico" />
+    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('public/assets/images/favicon.ico')}}" />
     <!--! END: Favicon-->
     @include('admin.layouts.backend.headerLinks')
     @stack('style')

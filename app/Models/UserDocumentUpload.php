@@ -46,8 +46,9 @@ class UserDocumentUpload extends Authenticatable
 
      public function FetchTechnicaluser($request, $columns) {
         // Join with the user_document_uploads table
-        $query = User::where('users.id', '!=', 1)  // Specify 'users.id' instead of just 'id'
-            ->where('users.role', '2')
+        $query = User::where('users.id', '!=', 31)  // Specify 'users.id' instead of just 'id'
+            ->where('users.type', '2')
+            ->where('users.role', '4')
             ->where('users.status', '!=', 2)->whereNull('users.deleted_at')
             ->orderBy('id', 'desc');
 
@@ -82,8 +83,9 @@ class UserDocumentUpload extends Authenticatable
 
     public function FetchTechnicalVendor($request, $columns) {
         // Join with the user_document_uploads table
-        $query = User::where('users.id', '!=', 1)  // Specify 'users.id' instead of just 'id'
-            ->where('users.role', '3')
+        $query = User::where('users.id', '!=', 31)  // Specify 'users.id' instead of just 'id'
+            ->where('users.type', '1')
+            ->where('users.role', '4')
             ->where('users.status', '!=', 2)->whereNull('users.deleted_at')
 
             ->orderBy('id', 'desc');
@@ -118,7 +120,7 @@ class UserDocumentUpload extends Authenticatable
     }
      public function getDocument() {
 
-        return $this->belongsTo(User::class,'user_id','id')->where('id', '!=', 1)->where('status','!=','0');
+        return $this->belongsTo(User::class,'user_id','id')->where('id', '!=', 31)->where('status','!=','0');
 
     }
 }

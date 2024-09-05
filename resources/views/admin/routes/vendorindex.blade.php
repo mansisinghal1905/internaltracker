@@ -43,7 +43,7 @@
                                                 <th>Full Name</th>
                                                 <th>Email</th>
                                                 <th>Phone</th>
-                                                <th>Status</th>
+                                                <!-- <th>Status</th> -->
                                                 <th class="">Actions</th>
                                             </tr>
                                         </thead>
@@ -108,7 +108,7 @@
 					url: "{{ route('admin.vendorAjax') }}",
 					type: "POST",
 					data: {
-                        status: $('input[name=status]').val(),
+                        // status: $('input[name=status]').val(),
 					},
 					dataSrc: "data"
 				},
@@ -124,7 +124,7 @@
                 { "data": "fullname" },
                 { "data": "email" },
                 { "data": "phone_number" },
-				{ "data": "status" },
+				// { "data": "status" },
                 { "data": "view" },
 				],
                 columnDefs: [

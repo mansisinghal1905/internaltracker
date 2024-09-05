@@ -68,7 +68,7 @@ class Payment extends Authenticatable
 
     public function getCustomer() {
 
-        return $this->belongsTo(User::class,'customer_id','id')->where('id', '!=', 1)->where('status','!=','0'); 
+        return $this->belongsTo(User::class,'customer_id','id')->where('id', '!=', 31)->where('status','!=','0'); 
 
     }
 }

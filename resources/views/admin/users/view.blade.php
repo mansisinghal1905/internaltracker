@@ -76,8 +76,12 @@
                             @endif 
                         </div>
                         <div class="row mb-3">
-                            <div class="col-md-4"><strong>Type:</strong></div>
+                            <div class="col-md-4"><strong>Role:</strong></div>
                             <div class="col-md-8"><p class="text-muted mb-0">{{ $user->getRoleNames()[0] }}</p></div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4"><strong>Type:</strong></div>
+                            <div class="col-md-8"><p class="text-muted mb-0">{{ $user->type== 2 ? 'Customer' : ($user->type == 1 ? 'Vendor' : 'Unknown') }}</p></div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4"><strong>Created On:</strong></div>

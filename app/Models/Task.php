@@ -71,11 +71,11 @@ class Task extends Authenticatable
     }
 
     public function getUser() {
-        return $this->belongsTo(User::class, 'user_id')->where('role',2)->where('id', '!=', 1); 
+        return $this->belongsTo(User::class, 'user_id')->where('type',2)->where('id', '!=', 31); 
     }
 
     public function getVendor() {
-        return $this->belongsTo(User::class, 'vendor_id')->where('role',3)->where('id', '!=', 1); 
+        return $this->belongsTo(User::class, 'vendor_id')->where('type',1)->where('id', '!=', 31); 
     }
 
 

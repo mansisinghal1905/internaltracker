@@ -75,15 +75,11 @@ Route::middleware([AuthCheck::class])->group(function(){
         // Customer Account route
         Route::resource('customer-payments', CustomerAccountController::class);
         Route::post('admin/customer-payments/payment-ajax', [CustomerAccountController::class, 'paymentAjax'])->name('paymentAjax');
-        // Route::post('change-payment-status', [CustomerAccountController::class, 'ChangePaymentStatus'])->name('ChangePaymentStatus');
-        // Route::post('admin/payments/destory', [CustomerAccountController::class, 'paymentdestory'])->name('paymentdestory');
         Route::post('admin/payments/paymenthistory-ajax', [CustomerAccountController::class, 'paymenthistoryAjax'])->name('paymenthistoryAjax');
         
         // Vendor Account route
         Route::resource('vendor-payments', VendorAccountController::class);
         Route::post('admin/vendor-payments/payment-ajax', [VendorAccountController::class, 'vendorpaymentAjax'])->name('vendorpaymentAjax');
-        // Route::post('change-payment-status', [VendorAccountController::class, 'ChangePaymentStatus'])->name('ChangePaymentStatus');
-        // Route::post('admin/payments/destory', [CustomerAccountController::class, 'paymentdestory'])->name('paymentdestory');
         Route::post('admin/vendorpayments/vendorpaymenthistory-ajax', [VendorAccountController::class, 'vendorpaymenthistoryAjax'])->name('vendorpaymenthistoryAjax');
         
         Route::resource('technical-customers', TechnicalCustomerController::class);

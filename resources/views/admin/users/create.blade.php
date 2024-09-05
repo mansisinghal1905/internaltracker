@@ -189,17 +189,16 @@
                                                 <div class="input-group">
                                                     <select class="form-control @error('role') is-invalid @enderror" data-select2-selector="tag" name="role" id="role">
 
-                                                            <option value="">Select Role</option>
-                                                       @if(isset($roles) && count($roles) > 0)
-                                            @foreach ($roles as $value => $label)
-                                            @php
-                                            @endphp
-                                             <option value="{{ $value }}"  {{ isset($userRole[$value]) ? 'selected' : ''}}>
-                                                                                        {{ $label }}
-                                                                                    </option>
+                                                    <option value="">Select Role</option>
+                                                    @if(isset($roles) && count($roles) > 0)
+                                                        @foreach ($roles as $value => $label)
+                                                            
+                                                            <option value="{{ $value }}"  {{ isset($userRole[$value]) ? 'selected' : ''}}>
+                                                                {{ $label }}
+                                                            </option>
 
-                                            @endforeach
-                                            @endif
+                                                        @endforeach
+                                                    @endif
                                                     </select>
                                                 </div>
                                                 @error('role')
@@ -209,7 +208,21 @@
                                         </div>
 
                                         <div class="row mb-4 align-items-center">
+                                            
+                                            <div class="col-lg-4">
+                                                <label for="fullnameInput" class="fw-semibold">Type: </label>
+                                                <div class="input-group">
+                                                    <select class="form-control @error('type') is-invalid           @enderror" data-select2-selector="tag" name="type" id="type">
 
+                                                            <option value="">Select Type</option>
+                                                            <option value="1" {{ old('type', isset($user->type) ? $user->type : '') == '1' ? 'selected' : '' }}>Vendor</option>
+                                                            <option value="2" {{ old('type', isset($user->type) ? $user->type : '') == '2' ? 'selected' : '' }}>Customer</option>
+                                                    </select>
+                                                </div>
+                                                @error('type')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
                                             <div class="col-lg-4">
                                                 <label for="fullnameInput" class="fw-semibold">Add IP: </label>
                                                 <div class="input-group">
@@ -220,7 +233,7 @@
 
                                             
                                             <!-- Trade Reference Checkbox and File Input -->
-                                            <div class="col-lg-8 create-user-check-box-style">
+                                            <div class="col-lg-4 create-user-check-box-style">
                                                 <!-- Trade Reference -->
                                                  <div class="upload-doc-check">
                                                  <label>

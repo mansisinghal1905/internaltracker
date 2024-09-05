@@ -22,7 +22,7 @@ class TaskController extends Controller
     function __construct()
     {
         $this->Model = new Task;
-
+        $this->middleware('permission:Task-Management', ['only' => ['index','store','create','edit','destroy','update']]);
         $this->columns = [
             "id",
             "title",
@@ -104,8 +104,8 @@ class TaskController extends Controller
     public function create()
     {
         $task = null;
-        $clientlist = User::where("status","1")->where('id', '!=', 1)->where('role','2')->get(['id',"first_name","last_name"]);
-        $vendorlist = User::where("status","1")->where('id', '!=', 1)->where('role','3')->get(['id',"first_name","last_name"]);
+        $clientlist = User::where("status","1")->where('id', '!=', 31)->where('type','2')->get(['id',"first_name","last_name"]);
+        $vendorlist = User::where("status","1")->where('id', '!=', 31)->where('type','1')->get(['id',"first_name","last_name"]);
 
         return view('admin.tasks.create',compact('task','clientlist','vendorlist'));
     }
@@ -170,7 +170,7 @@ class TaskController extends Controller
     public function show(string $id)
     {
         $task=Task::find($id);
-        $clientlist = User::where("status","1")->where('id', '!=', 1)->get(['id',"first_name","last_name"]);
+        $clientlist = User::where("status","1")->where('id', '!=', 31)->get(['id',"first_name","last_name"]);
 
         return view('admin.tasks.view',compact('task','clientlist'));
     }
@@ -188,8 +188,8 @@ class TaskController extends Controller
             
                 $type = 'edit';
                
-                $clientlist = User::where("status","1")->where('id', '!=', 1)->where('role','2')->get(['id',"first_name","last_name"]);
-                $vendorlist = User::where("status","1")->where('id', '!=', 1)->where('role','3')->get(['id',"first_name","last_name"]);
+                $clientlist = User::where("status","1")->where('id', '!=', 31)->where('type','2')->get(['id',"first_name","last_name"]);
+                $vendorlist = User::where("status","1")->where('id', '!=', 31)->where('type','1')->get(['id',"first_name","last_name"]);
             
                 return view('admin.tasks.create', compact('task', 'type','clientlist','vendorlist'));
             } else {

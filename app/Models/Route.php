@@ -37,7 +37,7 @@ class Route extends Authenticatable
 
     public function fetchRoute($request, $columns) {
       
-        $query = User::where('id', '!=', 1)->where('status','!=',2)->where('role','2')->orderBy('id', 'desc');
+        $query = User::where('id', '!=', 31)->where('status','!=',2)->where('type','2')->where('role','3')->orderBy('id', 'desc');
 
         if (isset($request->from_date)) {
             $query->whereRaw('DATE_FORMAT(created_at, "%Y-%m-%d") >= "' . date("Y-m-d", strtotime($request->from_date)) . '"');
@@ -69,7 +69,7 @@ class Route extends Authenticatable
 
     public function fetchvendor($request, $columns) {
       
-        $query = User::where('id', '!=', 1)->where('status','!=',2)->where('role','3')->orderBy('id', 'desc');
+        $query = User::where('id', '!=', 31)->where('status','!=',2)->where('type','1')->where('role','3')->orderBy('id', 'desc');
 
         if (isset($request->from_date)) {
             $query->whereRaw('DATE_FORMAT(created_at, "%Y-%m-%d") >= "' . date("Y-m-d", strtotime($request->from_date)) . '"');
@@ -100,13 +100,7 @@ class Route extends Authenticatable
         return $categories;
     }
 
-    // public function getCustomer() {
-    //     return $this->belongsTo(User::class, 'customer_id')->where('role',2)->where('id', '!=', 1); 
-    // }
-
-    // public function getVendor() {
-    //     return $this->belongsTo(User::class, 'vendor_id')->where('role',3)->where('id', '!=', 1); 
-    // }
+    
 
 
     

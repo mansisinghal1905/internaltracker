@@ -46,7 +46,7 @@
             <!--! [Start] Header Right !-->
             <div class="header-right ms-auto">
                 <div class="d-flex align-items-center">
-                    <div class="dropdown nxl-h-item nxl-header-search">
+                    <!-- <div class="dropdown nxl-h-item nxl-header-search">
                         <a href="javascript:void(0);" class="nxl-head-link me-0" data-bs-toggle="dropdown" data-bs-auto-close="outside">
                             <i class="feather-search"></i>
                         </a>
@@ -248,101 +248,8 @@
                                 <a href="javascript:void(0);" class="p-3 fs-10 fw-bold text-uppercase text-center d-block">Loar More</a>
                             </div>
                         </div>
-                    </div>
-                    <div class="dropdown nxl-h-item nxl-header-language d-none d-sm-flex">
-                        <a href="javascript:void(0);" class="nxl-head-link me-0 nxl-language-link" data-bs-toggle="dropdown" data-bs-auto-close="outside">
-                            <img src="{{ asset('public/assets/vendors/img/flags/4x3/us.svg')}}" alt="" class="img-fluid wd-20" />
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-end nxl-h-dropdown nxl-language-dropdown">
-                            <div class="dropdown-divider mt-0"></div>
-                            <div class="language-items-wrapper">
-                                <div class="select-language px-4 py-2 hstack justify-content-between gap-4">
-                                    <div class="lh-lg">
-                                        <h6 class="mb-0">Select Language</h6>
-                                        <p class="fs-11 text-muted mb-0">12 languages avaiable!</p>
-                                    </div>
-                                    <a href="javascript:void(0);" class="avatar-text avatar-md" data-bs-toggle="tooltip" title="Add Language">
-                                        <i class="feather-plus"></i>
-                                    </a>
-                                </div>
-                                <div class="dropdown-divider"></div>
-                                <div class="row px-4 pt-3">
-                                    <div class="col-sm-4 col-6 language_select">
-                                        <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
-                                            <div class="avatar-image avatar-sm"><img src="{{ asset('public/assets/vendors/img/flags/1x1/sa.svg')}}" alt="" class="img-fluid" /></div>
-                                            <span>Arabic</span>
-                                        </a>
-                                    </div>
-                                    <div class="col-sm-4 col-6 language_select">
-                                        <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
-                                            <div class="avatar-image avatar-sm"><img src="{{ asset('public/assets/vendors/img/flags/1x1/bd.svg')}}" alt="" class="img-fluid" /></div>
-                                            <span>Bengali</span>
-                                        </a>
-                                    </div>
-                                    <div class="col-sm-4 col-6 language_select">
-                                        <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
-                                            <div class="avatar-image avatar-sm"><img src="{{ asset('public/assets/vendors/img/flags/1x1/ch.svg')}}" alt="" class="img-fluid" /></div>
-                                            <span>Chinese</span>
-                                        </a>
-                                    </div>
-                                    <div class="col-sm-4 col-6 language_select">
-                                        <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
-                                            <div class="avatar-image avatar-sm"><img src="{{ asset('public/assets/vendors/img/flags/1x1/nl.svg')}}" alt="" class="img-fluid" /></div>
-                                            <span>Dutch</span>
-                                        </a>
-                                    </div>
-                                    <div class="col-sm-4 col-6 language_select active">
-                                        <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
-                                            <div class="avatar-image avatar-sm"><img src="{{ asset('public/assets/vendors/img/flags/1x1/us.svg')}}" alt="" class="img-fluid" /></div>
-                                            <span>English</span>
-                                        </a>
-                                    </div>
-                                    <div class="col-sm-4 col-6 language_select">
-                                        <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
-                                            <div class="avatar-image avatar-sm"><img src="{{ asset('public/assets/vendors/img/flags/1x1/fr.svg')}}" alt="" class="img-fluid" /></div>
-                                            <span>French</span>
-                                        </a>
-                                    </div>
-                                    <div class="col-sm-4 col-6 language_select">
-                                        <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
-                                            <div class="avatar-image avatar-sm"><img src="{{ asset('public/assets/vendors/img/flags/1x1/de.svg')}}" alt="" class="img-fluid" /></div>
-                                            <span>German</span>
-                                        </a>
-                                    </div>
-                                    <div class="col-sm-4 col-6 language_select">
-                                        <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
-                                            <div class="avatar-image avatar-sm"><img src="{{ asset('public/assets/vendors/img/flags/1x1/in.svg')}}" alt="" class="img-fluid" /></div>
-                                            <span>Hindi</span>
-                                        </a>
-                                    </div>
-                                    <div class="col-sm-4 col-6 language_select">
-                                        <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
-                                            <div class="avatar-image avatar-sm"><img src="{{ asset('public/assets/vendors/img/flags/1x1/ru.svg')}}" alt="" class="img-fluid" /></div>
-                                            <span>Russian</span>
-                                        </a>
-                                    </div>
-                                    <div class="col-sm-4 col-6 language_select">
-                                        <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
-                                            <div class="avatar-image avatar-sm"><img src="{{ asset('public/assets/vendors/img/flags/1x1/es.svg')}}" alt="" class="img-fluid" /></div>
-                                            <span>Spanish</span>
-                                        </a>
-                                    </div>
-                                    <div class="col-sm-4 col-6 language_select">
-                                        <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
-                                            <div class="avatar-image avatar-sm"><img src="{{ asset('public/assets/vendors/img/flags/1x1/tr.svg')}}" alt="" class="img-fluid" /></div>
-                                            <span>Turkish</span>
-                                        </a>
-                                    </div>
-                                    <div class="col-sm-4 col-6 language_select">
-                                        <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
-                                            <div class="avatar-image avatar-sm"><img src="{{ asset('public/assets/vendors/img/flags/1x1/pk.svg')}}" alt="" class="img-fluid" /></div>
-                                            <span>Urdo</span>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    </div> -->
+                   
                     <div class="nxl-h-item d-none d-sm-flex">
                         <div class="full-screen-switcher">
                             <a href="javascript:void(0);" class="nxl-head-link me-0" onclick="$('body').fullScreenHelper('toggle');">
@@ -359,7 +266,7 @@
                             <i class="feather-sun"></i>
                         </a>
                     </div>
-                    <div class="dropdown nxl-h-item">
+                    <!-- <div class="dropdown nxl-h-item">
                         <a href="javascript:void(0);" class="nxl-head-link me-0" data-bs-toggle="dropdown" role="button" data-bs-auto-close="outside">
                             <i class="feather-clock"></i>
                             <span class="badge bg-success nxl-h-badge">2</span>
@@ -381,7 +288,7 @@
                                 <a href="javascript:void(0);" class="fs-13 fw-semibold text-dark">Alls Timesheets</a>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="dropdown nxl-h-item">
                         <a class="nxl-head-link me-3" data-bs-toggle="dropdown" href="#" role="button" data-bs-auto-close="outside">
                             <i class="feather-bell"></i>
@@ -463,7 +370,16 @@
 
                                     <div>
                                         @if(Auth::check())
-                                        <h6 class="text-dark mb-0">{{ ucfirst(Auth::user()->name) }} <span class="badge bg-soft-success text-success ms-1">PRO</span></h6>
+                                        <h6 class="text-dark mb-0">
+                                            @if(Auth::user()->first_name && Auth::user()->last_name)
+                                                {{ ucfirst(Auth::user()->first_name) }} {{ ucfirst(Auth::user()->last_name) }}
+                                            @else
+                                                {{ ucfirst(Auth::user()->name) }}
+                                            @endif
+                                            <!-- <span class="badge bg-soft-success text-success ms-1">PRO</span> -->
+                                        </h6>
+
+                                        <!-- <h6 class="text-dark mb-0">{{ ucfirst(Auth::user()->name) }} <span class="badge bg-soft-success text-success ms-1">PRO</span></h6> -->
                                         @else
                                         <h6 class="text-dark mb-0"> <span class="badge bg-soft-success text-success ms-1">PRO</span></h6>
                                         @endif
@@ -472,104 +388,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- <div class="dropdown">
-                                <a href="javascript:void(0);" class="dropdown-item" data-bs-toggle="dropdown">
-                                    <span class="hstack">
-                                        <i class="wd-10 ht-10 border border-2 border-gray-1 bg-success rounded-circle me-2"></i>
-                                        <span>Active</span>
-                                    </span>
-                                    <i class="feather-chevron-right ms-auto me-0"></i>
-                                </a>
-                                <div class="dropdown-menu">
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        <span class="hstack">
-                                            <i class="wd-10 ht-10 border border-2 border-gray-1 bg-warning rounded-circle me-2"></i>
-                                            <span>Always</span>
-                                        </span>
-                                    </a>
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        <span class="hstack">
-                                            <i class="wd-10 ht-10 border border-2 border-gray-1 bg-success rounded-circle me-2"></i>
-                                            <span>Active</span>
-                                        </span>
-                                    </a>
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        <span class="hstack">
-                                            <i class="wd-10 ht-10 border border-2 border-gray-1 bg-danger rounded-circle me-2"></i>
-                                            <span>Bussy</span>
-                                        </span>
-                                    </a>
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        <span class="hstack">
-                                            <i class="wd-10 ht-10 border border-2 border-gray-1 bg-info rounded-circle me-2"></i>
-                                            <span>Inactive</span>
-                                        </span>
-                                    </a>
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        <span class="hstack">
-                                            <i class="wd-10 ht-10 border border-2 border-gray-1 bg-dark rounded-circle me-2"></i>
-                                            <span>Disabled</span>
-                                        </span>
-                                    </a>
-                                    <div class="dropdown-divider"></div>
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        <span class="hstack">
-                                            <i class="wd-10 ht-10 border border-2 border-gray-1 bg-primary rounded-circle me-2"></i>
-                                            <span>Cutomization</span>
-                                        </span>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="dropdown-divider"></div>
-                            <div class="dropdown">
-                                <a href="javascript:void(0);" class="dropdown-item" data-bs-toggle="dropdown">
-                                    <span class="hstack">
-                                        <i class="feather-dollar-sign me-2"></i>
-                                        <span>Subscriptions</span>
-                                    </span>
-                                    <i class="feather-chevron-right ms-auto me-0"></i>
-                                </a>
-                                <div class="dropdown-menu">
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        <span class="hstack">
-                                            <i class="wd-5 ht-5 bg-gray-500 rounded-circle me-3"></i>
-                                            <span>Plan</span>
-                                        </span>
-                                    </a>
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        <span class="hstack">
-                                            <i class="wd-5 ht-5 bg-gray-500 rounded-circle me-3"></i>
-                                            <span>Billings</span>
-                                        </span>
-                                    </a>
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        <span class="hstack">
-                                            <i class="wd-5 ht-5 bg-gray-500 rounded-circle me-3"></i>
-                                            <span>Referrals</span>
-                                        </span>
-                                    </a>
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        <span class="hstack">
-                                            <i class="wd-5 ht-5 bg-gray-500 rounded-circle me-3"></i>
-                                            <span>Payments</span>
-                                        </span>
-                                    </a>
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        <span class="hstack">
-                                            <i class="wd-5 ht-5 bg-gray-500 rounded-circle me-3"></i>
-                                            <span>Statements</span>
-                                        </span>
-                                    </a>
-                                    <div class="dropdown-divider"></div>
-                                    <a href="javascript:void(0);" class="dropdown-item">
-                                        <span class="hstack">
-                                            <i class="wd-5 ht-5 bg-gray-500 rounded-circle me-3"></i>
-                                            <span>Subscriptions</span>
-                                        </span>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="dropdown-divider"></div> -->
+                           
                             <a href="javascript:void(0);" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#updateProfileModal">
                                 <i class="feather-user"></i>
                                 <span>Update Profile</span>
@@ -688,9 +507,16 @@
                     @endif
                     
                     <div class="mb-3">
-                        <label for="name" class="form-label">Name</label>
-                        <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name', auth()->user()->name) }}">
-                        @error('name')
+                        <label for="first_name" class="form-label">First Name</label>
+                        <input type="text" class="form-control @error('first_name') is-invalid @enderror" id="first_name" name="first_name" value="{{ old('first_name', auth()->user()->first_name) }}">
+                        @error('first_name')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div class="mb-3">
+                        <label for="last_name" class="form-label">Last Name</label>
+                        <input type="text" class="form-control @error('last_name') is-invalid @enderror" id="last_name" name="last_name" value="{{ old('last_name', auth()->user()->last_name) }}">
+                        @error('last_name')
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>

@@ -19,6 +19,7 @@ class VendorAccountController extends Controller
     {
         $this->Model = new VendorPayment;
         $this->Model1 = new VendorPaymentHistory;
+        $this->middleware('permission:Account-Management', ['only' => ['index','store','create','edit','destroy','update']]);
 
 
         $this->columns = [
@@ -97,7 +98,7 @@ class VendorAccountController extends Controller
     public function create()
     {
         $vendorpayment = null;
-        $vendorlist = User::where("status","1")->where('id', '!=', 1)->where('role','3')->get(['id',"first_name","last_name"]);
+        $vendorlist = User::where("status","1")->where('id', '!=', 31)->where('type','1')->get(['id',"first_name","last_name"]);
       
         return view('admin.vendoraccounts.create',compact('vendorpayment','vendorlist'));
     }

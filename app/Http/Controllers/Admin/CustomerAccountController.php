@@ -22,6 +22,7 @@ class CustomerAccountController extends Controller
     {
         $this->Model = new Payment;
         $this->Model1 = new PaymentHistory;
+        $this->middleware('permission:Account-Management', ['only' => ['index','store','create','edit','destroy','update']]);
 
 
         $this->columns = [
@@ -100,7 +101,7 @@ class CustomerAccountController extends Controller
     public function create()
     {
         $payment = null;
-        $customerlist = User::where("status","1")->where('id', '!=', 1)->where('role','2')->get(['id',"first_name","last_name"]);
+        $customerlist = User::where("status","1")->where('id', '!=', 31)->where('type','2')->get(['id',"first_name","last_name"]);
       
         return view('admin.accounts.create',compact('payment','customerlist'));
     }
@@ -179,7 +180,7 @@ class CustomerAccountController extends Controller
         $payment=PaymentHistory::with('getpayment')->where('payment_id', $id) // Filter by payment_id
                                 ->get();
         // dd($payment);
-        $customerlist = User::where("status","1")->where('id', '!=', 1)->get(['id',"first_name","last_name"]);
+        $customerlist = User::where("status","1")->where('id', '!=', 31)->get(['id',"first_name","last_name"]);
 
         return view('admin.accounts.view',compact('payment','customerlist','id'));
     }

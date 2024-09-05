@@ -20,6 +20,8 @@ class RouteController extends Controller
     {
         $this->Model = new Route;
         $this->Model1 = new User;
+        $this->middleware('permission:Route-Management', ['only' => ['index','store','create','edit','destroy','update']]);
+
         $this->columns = [
             "id",
             "first_name",
@@ -70,11 +72,11 @@ class RouteController extends Controller
 
             $data['avatar'] = ($value->avatar != null) ? '<img src="'. $value->avatar.'" height="40%"width="40%" />' : '-';
 
-            $status = "<div class='form-check form-switch form-switch-sm'><input class='form-check-input c-pointer userStatusToggle' type='checkbox' id='formSwitchDropbox_{$value->id}' data-id='{$value->id}'" . ($value->status == 1 ? 'checked' : '') . "><label class='form-check-label fw-500 text-dark c-pointer' for='formSwitchDropbox_{$value->id}'>" . ($value->status == 1 ? 'Active' : 'Inactive') . "</label></div>";
+            // $status = "<div class='form-check form-switch form-switch-sm'><input class='form-check-input c-pointer userStatusToggle' type='checkbox' id='formSwitchDropbox_{$value->id}' data-id='{$value->id}'" . ($value->status == 1 ? 'checked' : '') . "><label class='form-check-label fw-500 text-dark c-pointer' for='formSwitchDropbox_{$value->id}'>" . ($value->status == 1 ? 'Active' : 'Inactive') . "</label></div>";
 
             $action = '<div class="actionBtn d-flex align-itemss-center" style="gap:8px">';
 
-            $action .= '<a href="' . route('admin.users.edit', $value->id) . '" class="toolTip" data-toggle="tooltip" data-placement="bottom" title="Edit"><i class="fa fa-pencil"></i></a>';
+            // $action .= '<a href="' . route('admin.users.edit', $value->id) . '" class="toolTip" data-toggle="tooltip" data-placement="bottom" title="Edit"><i class="fa fa-pencil"></i></a>';
             
             $action .= '<a href="' . route('admin.customershow', $value->id) . '" class="toolTip" data-toggle="tooltip" data-placement="bottom" title="View Detail"><i class="fa fa-eye"></i></a>';
 
@@ -83,7 +85,7 @@ class RouteController extends Controller
             $action.="</div>";
 
             $data['view'] = $action;
-            $data['status'] = $status;
+            // $data['status'] = $status;
             $result[] = $data;
 
         }
@@ -141,11 +143,11 @@ class RouteController extends Controller
 
             $data['avatar'] = ($value->avatar != null) ? '<img src="'. $value->avatar.'" height="40%"width="40%" />' : '-';
 
-            $status = "<div class='form-check form-switch form-switch-sm'><input class='form-check-input c-pointer userStatusToggle' type='checkbox' id='formSwitchDropbox_{$value->id}' data-id='{$value->id}'" . ($value->status == 1 ? 'checked' : '') . "><label class='form-check-label fw-500 text-dark c-pointer' for='formSwitchDropbox_{$value->id}'>" . ($value->status == 1 ? 'Active' : 'Inactive') . "</label></div>";
+            // $status = "<div class='form-check form-switch form-switch-sm'><input class='form-check-input c-pointer userStatusToggle' type='checkbox' id='formSwitchDropbox_{$value->id}' data-id='{$value->id}'" . ($value->status == 1 ? 'checked' : '') . "><label class='form-check-label fw-500 text-dark c-pointer' for='formSwitchDropbox_{$value->id}'>" . ($value->status == 1 ? 'Active' : 'Inactive') . "</label></div>";
 
             $action = '<div class="actionBtn d-flex align-itemss-center" style="gap:8px">';
 
-            $action .= '<a href="' . route('admin.users.edit', $value->id) . '" class="toolTip" data-toggle="tooltip" data-placement="bottom" title="Edit"><i class="fa fa-pencil"></i></a>';
+            // $action .= '<a href="' . route('admin.users.edit', $value->id) . '" class="toolTip" data-toggle="tooltip" data-placement="bottom" title="Edit"><i class="fa fa-pencil"></i></a>';
             
             $action .= '<a href="' . route('admin.vendorshow', $value->id) . '" class="toolTip" data-toggle="tooltip" data-placement="bottom" title="View Detail"><i class="fa fa-eye"></i></a>';
 
@@ -154,7 +156,7 @@ class RouteController extends Controller
             $action.="</div>";
 
             $data['view'] = $action;
-            $data['status'] = $status;
+            // $data['status'] = $status;
             $result[] = $data;
 
         }
@@ -199,7 +201,8 @@ class RouteController extends Controller
                 $query->where('vendor_id', $id)
                     ->where('status', '!=', 2);
             }])
-            ->where('role', '2') // Assuming '2' is the role for customers
+            ->where('type', '2') // Assuming '2' is the type for customers
+            ->where('role', '3') // Assuming '3' is the role for customers
             ->get();
 
         return view('admin.routes.vendorview', compact('vendor', 'customers'));

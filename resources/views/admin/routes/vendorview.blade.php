@@ -157,7 +157,7 @@ table.associated-custom-table tbody tr td {
                         </div>
                         <div class="row mb-3 vendorview-detaisl-row">
                             <div class="col-md-4 vendorview-detail-lable"><strong>Type:</strong></div>
-                            <div class="col-md-8 vendorview-detail-value"><p class="text-muted mb-0">{{ $vendor->role == 2 ? 'Customer' : ($vendor->role == 3 ? 'Vendor' : 'Unknown') }}</p></div>
+                            <div class="col-md-8 vendorview-detail-value"><p class="text-muted mb-0">{{ $vendor->type == 2 ? 'Customer' : ($vendor->type == 1 ? 'Vendor' : 'Unknown') }}</p></div>
                         </div>
                         <div class="row mb-3 vendorview-detaisl-row">
                             <div class="col-md-4 vendorview-detail-lable"><strong>Created On:</strong></div>

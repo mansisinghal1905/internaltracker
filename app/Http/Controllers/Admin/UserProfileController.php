@@ -12,7 +12,8 @@ class UserProfileController extends Controller
 {
     // Validate incoming request
     $request->validate([
-        'name' => 'required|string|max:255',
+        'first_name' => 'required|string|max:255',
+        'last_name' => 'required|string|max:255',
         'phone_number' => 'required|numeric|digits_between:10,15',
         'avatar' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
     ]);
@@ -38,7 +39,8 @@ class UserProfileController extends Controller
         $user->avatar = $avatarName;
     }
 
-    $user->name = $request->name;
+    $user->first_name = $request->first_name;
+    $user->last_name = $request->last_name;
     $user->phone_number = $request->phone_number;
     $user->save();
 

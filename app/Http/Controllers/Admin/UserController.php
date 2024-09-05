@@ -11,6 +11,8 @@ use App\Models\UserDocumentUpload;
 use App\Models\BankInformation;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
+use App\Mail\UserDetailsMail;
+use Mail;
 use DB;
 use Hash;
 
@@ -76,8 +78,9 @@ class UserController extends Controller
             $data['fullname'] = ucfirst($value->first_name . ' ' . $value->last_name);
             $data['email'] = $value->email;
             $data['phone_number'] = $value->phone_number;
-            // $data['role'] = $value->role;
             $data['role'] =   $value->getRoleNames()[0];
+            $data['type'] = $value->type == 2 ? 'Customer' : ($value->type == 1 ? 'Vendor' : 'Unknown');
+
 
 
             $data['avatar'] = ($value->avatar != null) ? '<img src="'. $value->avatar.'" height="40%"width="40%" />' : '-';
@@ -129,8 +132,6 @@ class UserController extends Controller
      * Store a newly created resource in storage.
      */
 
-
-
     public function store(Request $request) {
         $input = $request->all();
         $validate = Validator($request->all(), [
@@ -139,7 +140,7 @@ class UserController extends Controller
             'email' => 'required|email',
             'phone_number' => 'required|numeric',
             'role' => 'required',
-
+            'type' => 'required',
         ]);
 
         $attr = [
@@ -148,6 +149,7 @@ class UserController extends Controller
             'email' => 'Email',
             'phone_number' => 'Phone no',
             'role' => 'Role',
+            'type' => 'Type',
         ];
         $validate->setAttributeNames($attr);
 
@@ -187,17 +189,13 @@ class UserController extends Controller
                 $user->phone_number = $request->phone_number;
                 $user->password = Hash::make($password);
                 $user->ip = $request->ip;
+                $user->type = $request->type;
                 $user->role = $roles->id;
-
-
-                // dd($user);
                 $user->save();
 
-             
                 // Assign roles
                 $user->assignRole($roles->name);
      
-
                 if(isset($request->department_type)){
                     foreach ($request->department_type as $key => $type) {
                         // Check if a document is uploaded for the current type
@@ -219,6 +217,9 @@ class UserController extends Controller
                     }
                 }
                 
+                // Send user details via email
+                Mail::to($user->email)->send(new UserDetailsMail($user, $password));
+
             
                 $request->session()->flash('success', 'User added successfully');
                 return redirect()->route('admin.users.index');
@@ -308,6 +309,8 @@ class UserController extends Controller
                 'email' => 'required|email',
                 'phone_number' => 'required|min:8|numeric',
                 'role' => 'required',
+                'type' => 'required',
+
             ]);
 
             $attr = [
@@ -316,6 +319,8 @@ class UserController extends Controller
                 'email' => 'Email',
                 'phone_number' => 'Mobile',
                 'role' => 'Role',
+                'type' => 'Type',
+
             ];
 
 
@@ -342,6 +347,7 @@ class UserController extends Controller
                 $user->email = $request->email;
                 $user->phone_number = $request->phone_number;
                 $user->role = $roles->id;
+                $user->type = $request->type;
                 $user->ip = $request->ip;
                 $user->updated_at = now();
 

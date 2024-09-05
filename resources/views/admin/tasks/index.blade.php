@@ -312,6 +312,65 @@
                 ]
 			});
 
+            // for chnage status
+            $(document).on('change', '.taskStatusToggle', function () {
+                var id = $(this).attr("data-id");
+                var status = $(this).is(':checked') ? 1 : 0;
+
+                $.ajax({
+                    type: "POST",
+                    url: @json(route('admin.ChangeTaskStatus')),
+                    data: { id: id, status: status },
+                    dataType: "JSON",
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function (response) {
+                        if (response.status) {
+                            toastr.success(response.message); // Show success toast
+                            table.ajax.reload(); // Reload the table to reflect the changes
+                        } else {
+                            toastr.error(response.message); // Show error toast
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        toastr.error("An error occurred while changing the status."); // Show generic error toast
+                        console.error(error);
+                    }
+                });
+            });
+
+            $(document).on('change', '.status-select', function() {
+            var status = $(this).val();
+            var recordId = $(this).data('id');
+
+            $.ajax({
+                url: @json(route('admin.update.status')),
+                method: 'POST',
+                data: {
+                    id: recordId,
+                    task_status: status
+                },
+                dataType: "JSON",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+
+                success: function(response) {
+                    if (response.status==true) {
+                        toastr.success(response.message); // Show success toast with green background
+                        table.ajax.reload(); // Reload the table to reflect the changes
+                    } else {
+                        toastr.error(response.message); // Show error toast with red background
+                    }
+                },
+                error: function(xhr, status, error) {
+                    toastr.error("An error occurred while changing the status."); // Show generic error toast with red background
+                    console.error(error);
+                }
+            });
+        });
+
 		});
 
 
@@ -362,64 +421,9 @@
         }
 
 
-        $(document).on('change', '.status-select', function() {
-            var status = $(this).val();
-            var recordId = $(this).data('id');
+       
 
-            $.ajax({
-                url: @json(route('admin.update.status')),
-                method: 'POST',
-                data: {
-                    id: recordId,
-                    task_status: status
-                },
-                dataType: "JSON",
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-
-                success: function(response) {
-                    if (response.status==true) {
-                        toastr.success(response.message); // Show success toast with green background
-                        table.ajax.reload(); // Reload the table to reflect the changes
-                    } else {
-                        toastr.error(response.message); // Show error toast with red background
-                    }
-                },
-                error: function(xhr, status, error) {
-                    toastr.error("An error occurred while changing the status."); // Show generic error toast with red background
-                    console.error(error);
-                }
-            });
-        });
-
-        // for chnage status
-        $(document).on('change', '.taskStatusToggle', function () {
-                var id = $(this).attr("data-id");
-                var status = $(this).is(':checked') ? 1 : 0;
-
-                $.ajax({
-                    type: "POST",
-                    url: @json(route('admin.ChangeTaskStatus')),
-                    data: { id: id, status: status },
-                    dataType: "JSON",
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    success: function (response) {
-                        if (response.status) {
-                            toastr.success(response.message); // Show success toast
-                            table.ajax.reload(); // Reload the table to reflect the changes
-                        } else {
-                            toastr.error(response.message); // Show error toast
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        toastr.error("An error occurred while changing the status."); // Show generic error toast
-                        console.error(error);
-                    }
-                });
-            });
+        
 
 
 	</script>
