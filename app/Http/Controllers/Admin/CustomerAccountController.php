@@ -143,27 +143,27 @@ class CustomerAccountController extends Controller
                 if($payment){
 
                 
-                $paymenthistory = new PaymentHistory;
-                $paymenthistory->payment_id = $payment->id;
-                $paymenthistory->customer_id = $request->customer_id;
-                $paymenthistory->amount =  $request->total_amount;
-                $paymenthistory->payment_purpose =  $request->payment_purpose;
-                $paymenthistory->created_at = date('Y-m-d H:i:s');
-                $paymenthistory->updated_at = date('Y-m-d H:i:s');
+                    $paymenthistory = new PaymentHistory;
+                    $paymenthistory->payment_id = $payment->id;
+                    $paymenthistory->customer_id = $request->customer_id;
+                    $paymenthistory->amount =  $request->total_amount;
+                    $paymenthistory->payment_purpose =  $request->payment_purpose;
+                    $paymenthistory->created_at = date('Y-m-d H:i:s');
+                    $paymenthistory->updated_at = date('Y-m-d H:i:s');
 
 
-                if ($paymenthistory->save()) {
-                    $request->session()->flash('success', 'Payment added successfully');
-                    return redirect()->route('admin.customer-payments.index');
-                } else {
+                    if ($paymenthistory->save()) {
+                        $request->session()->flash('success', 'Payment added successfully');
+                        return redirect()->route('admin.customer-payments.index');
+                    } else {
+                        $request->session()->flash('error', 'Something went wrong. Please try again later.');
+                        return redirect()->route('admin.customer-payments.index');
+                    }
+                }
+                else{
                     $request->session()->flash('error', 'Something went wrong. Please try again later.');
                     return redirect()->route('admin.customer-payments.index');
                 }
-            }
-            else{
-                $request->session()->flash('error', 'Something went wrong. Please try again later.');
-                return redirect()->route('admin.customer-payments.index');
-            }
             } catch (Exception $e) {
                 $request->session()->flash('error', 'Something went wrong. Please try again later.');
                 return redirect()->route('admin.customer-payments.index');
@@ -177,8 +177,7 @@ class CustomerAccountController extends Controller
      */
     public function show(string $id)
     {
-        $payment=PaymentHistory::with('getpayment')->where('payment_id', $id) // Filter by payment_id
-                                ->get();
+        $payment=PaymentHistory::with('getpayment')->where('payment_id', $id)->get();
         // dd($payment);
         $customerlist = User::where("status","1")->where('id', '!=', 31)->get(['id',"first_name","last_name"]);
 

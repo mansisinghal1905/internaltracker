@@ -47,8 +47,8 @@ class UserDocumentUpload extends Authenticatable
      public function FetchTechnicaluser($request, $columns) {
         // Join with the user_document_uploads table
         $query = User::where('users.id', '!=', 31)  // Specify 'users.id' instead of just 'id'
-            ->where('users.type', '2')
             ->where('users.role', '4')
+            ->where('users.type', '2')
             ->where('users.status', '!=', 2)->whereNull('users.deleted_at')
             ->orderBy('id', 'desc');
 

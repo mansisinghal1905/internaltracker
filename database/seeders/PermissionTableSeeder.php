@@ -20,6 +20,9 @@ class PermissionTableSeeder extends Seeder
            'Route-Management',
            'Account-Management',
            'Technical-Management',
+           'Customer-Management',
+           'Vendor-Management',
+           'Ticket-System',
         ];
 
         foreach ($permissions as $permission) {

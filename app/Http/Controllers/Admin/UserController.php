@@ -123,7 +123,7 @@ class UserController extends Controller
        // $roles = Role::where('id','!=',1)->pluck('name','name')->all();
        // $roles = Role::where("id","<>",1)->get();
        $roles = Role::where("id","<>",1)->pluck('name','name')->all();
-       $userRole =null;// $user->roles->pluck('name','name')->all();
+       $userRole =null;
 
         return view('admin.users.create',compact('user','existingDocuments','roles'));
     }
@@ -141,6 +141,7 @@ class UserController extends Controller
             'phone_number' => 'required|numeric',
             'role' => 'required',
             'type' => 'required',
+            'avatar' => 'required',
         ]);
 
         $attr = [
@@ -150,6 +151,7 @@ class UserController extends Controller
             'phone_number' => 'Phone no',
             'role' => 'Role',
             'type' => 'Type',
+            'avatar' => 'Image',
         ];
         $validate->setAttributeNames($attr);
 
@@ -310,6 +312,7 @@ class UserController extends Controller
                 'phone_number' => 'required|min:8|numeric',
                 'role' => 'required',
                 'type' => 'required',
+                
 
             ]);
 

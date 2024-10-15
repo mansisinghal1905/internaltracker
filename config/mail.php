@@ -16,6 +16,9 @@ return [
 
     'default' => env('MAIL_MAILER', 'log'),
 
+    // 'admin_email' => 'admintracker@yopmail.com',
+
+
     /*
     |--------------------------------------------------------------------------
     | Mailer Configurations
@@ -94,7 +97,7 @@ return [
                 'postmark',
             ],
         ],
-
+        
     ],
 
     /*

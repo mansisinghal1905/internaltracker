@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\VendorAccountController;
 use App\Http\Controllers\Admin\TechnicalCustomerController;
 use App\Http\Controllers\Admin\TechnicalVendorController;
 use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\TicketController;
 use App\Http\Controllers\Admin\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Admin\Auth\ForgetPasswordController;
 use App\Http\Middleware\AuthCheck;
@@ -92,6 +93,12 @@ Route::middleware([AuthCheck::class])->group(function(){
 
         Route::resource('roles', RoleController::class);
         Route::post('admin/roles/role-ajax', [RoleController::class, 'roleAjax'])->name('roleAjax');
+
+        Route::resource('ticket-system', TicketController::class);
+        Route::post('admin/ticket-system/task-ajax', [TicketController::class, 'ticketAjax'])->name('ticketAjax');
+        Route::post('admin/ticket-system/destory', [TicketController::class, 'ticketdestory'])->name('ticketdestory');
+        Route::post('change-ticketsystem-status', [TicketController::class, 'ChangeTicketStatus'])->name('ChangeTicketStatus');
+
 
     });
 });

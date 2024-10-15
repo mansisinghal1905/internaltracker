@@ -44,8 +44,12 @@
                             <span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                         </a>
                         <ul class="nxl-submenu">
+                            
                             <li class="nxl-item"><a class="nxl-link" href="{{ route('admin.routes.index') }}"> Customer Management</a></li>
+                           
+                            @if(Auth::user()->type != 2)
                             <li class="nxl-item"><a class="nxl-link" href="{{ route('admin.vendorindex') }}">Vendor Management</a></li>
+                            @endif
                         </ul>
                     </li> 
                     @endcan 
@@ -58,7 +62,9 @@
                         </a>
                         <ul class="nxl-submenu">
                             <li class="nxl-item"><a class="nxl-link" href="{{ route('admin.customer-payments.index') }}"> Customer Payment Management</a></li>
+                            @if(Auth::user()->type != 2)
                             <li class="nxl-item"><a class="nxl-link" href="{{ route('admin.vendor-payments.index') }}">Vendor Payment Management</a></li>
+                            @endif                        
                         </ul>
                     </li>
                     @endcan
@@ -71,8 +77,18 @@
                         </a>
                         <ul class="nxl-submenu">
                             <li class="nxl-item"><a class="nxl-link" href="{{ route('admin.technical-customers.index') }}"> Customer Technical Details</a></li>
+                            @if(Auth::user()->type != 2)
                             <li class="nxl-item"><a class="nxl-link" href="{{ route('admin.technical-vendors.index') }}">Vendor Technical Details</a></li>
+                            @endif
                         </ul>
+                    </li>
+                    @endcan
+                    @can('Ticket-System')
+                    <li class="nxl-item nxl-hasmenu">
+                        <a href="{{ route('admin.ticket-system.index') }}" class="nxl-link">
+                            <span class="nxl-micon"><i class="feather-briefcase"></i></span>
+                            <span class="nxl-mtext">Ticket System</span>
+                        </a>
                     </li>
                     @endcan
                     @can('Role-Management')
@@ -82,7 +98,7 @@
                             <span class="nxl-mtext">Role Management</span>
                         </a>
                     </li>
-                 @endcan
+                    @endcan
               
                 </ul>
             </div>

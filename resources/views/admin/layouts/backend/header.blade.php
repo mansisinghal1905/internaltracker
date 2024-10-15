@@ -289,10 +289,10 @@
                             </div>
                         </div>
                     </div> -->
-                    <div class="dropdown nxl-h-item">
+                    <!-- <div class="dropdown nxl-h-item">
                         <a class="nxl-head-link me-3" data-bs-toggle="dropdown" href="#" role="button" data-bs-auto-close="outside">
                             <i class="feather-bell"></i>
-                            <span class="badge bg-danger nxl-h-badge">3</span>
+                            <span class="badge bg-danger nxl-h-badge">0</span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end nxl-h-dropdown nxl-notifications-menu">
                             <div class="d-flex justify-content-between align-items-center notifications-head">
@@ -351,7 +351,7 @@
                                 <a href="javascript:void(0);" class="fs-13 fw-semibold text-dark">Alls Notifications</a>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="dropdown nxl-h-item">
                         <a href="javascript:void(0);" data-bs-toggle="dropdown" role="button" data-bs-auto-close="outside">
                             <img src="{{Auth::user()->avatar }}" style="height: 40px;" alt="user-image" class="img-fluid user-avtar me-0" />
@@ -401,10 +401,10 @@
                                 <i class="feather-dollar-sign"></i>
                                 <span>Billing Details</span>
                             </a> -->
-                            <a href="javascript:void(0);" class="dropdown-item">
+                           <!--  <a href="javascript:void(0);" class="dropdown-item">
                                 <i class="feather-bell"></i>
                                 <span>Notifications</span>
-                            </a>
+                            </a> -->
                             <!-- <a href="javascript:void(0);" class="dropdown-item">
                                 <i class="feather-settings"></i>
                                 <span>Account Settings</span>

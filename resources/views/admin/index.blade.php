@@ -7,7 +7,7 @@
     <main class="nxl-container">
         <div class="nxl-content">
             <!-- [ page-header ] start -->
-            <div class="page-header">
+           <!--  <div class="page-header">
                 <div class="page-header-left d-flex align-items-center">
                     <div class="page-header-title">
                         <h5 class="m-b-10">Dashboard</h5>
@@ -84,7 +84,7 @@
                         </a>
                     </div>
                 </div>
-            </div>
+            </div> -->
             <!-- [ page-header ] end -->
             <!-- [ Main Content ] start -->
             <div class="main-content">
@@ -226,7 +226,7 @@
                     </div>
                     <!-- [Conversion Rate] end -->
                     <!-- [Payment Records] start -->
-                    <div class="col-xxl-8">
+                    <!-- <div class="col-xxl-8">
                         <div class="card stretch stretch-full">
                             <div class="card-header">
                                 <h5 class="card-title">Payment Record</h5>
@@ -304,10 +304,10 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                     <!-- [Payment Records] end -->
                     <!-- [Total Sales] start -->
-                    <div class="col-xxl-4">
+                    <!-- <div class="col-xxl-4">
                         <div class="card stretch stretch-full overflow-hidden">
                             <div class="bg-primary text-white">
                                 <div class="p-4">
@@ -370,10 +370,10 @@
                             </div>
                             <a href="javascript:void(0);" class="card-footer fs-11 fw-bold text-uppercase text-center py-4">Full Details</a>
                         </div>
-                    </div>
+                    </div> -->
                     <!-- [Total Sales] end !-->
                     <!-- [Mini] start -->
-                    <div class="col-lg-4">
+                    <!-- <div class="col-lg-4">
                         <div class="card mb-4 stretch stretch-full">
                             <div class="card-header d-flex align-items-center justify-content-between">
                                 <div class="d-flex gap-3 align-items-center">
@@ -441,10 +441,10 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                     <!-- [Mini] end !-->
                     <!-- [Leads Overview] start -->
-                    <div class="col-xxl-4">
+                    <!-- <div class="col-xxl-4">
                         <div class="card stretch stretch-full">
                             <div class="card-header">
                                 <h5 class="card-title">Leads Overview</h5>
@@ -538,10 +538,10 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                     <!-- [Leads Overview] end -->
                     <!-- [Latest Leads] start -->
-                    <div class="col-xxl-8">
+                    <!-- <div class="col-xxl-8">
                         <div class="card stretch stretch-full">
                             <div class="card-header">
                                 <h5 class="card-title">Latest Leads</h5>
@@ -725,10 +725,10 @@
                                 </ul>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                     <!-- [Latest Leads] end -->
                     <!--! BEGIN: [Upcoming Schedule] !-->
-                    <div class="col-xxl-4">
+                    <!-- <div class="col-xxl-4">
                         <div class="card stretch stretch-full">
                             <div class="card-header">
                                 <h5 class="card-title">Upcoming Schedule</h5>
@@ -763,7 +763,6 @@
                                 </div>
                             </div>
                             <div class="card-body">
-                                <!--! BEGIN: [Events] !-->
                                 <div class="p-3 border border-dashed rounded-3 mb-3">
                                     <div class="d-flex justify-content-between">
                                         <div class="d-flex align-items-center gap-3">
@@ -795,7 +794,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <!--! BEGIN: [Events] !-->
+                                
                                 <div class="p-3 border border-dashed rounded-3 mb-3">
                                     <div class="d-flex justify-content-between">
                                         <div class="d-flex align-items-center gap-3">
@@ -827,7 +826,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <!--! BEGIN: [Events] !-->
+                               
                                 <div class="p-3 border border-dashed rounded-3 mb-3">
                                     <div class="d-flex justify-content-between">
                                         <div class="d-flex align-items-center gap-3">
@@ -859,7 +858,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <!--! BEGIN: [Events] !-->
+                                
                                 <div class="p-3 border border-dashed rounded-3 mb-2">
                                     <div class="d-flex justify-content-between">
                                         <div class="d-flex align-items-center gap-3">
@@ -894,10 +893,10 @@
                             </div>
                             <a href="javascript:void(0);" class="card-footer fs-11 fw-bold text-uppercase text-center py-4">Upcomming Schedule</a>
                         </div>
-                    </div>
+                    </div> -->
                     <!--! END: [Upcoming Schedule] !-->
                     <!--! BEGIN: [Project Status] !-->
-                    <div class="col-xxl-4">
+                    <!-- <div class="col-xxl-4">
                         <div class="card stretch stretch-full">
                             <div class="card-header">
                                 <h5 class="card-title">Project Status</h5>
@@ -1016,10 +1015,10 @@
                             </div>
                             <a href="javascript:void(0);" class="card-footer fs-11 fw-bold text-uppercase text-center">Upcomming Projects</a>
                         </div>
-                    </div>
+                    </div> -->
                     <!--! END: [Project Status] !-->
                     <!--! BEGIN: [Team Progress] !-->
-                    <div class="col-xxl-4">
+                    <!-- <div class="col-xxl-4">
                         <div class="card stretch stretch-full">
                             <div class="card-header">
                                 <h5 class="card-title">Team Progress</h5>
@@ -1105,7 +1104,7 @@
                             </div>
                             <a href="javascript:void(0);" class="card-footer fs-11 fw-bold text-uppercase text-center">Update 30 Min Ago</a>
                         </div>
-                    </div>
+                    </div> -->
                     <!--! END: [Team Progress] !-->
                 </div>
             </div>
