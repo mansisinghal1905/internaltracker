@@ -271,7 +271,7 @@
 				serverSide: true,
 				"scrollY": "400px", // Set the height for the container
 				"scrollCollapse": true, // Allow the container to collapse when the content is smaller
-				"scrollX": false,
+				"scrollX": true,
 				pagingType: "simple_numbers", // Use simple pagination (Previous/Next)
 
 				ajax: {
@@ -308,7 +308,7 @@
 
 				],
                 columnDefs: [
-                    { "targets": [5], "orderable": false }, // Disable sorting on the "job_id" column
+                    { "targets": [1,2,3,4,5,6,7,8], "orderable": false }, // Disable sorting on the "job_id" column
                     { "targets": [], "orderable": false } // Disable sorting on the "job_id" column
                 ]
 			});

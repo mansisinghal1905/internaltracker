@@ -37,41 +37,39 @@
         <div class="main-content">
             <div class="row">
                 <div class="col-xxl-12">
+               
                     <div class="card border-top-0 p-4">
                         <h6 class="mb-4">Task Details</h6>
+                        <div class="mb-4 d-flex align-items-center justify-content-between">
+                            <h5 class="fw-bold mb-0 me-4">
+                                <span class="d-block mb-2">New Interconnection:</span>
+                            </h5>
+                        </div>
+                      
+
                         <div class="row mb-3">
-                            <div class="col-md-4"><strong>Task Title:</strong></div>
-                            <div class="col-md-8"><p class="text-muted mb-0">{{ $task->title }}</p></div>
+                            <div class="col-md-4"><strong>Company Name:</strong></div>
+                            <div class="col-md-8"><p class="text-muted mb-0">{{ $task->company_name ?? 'N/A'}}</p></div>
                         </div>
                         <div class="row mb-3">
-                            <div class="col-md-4"><strong>Customer:</strong></div>
-                            <div class="col-md-8"><p class="text-muted mb-0">{{ $task->getUser->first_name}} {{ $task->getUser->last_name}}</p></div>
+                            <div class="col-md-4"><strong>Country:</strong></div>
+                            <div class="col-md-8"><p class="text-muted mb-0">{{ $task->getCountry->name ?? 'N/A' }}</p></div>
+                        </div> 
+                        <div class="row mb-3">
+                            <div class="col-md-4"><strong>AM Name:</strong></div>
+                            <div class="col-md-8"><p class="text-muted mb-0">{{ $task->am_name ?? 'N/A'}}</p></div>
                         </div>
                         <div class="row mb-3">
-                            <div class="col-md-4"><strong>Vendor:</strong></div>
-                            <div class="col-md-8"><p class="text-muted mb-0">{{ $task->getVendor->first_name}} {{ $task->getVendor->last_name}}</p></div>
-                        </div>
-                        
-                        <div class="row mb-3">
-                            <div class="col-md-4"><strong>Description:</strong></div>
-                            <div class="col-md-8"><p class="text-muted mb-0">{!! Str::limit($task->description, 50) !!}</p></div>
+                            <div class="col-md-4"><strong>AM Email:</strong></div>
+                            <div class="col-md-8"><p class="text-muted mb-0">{{ $task->am_email ?? 'N/A'}}</p></div>
                         </div>
                         <div class="row mb-3">
-                            <div class="col-md-4"><strong>Destination:</strong></div>
-                            <div class="col-md-8"><p class="text-muted mb-0">{!!$task->destination !!}</p></div>
-                        </div>
-                        
-                        <div class="row mb-3">
-                            <div class="col-md-4"><strong>Credit Limit:</strong></div>
-                            <div class="col-md-8"><p class="text-muted mb-0">{{ $task->credit_limit }}</p></div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-md-4"><strong>Billing Cycle:</strong></div>
-                            <div class="col-md-8"><p class="text-muted mb-0">{{ $task->billing_cycle }}</p></div>
+                            <div class="col-md-4"><strong>Whatsapp No.:</strong></div>
+                            <div class="col-md-8"><p class="text-muted mb-0">{{ $task->whatsapp_no ?? 'N/A'}}</p></div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-4"><strong>Task Status:</strong></div>
-                            <div class="col-md-8"><p class="text-muted mb-0">{{ ucfirst($task->task_status) }}</p></div>
+                            <div class="col-md-8"><p class="text-muted mb-0">{{ ucfirst($task->task_status ?? 'N/A') }}</p></div>
                         </div>
                        
                         <div class="row mb-3">
@@ -82,8 +80,81 @@
                             <div class="col-md-4"><strong>Status:</strong></div>
                             <div class="col-md-8"><p class="text-muted mb-0">{{ $task->status == 1 ? 'Active' : 'Inactive' }}</p></div>
                         </div>
-                       
+
+                        {{-- Display multiple descriptions --}}
+                        <div class="row mb-3">
+                            <div class="col-md-4"><strong>Descriptions:</strong></div>
+                            <div class="col-md-8">
+                                @if($taskDescriptions->isNotEmpty())
+                                    <ul class="list-unstyled text-muted mb-0">
+                                        @foreach($taskDescriptions as $description)
+                                            <li>{{ $description->description ?? 'N/A' }}</li>
+                                        @endforeach
+                                    </ul>
+                                @else
+                                    <p class="text-muted mb-0">N/A</p>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="mb-4 d-flex align-items-center justify-content-between">
+                            <h5 class="fw-bold mb-0 me-4">
+                                <span class="d-block mb-2">Trade Verifications:</span>
+                            </h5>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4"><strong>Response Of Tr:</strong></div>
+                            <div class="col-md-8"><p class="text-muted mb-0">{{ $tradeverification->response_of_tr ?? 'N/A'}}</p></div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4"><strong>Propose Credit Limit($):</strong></div>
+                            <div class="col-md-8"><p class="text-muted mb-0">{{ $tradeverification->propose_credit_limit ?? 'N/A'}}</p></div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4"><strong>Billing Cycle:</strong></div>
+                            <div class="col-md-8"><p class="text-muted mb-0">{{ $tradeverification->billing_cycle ?? 'N/A'}}</p></div>
+                        </div>
+                        
+                        <div class="mb-4 d-flex align-items-center justify-content-between">
+                            <h5 class="fw-bold mb-0 me-4">
+                                <span class="d-block mb-2">Agreement Review:</span>
+                            </h5>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4"><strong>Review Description:</strong></div>
+                            <div class="col-md-8"><p class="text-muted mb-0">{{ $agreementreview->review_description ?? 'N/A'}}</p></div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4"><strong>Financial Statement:</strong></div>
+                            <div class="col-md-8"><p class="text-muted mb-0">{{ $agreementreview->financial_statement ?? 'N/A'}}</p></div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4"><strong>Billing Cycle:</strong></div>
+                            <div class="col-md-8"><p class="text-muted mb-0">{{ $agreementreview->billing_cycle_review ?? 'N/A'}}</p></div>
+                        </div>
+
+                        <div class="mb-4 d-flex align-items-center justify-content-between">
+                            <h5 class="fw-bold mb-0 me-4">
+                                <span class="d-block mb-2">Agreement Sign:</span>
+                            </h5>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4"><strong>Agreement:</strong></div>
+                            <div class="col-md-8"><p class="text-muted mb-0">{{ $agreementsign->agreement ?? 'N/A'}}</p></div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4"><strong>Unilateral:</strong></div>
+                            <div class="col-md-8"><p class="text-muted mb-0">{{ $agreementsign->unilateral ?? 'N/A'}}</p></div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4"><strong>Sign Description:</strong></div>
+                            <div class="col-md-8"><p class="text-muted mb-0">{{ $agreementsign->sign_description ?? 'N/A'}}</p></div>
+                        </div>
                     </div>
+
+                    
+
+
                 </div>
             </div>
         </div>

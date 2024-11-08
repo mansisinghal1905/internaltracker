@@ -53,10 +53,10 @@ class ClientUserController extends Controller
             $categories = $records->offset($request->start)->limit(count($total))->get();
         }
         $result = [];
-        $i = 1;
+        $i = $request->start;
         foreach ($categories as $value) {
             $data = [];
-            $data['id'] = $i++;
+            $data['id'] = ++$i;
             $data['client_id'] = $value->getCLient->name;
             $data['fullname'] = ucfirst($value->first_name . ' ' . $value->last_name);
             $data['email'] = $value->email;

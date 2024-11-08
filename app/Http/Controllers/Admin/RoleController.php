@@ -91,12 +91,12 @@ class RoleController extends Controller
     $result = [];
 
 
-    $i = 1;
+    $i = $request->start;
     foreach ($banners as $value) {
         $data = [];
 
-        $data['srno'] = $i++;
-        $data['id'] = $value->id;
+        // $data['srno'] = $i++;
+        $data['id'] = ++$i;
         $data['name'] = ucfirst($value->name);
         $data['permissions']=$this->getPermissionById($value->id);
         $data['created_at'] = date('Y-m-d', strtotime($value->created_at)); // Assuming created_at is a Carbon instance
@@ -139,10 +139,10 @@ class RoleController extends Controller
     //         $categories = $records->offset($request->start)->limit(count($total))->get();
     //     }
     //     $result = [];
-    //     $i = 1;
+    //     $i = $request->start;
     //     foreach ($categories as $value) {
     //         $data = [];
-    //         $data['id'] = $i++;
+    //         $data['id'] = ++$i;
     //         $data['role_id'] = $value->role_id;
     //         $data['permission_id'] = $value->permission_id;
 

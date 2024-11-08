@@ -53,8 +53,8 @@ class Task extends Authenticatable
             $searchValue = $request['search']['value'];
 
             $query->where(function ($q) use ($searchValue) {
-                $q->where('title', 'like', '%' . $searchValue . '%')
-                  ->orWhere('client_id', 'like', '%' . $searchValue . '%');
+                $q->where('company_name', 'like', '%' . $searchValue . '%')
+                  ->orWhere('am_name', 'like', '%' . $searchValue . '%');
             });
         }
 
@@ -77,7 +77,9 @@ class Task extends Authenticatable
     public function getVendor() {
         return $this->belongsTo(User::class, 'vendor_id')->where('type',1)->where('id', '!=', 31); 
     }
-
+    public function getCountry() {
+        return $this->belongsTo(Country::class, 'register_country_id','id')->where("status","active"); 
+    }
 
     
 }

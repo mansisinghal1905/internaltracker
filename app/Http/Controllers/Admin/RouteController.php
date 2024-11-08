@@ -59,11 +59,11 @@ class RouteController extends Controller
             $categories = $records->offset($request->start)->limit(count($total))->get();
         }
         $result = [];
-        $i = 1;
+        $i = $request->start;
         // dd($value->getUser);
         foreach ($categories as $value) {
             $data = [];
-            $data['id'] = $i++;
+            $data['id'] = ++$i;
             $data['fullname'] = ucfirst($value->first_name . ' ' . $value->last_name);
             $data['email'] = $value->email;
             $data['phone_number'] = $value->phone_number;
@@ -130,11 +130,11 @@ class RouteController extends Controller
             $categories = $records->offset($request->start)->limit(count($total))->get();
         }
         $result = [];
-        $i = 1;
+        $i = $request->start;
         // dd($value->getUser);
         foreach ($categories as $value) {
             $data = [];
-            $data['id'] = $i++;
+            $data['id'] = ++$i;
             $data['fullname'] = ucfirst($value->first_name . ' ' . $value->last_name);
             $data['email'] = $value->email;
             $data['phone_number'] = $value->phone_number;

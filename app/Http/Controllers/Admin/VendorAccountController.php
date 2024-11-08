@@ -60,10 +60,10 @@ class VendorAccountController extends Controller
             $categories = $records->offset($request->start)->limit(count($total))->get();
         }
         $result = [];
-        $i = 1;
+        $i = $request->start;
         foreach ($categories as $value) {
             $data = [];
-            $data['id'] = $i++;
+            $data['id'] = ++$i;
             $data['vendor_id'] = ucfirst(($value->getVendor->first_name ?? '') . ' ' . ($value->getVendor->last_name ?? ''));
 
             $data['total_amount'] = $value->total_amount;
@@ -200,10 +200,10 @@ class VendorAccountController extends Controller
             $categories = $records->offset($request->start)->limit(count($total))->get();
         }
         $result = [];
-        $i = 1;
+        $i = $request->start;
         foreach ($categories as $value) {
             $data = [];
-            $data['id'] = $i++;
+            $data['id'] = ++$i;
             $data['vendor_id'] = ucfirst(($value->getVendor->first_name ?? '') . ' ' . ($value->getVendor->last_name ?? ''));            
             $data['amount'] = $value->amount;
             $data['payment_purpose'] = substr((string)($value->payment_purpose ?? 'Null'), 0, 20);

@@ -67,10 +67,10 @@ class CustomerAccountController extends Controller
             $categories = $records->offset($request->start)->limit(count($total))->get();
         }
         $result = [];
-        $i = 1;
+        $i = $request->start;
         foreach ($categories as $value) {
             $data = [];
-            $data['id'] = $i++;
+            $data['id'] = ++$i;
             $data['customer_id'] = ucfirst(($value->getCustomer->first_name ?? '') . ' ' . ($value->getCustomer->last_name ?? ''));
             $data['total_amount'] = $value->total_amount;
             $data['created_at'] = date('Y-m-d', strtotime($value->created_at));
@@ -202,10 +202,10 @@ class CustomerAccountController extends Controller
             $categories = $records->offset($request->start)->limit(count($total))->get();
         }
         $result = [];
-        $i = 1;
+        $i = $request->start;
         foreach ($categories as $value) {
             $data = [];
-            $data['id'] = $i++;
+            $data['id'] = ++$i;
             $data['customer_id'] = ucfirst(($value->getCustomer->first_name ?? '') . ' ' . ($value->getCustomer->last_name ?? ''));
             $data['amount'] = $value->amount;
             // $data['payment_purpose'] = $value->payment_purpose;

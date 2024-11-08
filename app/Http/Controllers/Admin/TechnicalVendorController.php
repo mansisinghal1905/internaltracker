@@ -60,12 +60,12 @@ class TechnicalVendorController extends Controller
             $categories = $records->offset($request->start)->limit(count($total))->get();
         }
         $result = [];
-        $i = 1;
+        $i = $request->start;
         foreach ($categories as $value) {
             $getUserDocumentUpload = UserDocumentUpload::where(["user_id"=>$value->id,'department_type'=> 'technical_document'])->whereNull('deleted_at')->first();
 
             $data = [];
-            $data['id'] = $i++;
+            $data['id'] = ++$i;
             $data['fullname'] = ucfirst($value->first_name . ' ' . $value->last_name);
             $data['created_at'] = date('Y-m-d', strtotime($value->created_at));
 

@@ -9,6 +9,9 @@ use App\Http\Controllers\Admin\UserprofileController;
 use App\Http\Controllers\Admin\ProjectStatusController;
 use App\Http\Controllers\Admin\ClientUserController;
 use App\Http\Controllers\Admin\TaskController;
+use App\Http\Controllers\Admin\NewInterConnectionController;
+use App\Http\Controllers\Admin\TradeVerificationController;
+
 use App\Http\Controllers\Admin\RouteController;
 use App\Http\Controllers\Admin\CustomerAccountController;
 use App\Http\Controllers\Admin\VendorAccountController;
@@ -63,6 +66,9 @@ Route::middleware([AuthCheck::class])->group(function(){
         Route::post('admin/tasks/destory', [TaskController::class, 'taskdestory'])->name('taskdestory');
         Route::post('/update-status', [TaskController::class, 'updateProjectStatus'])->name('update.status');
         Route::post('change-task-status', [TaskController::class, 'ChangeTaskStatus'])->name('ChangeTaskStatus');
+
+        Route::resource('newinterconnections', NewInterConnectionController::class);
+        Route::resource('tradeverifications', TradeVerificationController::class);
 
         // Route route
         Route::resource('routes', RouteController::class);

@@ -6,11 +6,14 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Project;
 use App\Models\Task;
-use App\Models\ClientUser;
-use App\Models\TaskClient;
+use App\Models\TaskDescription;
+use App\Models\TradeVerification;
+use App\Models\AgreementReview;
+use App\Models\AgreementSign;
 use App\Models\User;
 use App\Models\TaskUser;
 use App\Models\ProjectStatus;
+use App\Models\Country;
 use DB;
 use Hash;
 
@@ -25,10 +28,10 @@ class TaskController extends Controller
         $this->middleware('permission:Task-Management', ['only' => ['index','store','create','edit','destroy','update']]);
         $this->columns = [
             "id",
-            "title",
-            "user_id",
+            "company_name",
+            "am_name",
             "status",
-            
+            "task_status"
 
         ];
     }
@@ -57,15 +60,15 @@ class TaskController extends Controller
             $categories = $records->offset($request->start)->limit(count($total))->get();
         }
         $result = [];
-        $i = 1;
+        $i = $request->start;
         // dd($value->getUser);
         foreach ($categories as $value) {
             $data = [];
-            $data['id'] = $i++;
-            $data['title'] = $value->title;
+            $data['id'] = ++$i;
+            $data['company_name'] = $value->company_name;
             // $data['user_id'] = $value->getUser->first_name;
-            $data['user_id'] = $value->getUser ? $value->getUser->first_name . ' ' . $value->getUser->last_name : 'N/A';
-            $data['vendor_id'] = $value->getVendor ? $value->getVendor->first_name . ' ' . $value->getVendor->last_name : 'N/A';
+            $data['am_name'] = $value->am_name ?? 'N/A';
+            // $data['vendor_id'] = $value->getVendor ? $value->getVendor->first_name . ' ' . $value->getVendor->last_name : 'N/A';
 
 
             $data['task_status'] = '<select class="form-control status-select" name="task_status" data-id="' . $value->id . '">';
@@ -104,10 +107,11 @@ class TaskController extends Controller
     public function create()
     {
         $task = null;
-        $clientlist = User::where("status","1")->where('id', '!=', 31)->where('type','2')->get(['id',"first_name","last_name"]);
-        $vendorlist = User::where("status","1")->where('id', '!=', 31)->where('type','1')->get(['id',"first_name","last_name"]);
+        // $clientlist = User::where("status","1")->where('id', '!=', 31)->where('type','2')->get(['id',"first_name","last_name"]);
+        // $vendorlist = User::where("status","1")->where('id', '!=', 31)->where('type','1')->get(['id',"first_name","last_name"]);
+        $countrylist = Country::where("status","active")->get(['id',"name"]);
 
-        return view('admin.tasks.create',compact('task','clientlist','vendorlist'));
+        return view('admin.tasks.create',compact('task','countrylist'));
     }
 
     /**
@@ -115,20 +119,26 @@ class TaskController extends Controller
      */
    
     public function store(Request $request) {
+        // dd($request->all());
         $input = $request->all();
       
         $validate = Validator($request->all(), [
-            'title' => 'required',
-            'user_id' => 'required',
-            'vendor_id' => 'required',
+            'company_name' => 'required',
+            'register_country_id' => 'required',
+            'am_name' => 'required',
+            'am_email' => 'required',
+            'whatsapp_no' => 'required',
+            'register_year' => 'required',
 
-    
+          
         ]);
         $attr = [
-            'title' => 'Title',
-            'user_id' => 'Customer Name',
-            'vendor_id' => 'Vendor Name',
-
+            'company_name' => 'Company Name',
+            'register_country_id' => 'Register Country',
+            'am_name' => 'Am Name',
+            'am_email' => 'Am Email',
+            'whatsapp_no' => 'AM Skype/Whatsapp',
+            'register_year' => 'Registered Year',
         ];
         $validate->setAttributeNames($attr);
         if ($validate->fails()) {
@@ -136,27 +146,63 @@ class TaskController extends Controller
         } else {
             try {
                 $task = new Task;
-
-                $task->user_id = $request->user_id;
-                $task->vendor_id = $request->vendor_id;
-                $task->title =  $request->title;
-                $task->description = $request->description;
-                $task->destination = $request->destination;
-                $task->credit_limit = $request->credit_limit;
-                $task->billing_cycle = $request->billing_cycle;
-                $task->agreement_review = $request->agreement_review;
-                $task->agreement_sign = $request->agreement_sign;
-                $task->technical_interconnection = $request->technical_interconnection;
+                $task->company_name = $request->company_name;
+                $task->register_country_id = $request->register_country_id;
+                $task->am_name = $request->am_name;
+                $task->am_email = $request->am_email;
+                $task->whatsapp_no = $request->whatsapp_no;
+                $task->register_year = $request->register_year;
                 $task->created_at = date('Y-m-d H:i:s');
                 $task->updated_at = date('Y-m-d H:i:s');
                 if ($task->save()) {
+
+                    // $fields = $request->input('description',[]);
+                    $fields = (array) $request->input('description', []);
+
+
+                    foreach ($fields as $field) {
+                            $taskdescription = new TaskDescription;
+                            $taskdescription->task_id = $task->id;
+                            $taskdescription->description = $field;
+                            $taskdescription->save();
+                    }
+
+                    $tradeverification = new TradeVerification;
+                    $tradeverification->task_id = $task->id;
+                    $tradeverification->response_of_tr = $request->response_of_tr;
+                    $tradeverification->propose_credit_limit = $request->propose_credit_limit;
+                    $tradeverification->billing_cycle = $request->billing_cycle;
+                    $tradeverification->created_at = date('Y-m-d H:i:s');
+                    $tradeverification->updated_at = date('Y-m-d H:i:s');
+                    $tradeverification->save();
+
+                    $agreementreview = new AgreementReview;
+                    $agreementreview->task_id = $task->id;
+                    $agreementreview->review_description = $request->review_description;
+                    $agreementreview->financial_statement = $request->financial_statement;
+                    $agreementreview->billing_cycle_review = $request->billing_cycle_review;
+                    $agreementreview->created_at = date('Y-m-d H:i:s');
+                    $agreementreview->updated_at = date('Y-m-d H:i:s');
+                    $agreementreview->save();
+
+                    $agreementsign = new AgreementSign;
+                    $agreementsign->task_id = $task->id;
+                    $agreementsign->agreement = $request->agreement;
+                    $agreementsign->unilateral = $request->unilateral;
+                    $agreementsign->sign_description = $request->sign_description;
+                    $agreementsign->created_at = date('Y-m-d H:i:s');
+                    $agreementsign->updated_at = date('Y-m-d H:i:s');
+                    $agreementsign->save();
+
                     $request->session()->flash('success', 'Task added successfully');
                     return redirect()->route('admin.tasks.index');
+                    
                 } else {
                     $request->session()->flash('error', 'Something went wrong. Please try again later.');
                     return redirect()->route('admin.tasks.index');
                 }
             } catch (Exception $e) {
+            
                 $request->session()->flash('error', 'Something went wrong. Please try again later.');
                 return redirect()->route('admin.tasks.index');
             }
@@ -167,12 +213,25 @@ class TaskController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($id)
     {
-        $task=Task::find($id);
-        $clientlist = User::where("status","1")->where('id', '!=', 31)->get(['id',"first_name","last_name"]);
+        // dd($id);
+        try{
+            $task=Task::find($id);
+            // dd($task);
+                $taskDescriptions = TaskDescription::where('task_id', $id)->get();
 
-        return view('admin.tasks.view',compact('task','clientlist'));
+                $tradeverification = TradeVerification::where('task_id', $id)->first();
+                $agreementreview = AgreementReview::where('task_id', $id)->first();
+                $agreementsign = AgreementSign::where('task_id', $id)->first();
+            
+            return view('admin.tasks.view',compact('task','tradeverification','agreementreview','agreementsign','taskDescriptions'));
+        }catch (Exception $e) {
+            dd($e);
+            $request->session()->flash('error', 'Something went wrong. Please try again later.');
+            return redirect()->route('admin.tasks.index');
+        }
+       
     }
 
     /**
@@ -183,15 +242,18 @@ class TaskController extends Controller
             // $task = Task::where('id', $id)->first();
             $task = Task::find($id);
             // dd($task);
+            $taskDescriptions = TaskDescription::where('task_id', $id)->get();
+            
             
             if (isset($task->id)) {
             
                 $type = 'edit';
-               
-                $clientlist = User::where("status","1")->where('id', '!=', 31)->where('type','2')->get(['id',"first_name","last_name"]);
-                $vendorlist = User::where("status","1")->where('id', '!=', 31)->where('type','1')->get(['id',"first_name","last_name"]);
+                $tradeverification = TradeVerification::where('task_id', $id)->first();
+                $agreementreview = AgreementReview::where('task_id', $id)->first();
+                $agreementsign = AgreementSign::where('task_id', $id)->first();
+                $countrylist = Country::where("status","active")->get(['id',"name"]);
             
-                return view('admin.tasks.create', compact('task', 'type','clientlist','vendorlist'));
+                return view('admin.tasks.create', compact('tradeverification','agreementreview','agreementsign','task', 'type','countrylist','taskDescriptions'));
             } else {
                 $request->session()->flash('error', 'Invalid Data');
                 return redirect()->route('admin.tasks.index');
@@ -212,17 +274,23 @@ class TaskController extends Controller
             $task = Task::where('id', $id)->first();
 
             if (isset($task->id)) {
-                $validate = Validator($request->all(),  [
-                    'title' => 'required',
-                    'user_id' => 'required',
-                    'vendor_id' => 'required',
-
+                $validate = Validator($request->all(), [
+                    'company_name' => 'required',
+                    'register_country_id' => 'required',
+                    'am_name' => 'required',
+                    'am_email' => 'required',
+                    'whatsapp_no' => 'required',
+                    'register_year' => 'required',
+        
+                  
                 ]);
                 $attr = [
-                    'title' => 'Title',
-                    'user_id' => 'Customer Name',
-                    'vendor_id' => 'Vendor Name'
-
+                    'company_name' => 'Company Name',
+                    'register_country_id' => 'Register Country',
+                    'am_name' => 'Am Name',
+                    'am_email' => 'Am Email',
+                    'whatsapp_no' => 'AM Skype/Whatsapp',
+                    'register_year' => 'Registered Year',
                 ];
 
                 $validate->setAttributeNames($attr);
@@ -231,20 +299,53 @@ class TaskController extends Controller
                     return redirect()->route('admin.tasks.edit', ['id' => $id])->withInput($request->all())->withErrors($validate);
                 } else {
                     try {
-                        $task->user_id = $request->user_id;
-                        $task->vendor_id = $request->vendor_id;
-                        $task->title =  $request->title;
-                        $task->description = $request->description;
-                        $task->destination = $request->destination;
-                        $task->credit_limit = $request->credit_limit;
-                        $task->billing_cycle = $request->billing_cycle;
-                        $task->agreement_review = $request->agreement_review;
-                        $task->agreement_sign = $request->agreement_sign;
-                        $task->technical_interconnection = $request->technical_interconnection;
+                        $task->company_name = $request->company_name;
+                        $task->register_country_id = $request->register_country_id;
+                        $task->am_name = $request->am_name;
+                        $task->am_email = $request->am_email;
+                        $task->whatsapp_no = $request->whatsapp_no;
+                        $task->register_year = $request->register_year;
                         $task->updated_at = date('Y-m-d H:i:s');
                         
                         // dd($task);
                         if ($task->save()) {
+
+                            TaskDescription::where('task_id', $task->id)->delete();
+
+                            // Now, insert the new descriptions
+                            // $fields = $request->input('description');
+                            $fields = (array) $request->input('description', []);
+            
+                            foreach ($fields as $field) {
+                                $taskdescription = new TaskDescription;
+                                $taskdescription->task_id = $task->id;
+                                $taskdescription->description = $field; // Save each description
+                                $taskdescription->save();
+                            }
+
+                            $tradeverification = TradeVerification::firstOrNew(['task_id' => $id]);
+                            $tradeverification->task_id = $task->id;
+                            $tradeverification->response_of_tr = $request->response_of_tr;
+                            $tradeverification->propose_credit_limit = $request->propose_credit_limit;
+                            $tradeverification->billing_cycle = $request->billing_cycle;
+                            $tradeverification->updated_at = date('Y-m-d H:i:s');
+                            $tradeverification->save();
+
+                            $agreementreview = AgreementReview::firstOrNew(['task_id' => $id]);
+                            $agreementreview->task_id = $task->id;
+                            $agreementreview->review_description = $request->review_description;
+                            $agreementreview->financial_statement = $request->financial_statement;
+                            $agreementreview->billing_cycle_review = $request->billing_cycle_review;
+                            $agreementreview->updated_at = date('Y-m-d H:i:s');
+                            $agreementreview->save();
+
+                            $agreementsign = AgreementSign::firstOrNew(['task_id' => $id]);
+                            $agreementsign->task_id = $task->id;
+                            $agreementsign->agreement = $request->agreement;
+                            $agreementsign->unilateral = $request->unilateral;
+                            $agreementsign->sign_description = $request->sign_description;
+                            $agreementsign->updated_at = date('Y-m-d H:i:s');
+                            $agreementsign->save();
 
                             $request->session()->flash('success', 'Task updated successfully');
                             return redirect()->route('admin.tasks.index');

@@ -31,15 +31,33 @@
                     @can('Task-Management')
                     <li class="nxl-item nxl-hasmenu">
                         <a href="{{ route('admin.tasks.index') }}" class="nxl-link">
-                            <span class="nxl-micon"><i class="feather-briefcase"></i></span>
+                            <span class="nxl-micon"><i class="feather feather-file-text"></i></span>
                             <span class="nxl-mtext">Task Management</span>
                         </a>
                     </li>
+
+                    <li class="nxl-item nxl-hasmenu">
+                        <a href="javascript:void(0);" class="nxl-link">
+                            <span class="nxl-micon"><i class="feather feather-file-text"></i></span>
+                            <span class="nxl-mtext"> Task Management</span>
+                            <span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
+                        </a>
+                        <ul class="nxl-submenu">
+                            
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('admin.newinterconnections.create') }}"> New InterConnection</a></li>
+                           
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('admin.tradeverifications.create') }}">Trade Verification</a></li>
+
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('admin.vendorindex') }}">Agreement Review</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('admin.vendorindex') }}">Agreement Signing</a></li>
+                           
+                        </ul>
+                    </li> 
                     @endcan
                     @can('Route-Management')
                      <li class="nxl-item nxl-hasmenu">
                         <a href="javascript:void(0);" class="nxl-link">
-                            <span class="nxl-micon"><i class="feather-briefcase"></i></span>
+                            <span class="nxl-micon"><i class="fa-solid fa-route"></i></span>
                             <span class="nxl-mtext"> Route Management</span>
                             <span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                         </a>
@@ -56,7 +74,7 @@
                     @can('Account-Management')
                     <li class="nxl-item nxl-hasmenu">
                         <a href="javascript:void(0);" class="nxl-link">
-                            <span class="nxl-micon"><i class="feather-briefcase"></i></span>
+                            <span class="nxl-micon"><i class="fa fa-user"></i></span>
                             <span class="nxl-mtext">Account Management</span>
                             <span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                         </a>
@@ -71,7 +89,7 @@
                     @can('Technical-Management')
                     <li class="nxl-item nxl-hasmenu">
                         <a href="javascript:void(0);" class="nxl-link">
-                            <span class="nxl-micon"><i class="feather-briefcase"></i></span>
+                            <span class="nxl-micon"><i class="fa-solid fa-microchip"></i></span>
                             <span class="nxl-mtext">Technical Details</span>
                             <span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                         </a>
@@ -86,7 +104,8 @@
                     @can('Ticket-System')
                     <li class="nxl-item nxl-hasmenu">
                         <a href="{{ route('admin.ticket-system.index') }}" class="nxl-link">
-                            <span class="nxl-micon"><i class="feather-briefcase"></i></span>
+                            <span class="nxl-micon"><i class="fa-solid fa-ticket"></i></span>
+                            
                             <span class="nxl-mtext">Ticket System</span>
                         </a>
                     </li>

@@ -311,8 +311,6 @@ class TicketController extends Controller
         }
     }
     
-
-
     /**
      * Display the specified resource.
      */

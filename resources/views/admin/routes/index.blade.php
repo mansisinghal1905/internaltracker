@@ -143,7 +143,7 @@
                 { "data": "view" },
 				],
                 columnDefs: [
-                    { "targets": [], "orderable": false }, // Disable sorting on the "job_id" column
+                    { "targets": [1,2,3,4,5], "orderable": false }, // Disable sorting on the "job_id" column
                     { "targets": [], "orderable": false } // Disable sorting on the "job_id" column
                 ]
 			});
