@@ -11,13 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('agreement_reviews', function (Blueprint $table) {
+        Schema::create('trade_verification_documents', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('task_id')->nullable();
-            $table->text('review_description')->nullable();
-            $table->string('billing_cycle_review')->nullable();
-            $table->string('financial_statement')->nullable();
+            $table->unsignedBigInteger('trade_verification_id')->nullable();
+            $table->string('documents')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('agreement_reviews');
+        Schema::dropIfExists('trade_verification_documents');
     }
 };

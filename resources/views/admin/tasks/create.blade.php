@@ -38,352 +38,432 @@
          <div class="row">
             <div class="col-lg-12">
                <div class="card border-top-0">
-                  <div class="card-header p-0">
+                  <div class="">
                      <!-- Nav tabs -->
                      <form action="{{ $task ? route('admin.tasks.update', $task->id) : route('admin.tasks.store') }}" method="POST" enctype="multipart/form-data">
-                              {{csrf_field()}}
-                              @if($task)
-                              @method('PUT')
-                              @endif
-                              @if (session('status'))
-                              <div class="alert alert-success" role="alert">
-                                 {{ session('status') }}
-                              </div>
-                              @elseif (session('error'))
-                              <div class="alert alert-danger" role="alert">
-                                 {{ session('error') }}
-                              </div>
-                              @endif
-                            <ul class="nav nav-tabs flex-wrap w-100 text-center customers-nav-tabs" id="myTab" role="tablist">
-                                <li class="nav-item flex-fill border-top" role="presentation">
-                                    <a href="javascript:void(0);" class="nav-link active" id="profileTabLink" data-bs-toggle="tab" data-bs-target="#profileTab" role="tab">New InterConnection</a>
-                                </li>
-                                <li class="nav-item flex-fill border-top" role="presentation">
-                                    <a href="javascript:void(0);" class="nav-link" id="passwordTabLink" data-bs-toggle="tab" data-bs-target="#passwordTab" role="tab">Trade Verification</a>
-                                </li>
-                                <li class="nav-item flex-fill border-top" role="presentation">
-                                    <a href="javascript:void(0);" class="nav-link" id="billingTabLink" data-bs-toggle="tab" data-bs-target="#billingTab" role="tab">Agreement Review</a>
-                                </li>
-                                <li class="nav-item flex-fill border-top" role="presentation">
-                                    <a href="javascript:void(0);" class="nav-link" id="subscriptionTabLink" data-bs-toggle="tab" data-bs-target="#subscriptionTab" role="tab">Agreement Signing</a>
-                                </li>
-                            </ul>
-                  </div>
-                  
-                        <div class="tab-content">
-                        <!-- <form action="{{ $task ? route('admin.tasks.update', $task->id) : route('admin.tasks.store') }}" method="POST" enctype="multipart/form-data">
-                              {{csrf_field()}}
-                              @if($task)
-                              @method('PUT')
-                              @endif
-                              @if (session('status'))
-                              <div class="alert alert-success" role="alert">
-                                 {{ session('status') }}
-                              </div>
-                              @elseif (session('error'))
-                              <div class="alert alert-danger" role="alert">
-                                 {{ session('error') }}
-                              </div>
-                              @endif -->
-                            <div class="tab-pane fade show active" id="profileTab" role="tabpanel">
-                                <div class="card-body personal-info">
-                                
-                                    <div class="mb-4 d-flex align-items-center justify-content-between">
-                                        <h5 class="fw-bold mb-0 me-4">
-                                            <span class="d-block mb-2">Task Information:</span>
-                                        </h5>
-                                    </div>
-                                    <div class="tab-pane fade show active" id="profileTab" role="tabpanel">
-                                        <div class="card-body personal-info">
-                                            <div class="mb-4 d-flex align-items-center justify-content-between">
-                                            <h5 class="fw-bold mb-0 me-4">
-                                                <span class="d-block mb-2">New Interconnection:</span>
-                                            </h5>
-                                            </div>
-                                            <div class="row mb-4 align-items-center">
-                                            <div class="col-lg-4">
-                                                <label for="fullnameInput" class="fw-semibold"> Company Name: </label>
-                                            </div>
-                                            <div class="col-lg-8">
-                                                <div class="input-group">
-                                                    <input type="text" name="company_name" class="form-control @error('company_name') is-invalid @enderror" value="{{ isset($task->company_name) && !empty($task->company_name) ? $task->company_name : ''}}" id="fullnameInput" placeholder="Company Name">
-                                                </div>
-                                                @error('company_name')
-                                                <span class="text-danger">{{ $message }}</span>
-                                                @enderror
-                                            </div>
-                                            </div>
-                                            <div class="row mb-4 align-items-center">
-                                            <div class="col-lg-4">
-                                                <label class="fw-semibold">Country: </label>
-                                            </div>
-                                            <div class="col-lg-8">
-                                                <!-- <label class="fw-semibold">Country: </label> -->
-                                                <select class="form-control @error('register_country_id') is-invalid @enderror" data-select2-selector="tag" name="register_country_id" id="country_id">
-                                                    @if(count($countrylist) > 0)
-                                                    <option value="" >Select Country</option>
-                                                    @if($countrylist)
-                                                    @foreach($countrylist as $id=> $des)
-                                                    <option value="{{$des->id}}" @if(isset($task) &&  in_array($des->id, explode(",",$task->register_country_id))) selected @endif>{{ ucfirst($des->name) }}</option>
-                                                    @endforeach
-                                                    @endif
-                                                    @else
-                                                    <option value=''>No Country found</option>
-                                                    @endif
-                                                </select>
-                                                @error('register_country_id')
-                                                <span class="text-danger">{{ $message }}</span>
-                                                @enderror
-                                            </div>
-                                            </div>
-                                            <div class="row mb-4 align-items-center">
-                                            <div class="col-lg-4">
-                                                <label for="fullnameInput" class="fw-semibold"> AM Name: </label>
-                                            </div>
-                                            <div class="col-lg-8">
-                                                <div class="input-group">
-                                                    <input type="text" name="am_name" class="form-control @error('am_name') is-invalid @enderror"  value="{{ isset($task->am_name) && !empty($task->am_name) ? $task->am_name : ''}}" id="fullnameInput" placeholder="AM Name">
-                                                </div>
-                                                @error('am_name')
-                                                <span class="text-danger">{{ $message }}</span>
-                                                @enderror
-                                            </div>
-                                            </div>
-                                            <div class="row mb-4 align-items-center">
-                                            <div class="col-lg-4">
-                                                <label for="fullnameInput" class="fw-semibold"> AM Email: </label>
-                                            </div>
-                                            <div class="col-lg-8">
-                                                <div class="input-group">
-                                                    <input type="text" name="am_email" class="form-control @error('am_email') is-invalid @enderror" value="{{ isset($task->am_email) && !empty($task->am_email) ? $task->am_email : ''}}" id="fullnameInput" placeholder="AM Email">
-                                                </div>
-                                                @error('am_email')
-                                                <span class="text-danger">{{ $message }}</span>
-                                                @enderror
-                                            </div>
-                                            </div>
-                                            <div class="row mb-4 align-items-center">
-                                            <div class="col-lg-4">
-                                                <label for="fullnameInput" class="fw-semibold"> AM Skype/Whatsapp: </label>
-                                            </div>
-                                            <div class="col-lg-8">
-                                                <div class="input-group">
-                                                    <input type="text" name="whatsapp_no" class="form-control @error('whatsapp_no') is-invalid @enderror" value="{{ isset($task->whatsapp_no) && !empty($task->whatsapp_no) ? $task->whatsapp_no : ''}}" id="fullnameInput" placeholder="AM Skype/Whatsapp">
-                                                </div>
-                                                @error('whatsapp_no')
-                                                <span class="text-danger">{{ $message }}</span>
-                                                @enderror
-                                            </div>
-                                            </div>
-                                            <div class="row mb-4 align-items-center">
-                                            <div class="col-lg-4">
-                                                <label for="fullnameInput" class="fw-semibold"> Registered Year: </label>
-                                            </div>
-                                            <div class="col-lg-8">
-                                                <div class="input-group">
-                                                    <input type="text" name="register_year" class="form-control @error('register_year') is-invalid @enderror" value="{{ isset($task->register_year) && !empty($task->register_year) ? $task->register_year : ''}}" id="fullnameInput" placeholder="Register Year">
-                                                </div>
-                                                @error('register_year')
-                                                <span class="text-danger">{{ $message }}</span>
-                                                @enderror
-                                            </div>
-                                            </div>
-                                            <div class="row mb-4 align-items-center">
-                                            <div class="col-lg-4">
-                                                <label for="fullnameInput" class="fw-semibold">Description: </label>
-                                            </div>
-                                            <div class="col-lg-8" id="dynamicTextboxWrapper">
-                                                @if(isset($taskDescriptions) && count($taskDescriptions) > 0)
-                                                @foreach($taskDescriptions as $description)
-                                                <div class="input-group mb-2">
-                                                    <input type="text" name="description[]" class="form-control" placeholder="Description" value="{{ isset($description->description) && !empty($description->description) ? $description->description : ''}}">
-                                                    <button type="button" class="btn btn-danger remove-field " style="display:none;">Remove</button>
-                                                </div>
-                                                @endforeach
-                                                @else
-                                                <div class="input-group mb-2">
-                                                    <input type="text" name="description[]" class="form-control" placeholder="Description">
-                                                    <button type="button" class="btn btn-danger remove-field" style="display:none;">Remove</button>
-                                                </div>
-                                                @endif
-                                            </div>
-                                            <!-- <div class="col-lg-12 text-end"> -->
-                                            <div class="d-flex justify-content-end gap-2 mt-3">
-                                                <button type="button" id="addMoreButton" class="btn btn-success text-end">Add More</button>
-                                            </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <!-- End section -->
-                                <!-- </form> -->
-
-                                    <div class="mt-3">
-                                        <button id="nextBtn" class="btn btn-primary">Next</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Bank Detail -->
-                            <div class="tab-pane fade" id="passwordTab" role="tabpanel">
-                                <div class="card-body pass-info">
-                                <div class="mb-4 d-flex align-items-center justify-content-between">
-                                    <h5 class="fw-bold mb-0 me-4">
-                                        <span class="d-block mb-2">Trade Verification:</span>
-                                    </h5>
-                                </div>
-                                <div class="row mb-4 align-items-center">
-                                    <div class="col-lg-4">
-                                        <label for="fullnameInput" class="fw-semibold">Response of TR: </label>
-                                    </div>
-                                    <div class="col-lg-8">
-                                        <div class="input-group">
-                                            <textarea class="form-control"
-                                            id="" name="response_of_tr"  id="addressInput_2"  placeholder="Response of TR..">{{ isset($tradeverification->response_of_tr) && !empty($tradeverification->response_of_tr) ? $tradeverification->response_of_tr : ''}}</textarea>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row mb-4 align-items-center">
-                                    <div class="col-lg-4">
-                                        <label for="fullnameInput" class="fw-semibold">propose Credit Limit($):</label>
-                                    </div>
-                                    <div class="col-lg-8">
-                                        <div class="input-group">
-                                            <input type="number" name="propose_credit_limit" class="form-control" 
-                                            value="{{ isset($tradeverification->propose_credit_limit) && !empty($tradeverification->propose_credit_limit) ? '' . $tradeverification->propose_credit_limit : ''}}" 
-                                            id="creditLimitInput" placeholder="propose Credit Limit">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row mb-4 align-items-center">
-                                    <div class="col-lg-4">
-                                        <label for="fullnameInput" class="fw-semibold"> Billing Cycle: </label>
-                                    </div>
-                                    <div class="col-lg-8">
-                                        <div class="input-group">
-                                            <input type="text" name="billing_cycle" class="form-control" value="{{ isset($tradeverification->billing_cycle) && !empty($tradeverification->billing_cycle) ? $tradeverification->billing_cycle : ''}}" id="fullnameInput" placeholder="Billing Cycle">
-                                        </div>
-                                    </div>
-                                </div>
-                                </div>
-                                    <div class="mt-3">
-                                        <button id="prevBtn" class="btn btn-secondary">Back</button>
-                                        <button id="nextBtn1" class="btn btn-primary">Next</button>
-                                    </div>
-                            </div>
-                            <div class="tab-pane fade" id="billingTab" role="tabpanel">
-                                <div class="card-body pass-info">
-                                <div class="mb-4 d-flex align-items-center justify-content-between">
-                                    <h5 class="fw-bold mb-0 me-4">
-                                        <span class="d-block mb-2">Agreement Review:</span>
-                                    </h5>
-                                </div>
-                                <div class="row mb-4 align-items-center">
-                                    <div class="col-lg-4">
-                                        <label for="fullnameInput" class="fw-semibold">Description: </label>
-                                    </div>
-                                    <div class="col-lg-8">
-                                        <div class="input-group">
-                                            <textarea class="form-control"
-                                            id="" name="review_description"  id="addressInput_2" placeholder="Description">{{ isset($agreementreview->review_description) && !empty($agreementreview->review_description) ? $agreementreview->review_description : ''}}</textarea>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row mb-4 align-items-center">
-                                    <div class="col-lg-4">
-                                        <label for="fullnameInput" class="fw-semibold"> Billing Cycle: </label>
-                                    </div>
-                                    <div class="col-lg-8">
-                                        <div class="input-group">
-                                            <input type="text" name="billing_cycle_review" class="form-control" value="{{ isset($agreementreview->billing_cycle_review) && !empty($agreementreview->billing_cycle_review) ? $agreementreview->billing_cycle_review : ''}}" id="fullnameInput" placeholder="Billing Cycle">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row mb-4 align-items-center">
-                                    <div class="col-lg-4">
-                                        <label for="fullnameInput" class="fw-semibold"> Financial Statement: </label>
-                                    </div>
-                                    <div class="col-lg-8">
-                                        <div class="input-group">
-                                            <input type="text" name="financial_statement" class="form-control" value="{{ isset($agreementreview->financial_statement) && !empty($agreementreview->financial_statement) ? $agreementreview->financial_statement : ''}}" id="fullnameInput" placeholder="Financial Statement">
-                                        </div>
-                                    </div>
-                                </div>
-                                </div>
-                                    <div class="mt-3">
-                                        <button id="prevBtn1" class="btn btn-secondary">Back</button>
-                                        <button id="nextBtn2" class="btn btn-primary">Next</button>
-                                    </div>
-                            </div>
-                            <div class="tab-pane fade" id="subscriptionTab" role="tabpanel">
-                                <div class="card-body pass-info">
-                                <div class="mb-4 d-flex align-items-center justify-content-between">
-                                    <h5 class="fw-bold mb-0 me-4">
-                                        <span class="d-block mb-2">Agreement Signing:</span>
-                                    </h5>
-                                </div>
-                                <div class="row mb-4 align-items-center">
-                                    <div class="col-lg-4">
-                                        <label for="agreementSignYes" class="fw-semibold">Agreement:</label>
-                                    </div>
-                                    <div class="col-lg-8">
-                                        <div class="input-group">
-                                            <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="agreement" id="agreementSignYes" value="yes" 
-                                            {{ isset($agreementsign->agreement) && $agreementsign->agreement === 'yes' ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="agreementSignYes">Yes</label>
-                                            </div>
-                                            <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="agreement" id="agreementSignNo" value="no" 
-                                            {{ isset($agreementsign->agreement) && $agreementsign->agreement === 'no' ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="agreementSignNo">No</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row mb-4 align-items-center">
-                                    <div class="col-lg-4">
-                                        <label for="agreementSignYes" class="fw-semibold">Unilateral/Bilateral:</label>
-                                    </div>
-                                    <div class="col-lg-8">
-                                        <div class="input-group">
-                                            <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="unilateral" id="agreementSignYes" value="unilateral" 
-                                            {{ isset($agreementsign->unilateral) && $agreementsign->unilateral === 'unilateral' ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="agreementSignYes">Unilateral</label>
-                                            </div>
-                                            <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="unilateral" id="agreementSignNo" value="bilateral" 
-                                            {{ isset($agreementsign->unilateral) && $agreementsign->unilateral === 'bilateral' ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="agreementSignNo">Bilateral</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row mb-4 align-items-center">
-                                    <div class="col-lg-4">
-                                        <label for="fullnameInput" class="fw-semibold">Description: </label>
-                                    </div>
-                                    <div class="col-lg-8">
-                                        <div class="input-group">
-                                            <textarea class="form-control"
-                                            id="" name="sign_description"  id="addressInput_2" placeholder="Description">{{ isset($agreementsign->sign_description) && !empty($agreementsign->sign_description) ? $agreementsign->sign_description : ''}}</textarea>
-                                        </div>
-                                    </div>
-                                </div>
-                                </div>
-                                <div class="mt-3">
-                                    <button id="prevBtn2" class="btn btn-secondary">Back</button>
-                                   
-                                </div>
-                            </div>
-                            
-                                    <div class="d-flex justify-content-end">
-                                        <button type="submit" class="btn btn-primary">Save Changes</button>
-                                    </div>
-                                    
+                        {{csrf_field()}}
+                        @if($task)
+                        @method('PUT')
+                        @endif
+                        @if (session('status'))
+                        <div class="alert alert-success" role="alert">
+                           {{ session('status') }}
                         </div>
-                        </form> 
-                  
+                        @elseif (session('error'))
+                        <div class="alert alert-danger" role="alert">
+                           {{ session('error') }}
+                        </div>
+                        @endif
+                        <ul class="nav nav-tabs flex-wrap w-100 text-center customers-nav-tabs" id="myTab" role="tablist">
+                           <li class="nav-item flex-fill border-top" role="presentation">
+                              <a href="javascript:void(0);" class="nav-link active" id="profileTabLink" data-bs-toggle="tab" data-bs-target="#profileTab" role="tab">New InterConnection</a>
+                           </li>
+                           <li class="nav-item flex-fill border-top" role="presentation">
+                              <a href="javascript:void(0);" class="nav-link" id="passwordTabLink" data-bs-toggle="tab" data-bs-target="#passwordTab" role="tab">Trade Verification</a>
+                           </li>
+                           <li class="nav-item flex-fill border-top" role="presentation">
+                              <a href="javascript:void(0);" class="nav-link" id="billingTabLink" data-bs-toggle="tab" data-bs-target="#billingTab" role="tab">Agreement Review</a>
+                           </li>
+                           <li class="nav-item flex-fill border-top" role="presentation">
+                              <a href="javascript:void(0);" class="nav-link" id="subscriptionTabLink" data-bs-toggle="tab" data-bs-target="#subscriptionTab" role="tab">Agreement Signing</a>
+                           </li>
+                        </ul>
+                        <div class="tab-content">
+                           <div class="tab-pane fade show active" id="profileTab" role="tabpanel">
+                              <div class="card-body personal-info">
+                                 <div class="mb-4 d-flex align-items-center justify-content-between">
+                                    <h5 class="fw-bold mb-0 me-4">
+                                       <span class="d-block mb-2">Task Information:</span>
+                                    </h5>
+                                 </div>
+                                 <div class="tab-pane fade show active" id="profileTab" role="tabpanel">
+                                    <div class="card-body personal-info">
+                                       <div class="mb-4 d-flex align-items-center justify-content-between">
+                                          <h5 class="fw-bold mb-0 me-4">
+                                             <span class="d-block mb-2">New Interconnection:</span>
+                                          </h5>
+                                       </div>
+
+                                       <div class="row mb-4 align-items-center">
+                                    <div class="col-lg-4">
+                                       <label for="agreementSignYes" class="fw-semibold">Type:</label>
+                                    </div>
+                                    <div class="col-lg-8">
+                                       <div class="input-group">
+                                          <div class="form-check form-check-inline">
+                                             <input class="form-check-input" type="radio" name="project_type" id="projectsms" value="sms"
+                                             {{ isset($task->project_type) && $task->project_type === 'sms' ? 'checked' : '' }}>
+                                             <label class="form-check-label" for="projectsms">SMS</label>
+                                          </div>
+                                          <div class="form-check form-check-inline">
+                                             <input class="form-check-input" type="radio" name="project_type" id="projectvoice" value="voice"
+                                             {{ isset($task->project_type) && $task->project_type === 'voice' ? 'checked' : '' }}>
+                                             <label class="form-check-label" for="projectvoice">Voice</label>
+                                          </div>
+                                       </div>
+                                    </div>
+                                 </div>
+                                       <div class="row mb-4 align-items-center">
+                                          <div class="col-lg-4">
+                                             <label for="fullnameInput" class="fw-semibold"> Company Name: </label>
+                                          </div>
+                                          <div class="col-lg-8">
+                                             <div class="input-group">
+                                                <input type="text" name="company_name" class="form-control @error('company_name') is-invalid @enderror" value="{{ isset($task->company_name) && !empty($task->company_name) ? $task->company_name : ''}}" id="fullnameInput" placeholder="Company Name">
+                                             </div>
+                                             @error('company_name')
+                                             <span class="text-danger">{{ $message }}</span>
+                                             @enderror
+                                          </div>
+                                       </div>
+                                       <div class="row mb-4 align-items-center">
+                                          <div class="col-lg-4">
+                                             <label class="fw-semibold">Country: </label>
+                                          </div>
+                                          <div class="col-lg-8">
+                                             <!-- <label class="fw-semibold">Country: </label> -->
+                                             <select class="form-control @error('register_country_id') is-invalid @enderror" data-select2-selector="tag" name="register_country_id" id="country_id">
+                                                @if(count($countrylist) > 0)
+                                                <option value="" >Select Country</option>
+                                                @if($countrylist)
+                                                @foreach($countrylist as $id=> $des)
+                                                <option value="{{$des->id}}" @if(isset($task) &&  in_array($des->id, explode(",",$task->register_country_id))) selected @endif>{{ ucfirst($des->name) }}</option>
+                                                @endforeach
+                                                @endif
+                                                @else
+                                                <option value=''>No Country found</option>
+                                                @endif
+                                             </select>
+                                             @error('register_country_id')
+                                             <span class="text-danger">{{ $message }}</span>
+                                             @enderror
+                                          </div>
+                                       </div>
+                                       <div class="row mb-4 align-items-center">
+                                          <div class="col-lg-4">
+                                             <label for="fullnameInput" class="fw-semibold"> AM Name: </label>
+                                          </div>
+                                          <div class="col-lg-8">
+                                             <div class="input-group">
+                                                <input type="text" name="am_name" class="form-control @error('am_name') is-invalid @enderror"  value="{{ isset($task->am_name) && !empty($task->am_name) ? $task->am_name : ''}}" id="fullnameInput" placeholder="AM Name">
+                                             </div>
+                                             @error('am_name')
+                                             <span class="text-danger">{{ $message }}</span>
+                                             @enderror
+                                          </div>
+                                       </div>
+                                       <div class="row mb-4 align-items-center">
+                                          <div class="col-lg-4">
+                                             <label for="fullnameInput" class="fw-semibold"> AM Email: </label>
+                                          </div>
+                                          <div class="col-lg-8">
+                                             <div class="input-group">
+                                                <input type="text" name="am_email" class="form-control @error('am_email') is-invalid @enderror" value="{{ isset($task->am_email) && !empty($task->am_email) ? $task->am_email : ''}}" id="fullnameInput" placeholder="AM Email">
+                                             </div>
+                                             @error('am_email')
+                                             <span class="text-danger">{{ $message }}</span>
+                                             @enderror
+                                          </div>
+                                       </div>
+                                       <div class="row mb-4 align-items-center">
+                                          <div class="col-lg-4">
+                                             <label for="fullnameInput" class="fw-semibold"> AM Skype/Whatsapp: </label>
+                                          </div>
+                                          <div class="col-lg-8">
+                                             <div class="input-group">
+                                                <input type="text" name="whatsapp_no" class="form-control @error('whatsapp_no') is-invalid @enderror" value="{{ isset($task->whatsapp_no) && !empty($task->whatsapp_no) ? $task->whatsapp_no : ''}}" id="fullnameInput" placeholder="AM Skype/Whatsapp">
+                                             </div>
+                                             @error('whatsapp_no')
+                                             <span class="text-danger">{{ $message }}</span>
+                                             @enderror
+                                          </div>
+                                       </div>
+                                       <div class="row mb-4 align-items-center">
+                                          <div class="col-lg-4">
+                                             <label for="fullnameInput" class="fw-semibold"> Registered Year: </label>
+                                          </div>
+                                          <div class="col-lg-8">
+                                             <div class="input-group">
+                                                <input type="text" name="register_year" class="form-control @error('register_year') is-invalid @enderror" value="{{ isset($task->register_year) && !empty($task->register_year) ? $task->register_year : ''}}" id="fullnameInput" placeholder="Register Year">
+                                             </div>
+                                             @error('register_year')
+                                             <span class="text-danger">{{ $message }}</span>
+                                             @enderror
+                                          </div>
+                                       </div>
+                                       <div class="row mb-4 align-items-center">
+                                          <div class="col-lg-4">
+                                             <label for="fullnameInput" class="fw-semibold">Description: </label>
+                                          </div>
+                                          <div class="col-lg-8" id="dynamicTextboxWrapper">
+                                             @if(isset($taskDescriptions) && count($taskDescriptions) > 0)
+                                             @foreach($taskDescriptions as $description)
+                                             <div class="input-group mb-2">
+                                                <input type="text" name="description[]" class="form-control" placeholder="Description" value="{{ isset($description->description) && !empty($description->description) ? $description->description : ''}}">
+                                                <button type="button" class="btn btn-danger remove-field " style="display:none;">Remove</button>
+                                             </div>
+                                             @endforeach
+                                             @else
+                                             <div class="input-group mb-2">
+                                                <input type="text" name="description[]" class="form-control" placeholder="Description">
+                                                <!-- <button type="button" class="btn btn-danger remove-field" style="display:none;">Remove</button> -->
+                                             </div>
+                                             @endif
+                                          </div>
+                                          <!-- <div class="col-lg-12 text-end"> -->
+                                          <div class="d-flex justify-content-end gap-2 mt-3">
+                                             <button type="button" id="addMoreButton" class="btn btn-success text-end">Add More</button>
+                                          </div>
+                                       </div>
+                                    </div>
+                                 </div>
+                                 <!-- End section -->
+                                 <!-- </form> -->
+                                 <div class="mt-3 d-flex flex-wrap justify-content-start align-items-center p-3">
+                                    <button type="button" id="nextBtn" class="btn btn-primary m-2">Next</button>
+                                 </div>
+                              </div>
+                           </div>
+                           <!-- Bank Detail -->
+                           <div class="tab-pane fade" id="passwordTab" role="tabpanel">
+                              <div class="card-body pass-info">
+                                 <div class="mb-4 d-flex align-items-center justify-content-between">
+                                    <h5 class="fw-bold mb-0 me-4">
+                                       <span class="d-block mb-2">Trade Verification:</span>
+                                    </h5>
+                                 </div>
+                                 <div class="row mb-4 align-items-center">
+                                    <div class="col-lg-4">
+                                       <label for="fullnameInput" class="fw-semibold">Response of TR: </label>
+                                    </div>
+                                    <div class="col-lg-8">
+                                       <div class="input-group">
+                                          <textarea class="form-control"
+                                             id="" name="response_of_tr"  id="addressInput_2"  placeholder="Response of TR..">{{ isset($tradeverification->response_of_tr) && !empty($tradeverification->response_of_tr) ? $tradeverification->response_of_tr : ''}}</textarea>
+                                       </div>
+                                    </div>
+                                 </div>
+                                 <div class="row mb-4 align-items-center">
+                                    <div class="col-lg-4">
+                                       <label for="fullnameInput" class="fw-semibold">propose Credit Limit($):</label>
+                                    </div>
+                                    <div class="col-lg-8">
+                                       <div class="input-group">
+                                          <input type="number" name="propose_credit_limit" class="form-control"
+                                             value="{{ isset($tradeverification->propose_credit_limit) && !empty($tradeverification->propose_credit_limit) ? '' . $tradeverification->propose_credit_limit : ''}}"
+                                             id="creditLimitInput" placeholder="propose Credit Limit">
+                                       </div>
+                                    </div>
+                                 </div>
+                                 <div class="row mb-4 align-items-center">
+                                    <div class="col-lg-4">
+                                       <label for="fullnameInput" class="fw-semibold"> Billing Cycle: </label>
+                                    </div>
+                                    <div class="col-lg-8">
+                                       <div class="input-group">
+                                          <input type="text" name="billing_cycle" class="form-control" value="{{ isset($tradeverification->billing_cycle) && !empty($tradeverification->billing_cycle) ? $tradeverification->billing_cycle : ''}}" id="fullnameInput" placeholder="Billing Cycle">
+                                       </div>
+                                    </div>
+                                 </div>
+
+                                 <div class="row mb-4 align-items-center">
+                                    <div class="col-lg-4">
+                                       <label for="documentUpload" class="fw-semibold">Trade Verification Documents:</label>
+                                    </div>
+                                    <div class="col-lg-8" id="dynamicDocumentWrapper">
+                                       <!-- Display existing documents if available -->
+                                       @if($tradeverificatinDocuments)
+                                             @foreach ($tradeverificatinDocuments as $document)
+                                                <div class="input-group mb-2" id="document-{{ $document->id }}">
+                                                   <a href="{{ asset('public/tradeverification/'.$document->documents) }}" target="_blank" class="form-control">
+                                                         {{ $document->documents }}
+                                                   </a>
+                                                   <!-- <button type="button" class="btn btn-danger remove-document" data-id="{{ $document->id }}">Remove</button> -->
+                                                </div>
+                                             @endforeach
+                                       @endif
+                                       <!-- Input for uploading new documents -->
+                                       <div class="input-group mb-2">
+                                             <input type="file" name="documents[]" accept=".jpg, .jpeg, .png, .docx, .pdf" class="form-control" id="documentUpload" multiple>
+                                       </div>
+                                    </div>
+                                 </div>
+
+
+                              </div>
+                              <div class="mt-3 d-flex flex-wrap justify-content-between align-items-center p-3">
+                                 <button type="button" id="prevBtn" class="btn btn-secondary m-2">Back</button>
+                                 <button type="button" id="nextBtn1" class="btn btn-primary m-2">Next</button>
+                              </div>
+                           </div>
+                           <div class="tab-pane fade" id="billingTab" role="tabpanel">
+                              <div class="card-body pass-info">
+                                 <div class="mb-4 d-flex align-items-center justify-content-between">
+                                    <h5 class="fw-bold mb-0 me-4">
+                                       <span class="d-block mb-2">Agreement Review:</span>
+                                    </h5>
+                                 </div>
+                                 <div class="row mb-4 align-items-center">
+                                    <div class="col-lg-4">
+                                       <label for="fullnameInput" class="fw-semibold">Description: </label>
+                                    </div>
+                                    <div class="col-lg-8">
+                                       <div class="input-group">
+                                          <textarea class="form-control"
+                                             id="" name="review_description"  id="addressInput_2" placeholder="Description">{{ isset($agreementreview->review_description) && !empty($agreementreview->review_description) ? $agreementreview->review_description : ''}}</textarea>
+                                       </div>
+                                    </div>
+                                 </div>
+                                 <div class="row mb-4 align-items-center">
+                                    <div class="col-lg-4">
+                                       <label for="fullnameInput" class="fw-semibold"> Billing Cycle: </label>
+                                    </div>
+                                    <div class="col-lg-8">
+                                       <div class="input-group">
+                                          <input type="text" name="billing_cycle_review" class="form-control" value="{{ isset($agreementreview->billing_cycle_review) && !empty($agreementreview->billing_cycle_review) ? $agreementreview->billing_cycle_review : ''}}" id="fullnameInput" placeholder="Billing Cycle">
+                                       </div>
+                                    </div>
+                                 </div>
+                                 <div class="row mb-4 align-items-center">
+                                    <div class="col-lg-4">
+                                       <label for="fullnameInput" class="fw-semibold"> Financial Statement: </label>
+                                    </div>
+                                    <div class="col-lg-8">
+                                       <div class="input-group">
+                                          <input type="text" name="financial_statement" class="form-control" value="{{ isset($agreementreview->financial_statement) && !empty($agreementreview->financial_statement) ? $agreementreview->financial_statement : ''}}" id="fullnameInput" placeholder="Financial Statement">
+                                       </div>
+                                    </div>
+                                 </div>
+
+                                 <div class="row mb-4 align-items-center">
+                                    <div class="col-lg-4">
+                                       <label for="documentUpload" class="fw-semibold">Agreement Review Documents:</label>
+                                    </div>
+                                    <div class="col-lg-8" id="dynamicDocumentWrapper">
+                                    @if($agreementreviewDocuments)
+                                             @foreach ($agreementreviewDocuments as $document)
+                                             <div class="input-group mb-2" id="document-{{ $document->id }}">
+                                                <a href="{{ asset('public/agreementreview/'.$document->review_documents) }}" target="_blank" class="form-control">
+                                                         {{ $document->review_documents }}
+                                                </a>
+                                                <!-- <button type="button" class="btn btn-danger remove-document" data-id="{{ $document->id }}">Remove</button> -->
+                                             </div>
+                                             @endforeach
+                                    @endif
+                                       <!-- Initial file input for document upload -->
+                                       <div class="input-group mb-2">
+                                          <input type="file" name="review_documents[]" accept=".jpg, .jpeg, .png, .docx, .pdf" class="form-control" id="documentUpload" multiple>
+                                       </div>
+                                       
+                                    </div>
+                     
+                                 </div>
+                              </div>
+                              <div class="mt-3 d-flex flex-wrap justify-content-between align-items-center p-3">
+                                 <button type="button" id="prevBtn1" class="btn btn-secondary m-2">Back</button>
+                                 <button type="button" id="nextBtn2" class="btn btn-primary m-2">Next</button>
+                              </div>
+                           </div>
+                           <div class="tab-pane fade" id="subscriptionTab" role="tabpanel">
+                              <div class="card-body pass-info">
+                                 <div class="mb-4 d-flex align-items-center justify-content-between">
+                                    <h5 class="fw-bold mb-0 me-4">
+                                       <span class="d-block mb-2">Agreement Signing:</span>
+                                    </h5>
+                                 </div>
+                                 <div class="row mb-4 align-items-center">
+                                    <div class="col-lg-4">
+                                       <label for="agreementSignYes" class="fw-semibold">Agreement:</label>
+                                    </div>
+                                    <div class="col-lg-8">
+                                       <div class="input-group">
+                                          <div class="form-check form-check-inline">
+                                             <input class="form-check-input" type="radio" name="agreement" id="agreementSignYes" value="yes"
+                                             {{ isset($agreementsign->agreement) && $agreementsign->agreement === 'yes' ? 'checked' : '' }}>
+                                             <label class="form-check-label" for="agreementSignYes">Yes</label>
+                                          </div>
+                                          <div class="form-check form-check-inline">
+                                             <input class="form-check-input" type="radio" name="agreement" id="agreementSignNo" value="no"
+                                             {{ isset($agreementsign->agreement) && $agreementsign->agreement === 'no' ? 'checked' : '' }}>
+                                             <label class="form-check-label" for="agreementSignNo">No</label>
+                                          </div>
+                                       </div>
+                                    </div>
+                                 </div>
+                                 <div class="row mb-4 align-items-center">
+                                    <div class="col-lg-4">
+                                       <label for="agreementSignYes" class="fw-semibold">Unilateral/Bilateral:</label>
+                                    </div>
+                                    <div class="col-lg-8">
+                                       <div class="input-group">
+                                          <div class="form-check form-check-inline">
+                                             <input class="form-check-input" type="radio" name="unilateral" id="agreementSignYes" value="unilateral"
+                                             {{ isset($agreementsign->unilateral) && $agreementsign->unilateral === 'unilateral' ? 'checked' : '' }}>
+                                             <label class="form-check-label" for="agreementSignYes">Unilateral</label>
+                                          </div>
+                                          <div class="form-check form-check-inline">
+                                             <input class="form-check-input" type="radio" name="unilateral" id="agreementSignNo" value="bilateral"
+                                             {{ isset($agreementsign->unilateral) && $agreementsign->unilateral === 'bilateral' ? 'checked' : '' }}>
+                                             <label class="form-check-label" for="agreementSignNo">Bilateral</label>
+                                          </div>
+                                       </div>
+                                    </div>
+                                 </div>
+                                 <div class="row mb-4 align-items-center">
+                                    <div class="col-lg-4">
+                                       <label for="fullnameInput" class="fw-semibold">Description: </label>
+                                    </div>
+                                    <div class="col-lg-8">
+                                       <div class="input-group">
+                                          <textarea class="form-control"
+                                             id="" name="sign_description"  id="addressInput_2" placeholder="Description">{{ isset($agreementsign->sign_description) && !empty($agreementsign->sign_description) ? $agreementsign->sign_description : ''}}</textarea>
+                                       </div>
+                                    </div>
+                                 </div>
+                                 <div class="row mb-4 align-items-center">
+                                    <div class="col-lg-4">
+                                       <label for="documentUpload" class="fw-semibold">Agreement Sign Documents:</label>
+                                    </div>
+                                    <div class="col-lg-8" id="dynamicDocumentWrapper">
+                                    @if($agreementsignDocuments)
+                                             @foreach ($agreementsignDocuments as $document)
+                                             <div class="input-group mb-2" id="document-{{ $document->id }}">
+                                                <a href="{{ asset('public/agreementsign/'.$document->sign_documents) }}" target="_blank" class="form-control">
+                                                         {{ $document->sign_documents }}
+                                                </a>
+                                                <!-- <button type="button" class="btn btn-danger remove-document" data-id="{{ $document->id }}">Remove</button> -->
+                                             </div>
+                                             @endforeach
+                                    @endif
+                                       <!-- Initial file input for document upload -->
+                                       <div class="input-group mb-2">
+                                          <input type="file" name="sign_documents[]" accept=".jpg, .jpeg, .png, .docx, .pdf" class="form-control" id="documentUpload" multiple>
+                                          <!-- <button type="button" class="btn btn-danger remove-field" style="display:none;">Remove</button> -->
+                                       </div>
+                                       
+                                    </div>
+                     
+                                 </div>
+
+                                 <div class="row mb-4 align-items-center">
+                                    <div class="col-lg-4">
+                                       <label for="fullnameInput" class="fw-semibold"> Technical Interconnection: </label>
+                                    </div>
+                                    <div class="col-lg-8">
+                                       <div class="input-group">
+                                          <input type="text" name="technical_interconnection" class="form-control" value="{{ isset($agreementsign->technical_interconnection) && !empty($agreementsign->technical_interconnection) ? $agreementsign->technical_interconnection : ''}}" id="fullnameInput" placeholder="Technical Interconnection">
+                                       </div>
+                                    </div>
+                                 </div>
+                              </div>
+                              <div class="mt-3 d-flex flex-wrap justify-content-between align-items-center p-3">
+                                 <button type="button" id="prevBtn2" class="btn btn-secondary m-2">Back</button>
+                                 <button type="submit" class="btn btn-primary m-2">Save Changes</button>
+                              </div>
+                           </div>
+                        </div>
+                     </form>
+                  </div>
                </div>
             </div>
          </div>
@@ -409,13 +489,7 @@
 @endsection
 @push('script')
 <script src="{{ asset('public/assets/js/custom.js')}}"></script>
-<script src="https://cdn.ckeditor.com/ckeditor5/23.0.0/classic/ckeditor.js"></script>
-<script>
-   ClassicEditor.create( document.querySelector( '#editor1' ) )
-       .catch( error => {
-           console.error( error );
-       } );
-</script>
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
    $(document).ready(function() {
@@ -446,51 +520,49 @@
        });
    });
 </script>
-
-
 <script>
-  const tabs = [...document.querySelectorAll('.nav-link')];
-  let currentTabIndex = 0;
-
-    document.getElementById('nextBtn').addEventListener('click', () => {
-        if (currentTabIndex < tabs.length - 1) {
-        currentTabIndex++;
-        tabs[currentTabIndex].click();
-        }
-    });
-
-    document.getElementById('prevBtn').addEventListener('click', () => {
-        if (currentTabIndex > 0) {
-        currentTabIndex--;
-        tabs[currentTabIndex].click();
-        }
-    });
-
-    document.getElementById('nextBtn1').addEventListener('click', () => {
-        if (currentTabIndex < tabs.length - 1) {
-        currentTabIndex++;
-        tabs[currentTabIndex].click();
-        }
-    });
-
-    document.getElementById('prevBtn1').addEventListener('click', () => {
-        if (currentTabIndex > 0) {
-        currentTabIndex--;
-        tabs[currentTabIndex].click();
-        }
-    });
-
-    document.getElementById('nextBtn2').addEventListener('click', () => {
-        if (currentTabIndex < tabs.length - 1) {
-        currentTabIndex++;
-        tabs[currentTabIndex].click();
-        }
-    });
-    document.getElementById('prevBtn2').addEventListener('click', () => {
-        if (currentTabIndex > 0) {
-        currentTabIndex--;
-        tabs[currentTabIndex].click();
-        }
-    });
+   const tabs = [...document.querySelectorAll('.nav-link')];
+   let currentTabIndex = 0;
+   
+     document.getElementById('nextBtn').addEventListener('click', () => {
+         if (currentTabIndex < tabs.length - 1) {
+         currentTabIndex++;
+         tabs[currentTabIndex].click();
+         }
+     });
+   
+     document.getElementById('prevBtn').addEventListener('click', () => {
+         if (currentTabIndex > 0) {
+         currentTabIndex--;
+         tabs[currentTabIndex].click();
+         }
+     });
+   
+     document.getElementById('nextBtn1').addEventListener('click', () => {
+         if (currentTabIndex < tabs.length - 1) {
+         currentTabIndex++;
+         tabs[currentTabIndex].click();
+         }
+     });
+   
+     document.getElementById('prevBtn1').addEventListener('click', () => {
+         if (currentTabIndex > 0) {
+         currentTabIndex--;
+         tabs[currentTabIndex].click();
+         }
+     });
+   
+     document.getElementById('nextBtn2').addEventListener('click', () => {
+         if (currentTabIndex < tabs.length - 1) {
+         currentTabIndex++;
+         tabs[currentTabIndex].click();
+         }
+     });
+     document.getElementById('prevBtn2').addEventListener('click', () => {
+         if (currentTabIndex > 0) {
+         currentTabIndex--;
+         tabs[currentTabIndex].click();
+         }
+     });
 </script>
 @endpush

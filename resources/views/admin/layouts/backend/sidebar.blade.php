@@ -36,7 +36,7 @@
                         </a>
                     </li>
 
-                    <li class="nxl-item nxl-hasmenu">
+                    <!-- <li class="nxl-item nxl-hasmenu">
                         <a href="javascript:void(0);" class="nxl-link">
                             <span class="nxl-micon"><i class="feather feather-file-text"></i></span>
                             <span class="nxl-mtext"> Task Management</span>
@@ -52,7 +52,7 @@
                             <li class="nxl-item"><a class="nxl-link" href="{{ route('admin.vendorindex') }}">Agreement Signing</a></li>
                            
                         </ul>
-                    </li> 
+                    </li>  -->
                     @endcan
                     @can('Route-Management')
                      <li class="nxl-item nxl-hasmenu">

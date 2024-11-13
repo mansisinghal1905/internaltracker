@@ -37,6 +37,9 @@ class TradeVerification extends Authenticatable
      * @return array<string, string>
      */
 
-
+     public function documents()
+     {
+         return $this->hasMany(TradeVerificationDocument::class, 'trade_verification_id');
+     }
     
 }

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('task_id')->nullable();
             $table->string('agreement')->nullable();
             $table->string('unilateral')->nullable();
-            $table->text('description')->nullable();
+            $table->text('sign_description')->nullable();
             $table->timestamps();
         });
     }

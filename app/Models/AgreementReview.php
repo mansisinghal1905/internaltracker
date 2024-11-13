@@ -37,6 +37,9 @@ class AgreementReview extends Authenticatable
      * @return array<string, string>
      */
 
-
+     public function review_documents()
+     {
+         return $this->hasMany(AgreementReviewDocument::class, 'agreement_review_id');
+     }
     
 }

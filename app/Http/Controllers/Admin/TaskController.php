@@ -14,6 +14,10 @@ use App\Models\User;
 use App\Models\TaskUser;
 use App\Models\ProjectStatus;
 use App\Models\Country;
+use App\Models\TradeVerificationDocument;
+use App\Models\AgreementReviewDocument;
+use App\Models\AgreementSignDocument;
+
 use DB;
 use Hash;
 
@@ -110,8 +114,10 @@ class TaskController extends Controller
         // $clientlist = User::where("status","1")->where('id', '!=', 31)->where('type','2')->get(['id',"first_name","last_name"]);
         // $vendorlist = User::where("status","1")->where('id', '!=', 31)->where('type','1')->get(['id',"first_name","last_name"]);
         $countrylist = Country::where("status","active")->get(['id',"name"]);
-
-        return view('admin.tasks.create',compact('task','countrylist'));
+        $tradeverificatinDocuments='';
+        $agreementreviewDocuments = '';
+        $agreementsignDocuments = '';
+        return view('admin.tasks.create',compact('task','countrylist','tradeverificatinDocuments','agreementreviewDocuments','agreementsignDocuments'));
     }
 
     /**
@@ -146,6 +152,7 @@ class TaskController extends Controller
         } else {
             try {
                 $task = new Task;
+                $task->project_type = $request->project_type;
                 $task->company_name = $request->company_name;
                 $task->register_country_id = $request->register_country_id;
                 $task->am_name = $request->am_name;
@@ -176,6 +183,23 @@ class TaskController extends Controller
                     $tradeverification->updated_at = date('Y-m-d H:i:s');
                     $tradeverification->save();
 
+                    $getattachments = [];
+                    if ($request->hasfile('documents')) {
+                        foreach ($request->file('documents') as $file) {
+                            $filename = time() . '_' . str_replace(' ', '', $file->getClientOriginalName());
+                            $file->move(public_path('tradeverification'), $filename);
+        
+                            // Save file information to ticket_document table
+                            TradeVerificationDocument::create([
+                                'trade_verification_id' => $tradeverification->id,
+                                'task_id' => $task->id,
+                                'documents' => $filename,
+                            ]);
+        
+                            $getattachments[] = public_path('tradeverification/' . $filename);
+                        }
+                    }
+
                     $agreementreview = new AgreementReview;
                     $agreementreview->task_id = $task->id;
                     $agreementreview->review_description = $request->review_description;
@@ -185,14 +209,49 @@ class TaskController extends Controller
                     $agreementreview->updated_at = date('Y-m-d H:i:s');
                     $agreementreview->save();
 
+                    $getagreementreviewattachments = [];
+                    if ($request->hasfile('review_documents')) {
+                        foreach ($request->file('review_documents') as $file) {
+                            $filename = time() . '_' . str_replace(' ', '', $file->getClientOriginalName());
+                            $file->move(public_path('agreementreview'), $filename);
+        
+                            // Save file information to ticket_document table
+                            AgreementReviewDocument::create([
+                                'agreement_review_id' => $agreementreview->id,
+                                'task_id' => $task->id,
+                                'review_documents' => $filename,
+                            ]);
+        
+                            $getagreementreviewattachments[] = public_path('agreementreview/' . $filename);
+                        }
+                    }
+
                     $agreementsign = new AgreementSign;
                     $agreementsign->task_id = $task->id;
                     $agreementsign->agreement = $request->agreement;
                     $agreementsign->unilateral = $request->unilateral;
                     $agreementsign->sign_description = $request->sign_description;
+                    $agreementsign->technical_interconnection = $request->technical_interconnection;
                     $agreementsign->created_at = date('Y-m-d H:i:s');
                     $agreementsign->updated_at = date('Y-m-d H:i:s');
                     $agreementsign->save();
+
+                    $getagreementsignattachments = [];
+                    if ($request->hasfile('sign_documents')) {
+                        foreach ($request->file('sign_documents') as $file) {
+                            $filename = time() . '_' . str_replace(' ', '', $file->getClientOriginalName());
+                            $file->move(public_path('agreementsign'), $filename);
+        
+                            // Save file information to ticket_document table
+                            AgreementSignDocument::create([
+                                'agreement_sign_id' => $agreementsign->id,
+                                'task_id' => $task->id,
+                                'sign_documents' => $filename,
+                            ]);
+        
+                            $getagreementsignattachments[] = public_path('agreementsign/' . $filename);
+                        }
+                    }
 
                     $request->session()->flash('success', 'Task added successfully');
                     return redirect()->route('admin.tasks.index');
@@ -227,7 +286,7 @@ class TaskController extends Controller
             
             return view('admin.tasks.view',compact('task','tradeverification','agreementreview','agreementsign','taskDescriptions'));
         }catch (Exception $e) {
-            dd($e);
+            // dd($e);
             $request->session()->flash('error', 'Something went wrong. Please try again later.');
             return redirect()->route('admin.tasks.index');
         }
@@ -252,8 +311,14 @@ class TaskController extends Controller
                 $agreementreview = AgreementReview::where('task_id', $id)->first();
                 $agreementsign = AgreementSign::where('task_id', $id)->first();
                 $countrylist = Country::where("status","active")->get(['id',"name"]);
-            
-                return view('admin.tasks.create', compact('tradeverification','agreementreview','agreementsign','task', 'type','countrylist','taskDescriptions'));
+                 // Retrieve related documents
+                $tradeverificatinDocuments = $tradeverification ? $tradeverification->documents : [];
+                // dd($tradeverificatinDocuments);
+                $agreementreviewDocuments = $agreementreview ? $agreementreview->review_documents : [];
+
+                $agreementsignDocuments = $agreementsign ? $agreementsign->sign_documents : [];
+
+                return view('admin.tasks.create', compact('tradeverification','agreementreview','agreementsign','task', 'type','countrylist','taskDescriptions','tradeverificatinDocuments','agreementreviewDocuments','agreementsignDocuments'));
             } else {
                 $request->session()->flash('error', 'Invalid Data');
                 return redirect()->route('admin.tasks.index');
@@ -299,6 +364,7 @@ class TaskController extends Controller
                     return redirect()->route('admin.tasks.edit', ['id' => $id])->withInput($request->all())->withErrors($validate);
                 } else {
                     try {
+                        $task->project_type = $request->project_type;
                         $task->company_name = $request->company_name;
                         $task->register_country_id = $request->register_country_id;
                         $task->am_name = $request->am_name;
@@ -331,6 +397,21 @@ class TaskController extends Controller
                             $tradeverification->updated_at = date('Y-m-d H:i:s');
                             $tradeverification->save();
 
+                             // Document upload and update
+                                if ($request->hasFile('documents')) {
+                                    foreach ($request->file('documents') as $file) {
+                                        $filename = time() . '-' . $file->getClientOriginalName();
+                                        $file->move(public_path('tradeverification'), $filename);
+
+                                        // Save document details in the database
+                                        TradeVerificationDocument::create([
+                                            'trade_verification_id' => $tradeverification->id,
+                                            'task_id' => $task->id,
+                                            'documents' => $filename
+                                        ]);
+                                    }
+                                }
+
                             $agreementreview = AgreementReview::firstOrNew(['task_id' => $id]);
                             $agreementreview->task_id = $task->id;
                             $agreementreview->review_description = $request->review_description;
@@ -339,13 +420,44 @@ class TaskController extends Controller
                             $agreementreview->updated_at = date('Y-m-d H:i:s');
                             $agreementreview->save();
 
+                            if ($request->hasfile('review_documents')) {
+                                foreach ($request->file('review_documents') as $file) {
+                                    $filename = time() . '-' . $file->getClientOriginalName();
+                                    $file->move(public_path('agreementreview'), $filename);
+                
+                                    // Save file information to ticket_document table
+                                    AgreementReviewDocument::create([
+                                        'agreement_review_id' => $agreementreview->id,
+                                        'task_id' => $task->id,
+                                        'review_documents' => $filename,
+                                    ]);
+                
+                                }
+                            }
+
                             $agreementsign = AgreementSign::firstOrNew(['task_id' => $id]);
                             $agreementsign->task_id = $task->id;
                             $agreementsign->agreement = $request->agreement;
                             $agreementsign->unilateral = $request->unilateral;
                             $agreementsign->sign_description = $request->sign_description;
+                            $agreementsign->technical_interconnection = $request->technical_interconnection;
                             $agreementsign->updated_at = date('Y-m-d H:i:s');
                             $agreementsign->save();
+
+                            if ($request->hasfile('sign_documents')) {
+                                foreach ($request->file('sign_documents') as $file) {
+                                    $filename = time() . '-' . $file->getClientOriginalName();
+                                    $file->move(public_path('agreementsign'), $filename);
+                
+                                    // Save file information to ticket_document table
+                                    AgreementSignDocument::create([
+                                        'agreement_sign_id' => $agreementsign->id,
+                                        'task_id' => $task->id,
+                                        'sign_documents' => $filename,
+                                    ]);
+                
+                                }
+                            }
 
                             $request->session()->flash('success', 'Task updated successfully');
                             return redirect()->route('admin.tasks.index');

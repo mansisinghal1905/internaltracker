@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('agreement_reviews', function (Blueprint $table) {
+        Schema::create('agreement_review_documents', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('agreement_review_id')->nullable();
             $table->unsignedBigInteger('task_id')->nullable();
-            $table->text('review_description')->nullable();
-            $table->string('billing_cycle_review')->nullable();
-            $table->string('financial_statement')->nullable();
+            $table->string('review_documents')->nullable();
             $table->timestamps();
         });
     }
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('agreement_reviews');
+        Schema::dropIfExists('agreement_review_documents');
     }
 };

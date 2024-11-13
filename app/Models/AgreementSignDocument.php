@@ -9,7 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 
-class AgreementSign extends Authenticatable
+class AgreementSignDocument extends Authenticatable
 {
     use HasFactory, Notifiable,SoftDeletes;
 
@@ -21,6 +21,7 @@ class AgreementSign extends Authenticatable
     protected $fillable = [
         
     ];
+    protected $guarded = [];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -37,9 +38,13 @@ class AgreementSign extends Authenticatable
      * @return array<string, string>
      */
 
-     public function sign_documents()
-     {
-         return $this->hasMany(AgreementSignDocument::class, 'agreement_sign_id');
-     }
-    
+
+    public function getAttachmentAttribute($details)
+    {
+        if ($details != '') {
+            return asset('public/ticketfile').'/'.$details;
+        }
+        return asset('images/no_avatar.jpg');
+    } 
+   
 }
