@@ -61,16 +61,48 @@
                             <span class="nxl-mtext"> Route Management</span>
                             <span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                         </a>
-                        <ul class="nxl-submenu">
+                        <!-- <ul class="nxl-submenu">
                             
                             <li class="nxl-item"><a class="nxl-link" href="{{ route('admin.routes.index') }}"> Customer Management</a></li>
                            
                             @if(Auth::user()->type != 2)
                             <li class="nxl-item"><a class="nxl-link" href="{{ route('admin.vendorindex') }}">Vendor Management</a></li>
                             @endif
+                        </ul> -->
+                        <ul class="nxl-submenu">
+                            
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('admin.smsroutes.index') }}"> SMS</a></li>
+                        
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('admin.voiceroutes.index') }}">Voice</a></li>
+                           
                         </ul>
                     </li> 
                     @endcan 
+
+                    <li class="nxl-item nxl-hasmenu">
+                        <a href="javascript:void(0);" class="nxl-link">
+                            <span class="nxl-micon"><i class="fa-solid fa-route"></i></span>
+                            <span class="nxl-mtext"> NOC</span>
+                            <span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
+                        </a>
+                       
+                        <ul class="nxl-submenu">
+                            
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('admin.nocsms.index') }}"> NOC SMS</a></li>
+                        
+                            <li class="nxl-item"><a class="nxl-link" href="{{ route('admin.nocvoice.index') }}"> NOC Voice</a></li>
+                           
+                        </ul>
+                    </li> 
+
+                    <li class="nxl-item nxl-hasmenu">
+                        <a href="{{ route('admin.testresults.index') }}" class="nxl-link">
+                            <span class="nxl-micon"><i class="feather feather-file-text"></i></span>
+                            <span class="nxl-mtext">Test Result</span>
+                        </a>
+                    </li>
+
+
                     @can('Account-Management')
                     <li class="nxl-item nxl-hasmenu">
                         <a href="javascript:void(0);" class="nxl-link">

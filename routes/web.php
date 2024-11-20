@@ -13,12 +13,17 @@ use App\Http\Controllers\Admin\NewInterConnectionController;
 use App\Http\Controllers\Admin\TradeVerificationController;
 
 use App\Http\Controllers\Admin\RouteController;
+use App\Http\Controllers\Admin\RouteSmsController;
+use App\Http\Controllers\Admin\RouteVoiceController;
+use App\Http\Controllers\Admin\NOCSmsController;
+use App\Http\Controllers\Admin\NOCVoiceController;
 use App\Http\Controllers\Admin\CustomerAccountController;
 use App\Http\Controllers\Admin\VendorAccountController;
 use App\Http\Controllers\Admin\TechnicalCustomerController;
 use App\Http\Controllers\Admin\TechnicalVendorController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\TicketController;
+use App\Http\Controllers\Admin\TestResultController;
 use App\Http\Controllers\Admin\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Admin\Auth\ForgetPasswordController;
 use App\Http\Middleware\AuthCheck;
@@ -75,6 +80,15 @@ Route::middleware([AuthCheck::class])->group(function(){
         Route::post('admin/routes/customer-ajax', [RouteController::class, 'customerAjax'])->name('customerAjax');
         Route::get('/customers/view/{id?}', [RouteController::class, 'customershow'])->name('customershow');
 
+        Route::resource('smsroutes', RouteSmsController::class);
+        Route::resource('voiceroutes', RouteVoiceController::class);
+
+        Route::resource('nocsms', NOCSmsController::class);
+        Route::post('admin/nocsms/sms-ajax', [NOCSmsController::class, 'SmsAjax'])->name('SmsAjax');
+        
+        Route::resource('nocvoice', NOCVoiceController::class);
+        Route::post('admin/nocvoice/voice-ajax', [NOCVoiceController::class, 'VoiceAjax'])->name('VoiceAjax');
+
         Route::get('vendors', [RouteController::class, 'vendorindex'])->name('vendorindex');
         Route::post('admin/vendors/vendor-ajax', [RouteController::class, 'vendorAjax'])->name('vendorAjax');
         Route::get('/vendors/view/{id?}', [RouteController::class, 'vendorshow'])->name('vendorshow');
@@ -105,7 +119,9 @@ Route::middleware([AuthCheck::class])->group(function(){
         Route::post('admin/ticket-system/destory', [TicketController::class, 'ticketdestory'])->name('ticketdestory');
         Route::post('change-ticketsystem-status', [TicketController::class, 'ChangeTicketStatus'])->name('ChangeTicketStatus');
 
-
+        Route::resource('testresults', TestResultController::class);
+        Route::post('admin/testresults/testresult-ajax', [TestResultController::class, 'testresultAjax'])->name('testresultAjax');
+        
     });
 });
 
